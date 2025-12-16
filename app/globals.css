@@ -12,6 +12,56 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* Dark Theme (default) */
+[data-theme="dark"] {
+  --bg-primary: #000000;
+  --bg-secondary: #0e0e0e;
+  --bg-tertiary: #1a1a1a;
+  --bg-hover: #1a1a1a;
+  --bg-selected: rgba(255, 255, 255, 0.05);
+  --text-primary: #DEDEE5;
+  --text-secondary: #8A8A95;
+  --text-tertiary: #5a5a5a;
+  --border-primary: #0a0a0a;
+  --border-secondary: #8a8a95;
+  --border-tertiary: #5a5a5a;
+}
+
+[data-theme="dark"] ::selection {
+  background: #DEDEE5;
+  color: #000000;
+}
+
+[data-theme="dark"] ::-moz-selection {
+  background: #DEDEE5;
+  color: #000000;
+}
+
+/* Light Theme */
+[data-theme="light"] {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f5f5f5;
+  --bg-tertiary: #e8e8e8;
+  --bg-hover: #f0f0f0;
+  --bg-selected: rgba(0, 0, 0, 0.05);
+  --text-primary: #171717;
+  --text-secondary: #5a5a5a;
+  --text-tertiary: #8a8a95;
+  --border-primary: #e0e0e0;
+  --border-secondary: #5a5a5a;
+  --border-tertiary: #8a8a95;
+}
+
+[data-theme="light"] ::selection {
+  background: #171717;
+  color: #ffffff;
+}
+
+[data-theme="light"] ::-moz-selection {
+  background: #171717;
+  color: #ffffff;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
@@ -22,5 +72,28 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+/* Style datetime-local calendar popup to match dark theme */
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.8);
+  cursor: pointer;
+}
+
+/* Firefox datetime-local styling */
+input[type="datetime-local"] {
+  color-scheme: var(--theme-color-scheme);
+}
+
+/* Hide scrollbars on mobile */
+@media (max-width: 779px) {
+  * {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  
+  *::-webkit-scrollbar {
+    display: none;  /* Chrome, Safari, Opera */
+  }
 }
