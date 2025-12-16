@@ -7,7 +7,9 @@ export const removeUndefined = <T extends Record<string, any>>(obj: T): Partial<
   for (const key in obj) {
     const value = obj[key];
     if (value !== undefined) {
-      if (value && typeof value === 'object' && !Array.isArray(value) && !(value instanceof Date)) {
+      // Use Object.prototype.toString to check for Date to avoid instanceof type issues
+      const isDate = Object.prototype.toString.call(value) === '[object Date]';
+      if (value !== null && typeof value === 'object' && !Array.isArray(value) && !isDate) {
         // Recursively clean nested objects
         const cleanedNested = removeUndefined(value);
         if (Object.keys(cleanedNested).length > 0) {
