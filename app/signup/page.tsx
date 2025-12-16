@@ -6,6 +6,8 @@ import styled from 'styled-components';
 import { Eye, EyeOff } from 'lucide-react';
 import { auth, isFirebaseInitialized } from '@/lib/firebase/config';
 import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, updateProfile, onAuthStateChanged, User } from 'firebase/auth';
+import { mapAuthError } from '@/lib/auth/errorMessages';
+import { validatePassword } from '@/lib/auth/passwordRules';
 
 export default function SignupPage() {
   const router = useRouter();
@@ -19,6 +21,7 @@ export default function SignupPage() {
   const [isSigningUp, setIsSigningUp] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
+  const [passwordHint, setPasswordHint] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isFirebaseInitialized() || !auth) {
@@ -36,15 +39,17 @@ export default function SignupPage() {
   const handleEmailSignUp = async () => {
     if (!auth || isSigningUp || !email || !password || !confirmPassword) return;
     
+    const pwdCheck = validatePassword(password);
+    if (!pwdCheck.valid) {
+      setPasswordHint(pwdCheck.message || 'Password does not meet requirements');
+      return;
+    } else {
+      setPasswordHint(null);
+    }
+    
     // Validate password match
     if (password !== confirmPassword) {
       setError('Passwords do not match');
-      return;
-    }
-    
-    // Validate password length
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters');
       return;
     }
     
@@ -66,7 +71,7 @@ export default function SignupPage() {
       router.push('/');
     } catch (err: any) {
       console.error('Email sign-up error:', err);
-      setError(err?.message || 'Failed to create account');
+      setError(mapAuthError(err));
     } finally {
       setIsSigningUp(false);
     }
@@ -82,7 +87,7 @@ export default function SignupPage() {
       router.push('/');
     } catch (err: any) {
       console.error('Google sign-in error:', err);
-      setError(err?.message || 'Failed to sign in');
+      setError(mapAuthError(err));
     } finally {
       setIsSigningUp(false);
     }
@@ -184,6 +189,7 @@ export default function SignupPage() {
           </LandingActions>
           <LandingMessageContainer>
             {isSigningUp && <LandingStatus>Signing up...</LandingStatus>}
+            {passwordHint && <LandingError>{passwordHint}</LandingError>}
             {error && <LandingError>{error}</LandingError>}
           </LandingMessageContainer>
         </LandingForm>

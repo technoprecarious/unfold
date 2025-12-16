@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import { Eye, EyeOff } from 'lucide-react';
 import { auth, isFirebaseInitialized } from '@/lib/firebase/config';
 import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, User } from 'firebase/auth';
+import { mapAuthError } from '@/lib/auth/errorMessages';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -38,7 +39,7 @@ export default function LoginPage() {
       router.push('/');
     } catch (err: any) {
       console.error('Email sign-in error:', err);
-      setError(err?.message || 'Failed to sign in');
+      setError(mapAuthError(err));
     } finally {
       setIsSigningIn(false);
     }
@@ -54,7 +55,7 @@ export default function LoginPage() {
       router.push('/');
     } catch (err: any) {
       console.error('Google sign-in error:', err);
-      setError(err?.message || 'Failed to sign in');
+      setError(mapAuthError(err));
     } finally {
       setIsSigningIn(false);
     }
