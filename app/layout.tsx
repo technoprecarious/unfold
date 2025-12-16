@@ -17,6 +17,12 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "UNFOLD",
   description: "time management system",
+  icons: {
+    icon: [
+      { url: "/favicon_light.svg", media: "(prefers-color-scheme: light)" },
+      { url: "/favicon_dark.svg", media: "(prefers-color-scheme: dark)" },
+    ],
+  },
 };
 
 export default function RootLayout({
