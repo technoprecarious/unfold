@@ -41,7 +41,7 @@ const Drawer: React.FC<DrawerProps> = ({
 }) => {
   const [editedItem, setEditedItem] = useState<Program | Project | Task | Subtask | null>(null);
   const [isSaving, setIsSaving] = useState(false);
-  const { alert, confirm, AlertComponent, ConfirmComponent } = useDialog();
+  const { alert, confirm, saveDiscard, AlertComponent, ConfirmComponent, SaveDiscardComponent } = useDialog();
   const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -89,16 +89,28 @@ const Drawer: React.FC<DrawerProps> = ({
   // Handle close with unsaved changes check
   const handleClose = async () => {
     if (hasUnsavedChanges) {
-      const confirmed = await confirm(
-        'You have unsaved changes. Do you want to discard them?',
-        'Unsaved Changes',
-        false
+      const action = await saveDiscard(
+        'You have unsaved changes. What would you like to do?',
+        'Unsaved Changes'
       );
-      if (!confirmed) {
-        return; // User cancelled, don't close
+      
+      if (action === 'save') {
+        // User wants to save, save first then close
+        try {
+          await handleSave();
+          onClose();
+        } catch (error) {
+          // Save failed, don't close
+          console.error('Failed to save before closing:', error);
+        }
+      } else if (action === 'discard') {
+        // User wants to discard, just close
+        onClose();
       }
+      // If action === 'cancel', stay open (don't close) so they can continue editing
+    } else {
+      onClose();
     }
-    onClose();
   };
 
   // Handle add child with unsaved changes check
@@ -838,6 +850,7 @@ const Drawer: React.FC<DrawerProps> = ({
     </DrawerOverlay>
     <AlertComponent />
     <ConfirmComponent />
+    <SaveDiscardComponent />
     </>
   );
 };

@@ -3,6 +3,7 @@
 import { useState, useCallback, useRef } from 'react';
 import AlertDialog from './AlertDialog';
 import ConfirmDialog from './ConfirmDialog';
+import SaveDiscardDialog from './SaveDiscardDialog';
 
 export const useDialog = () => {
   const [alertState, setAlertState] = useState<{ isOpen: boolean; message: string; title?: string }>({
@@ -21,8 +22,20 @@ export const useDialog = () => {
     message: '',
   });
 
+  const [saveDiscardState, setSaveDiscardState] = useState<{
+    isOpen: boolean;
+    message: string;
+    title?: string;
+    onSave?: () => void;
+    onDiscard?: () => void;
+  }>({
+    isOpen: false,
+    message: '',
+  });
+
   const alertResolverRef = useRef<(() => void) | null>(null);
   const confirmResolverRef = useRef<((confirmed: boolean) => void) | null>(null);
+  const saveDiscardResolverRef = useRef<((action: 'save' | 'discard' | 'cancel') => void) | null>(null);
 
   const alert = useCallback((message: string, title?: string): Promise<void> => {
     return new Promise<void>((resolve) => {
@@ -64,6 +77,35 @@ export const useDialog = () => {
     }
   };
 
+  const saveDiscard = useCallback((message: string, title?: string): Promise<'save' | 'discard' | 'cancel'> => {
+    return new Promise((resolve) => {
+      saveDiscardResolverRef.current = resolve;
+      setSaveDiscardState({
+        isOpen: true,
+        message,
+        title,
+        onSave: () => {
+          setSaveDiscardState({ isOpen: false, message: '', title: undefined, onSave: undefined, onDiscard: undefined });
+          resolve('save');
+          saveDiscardResolverRef.current = null;
+        },
+        onDiscard: () => {
+          setSaveDiscardState({ isOpen: false, message: '', title: undefined, onSave: undefined, onDiscard: undefined });
+          resolve('discard');
+          saveDiscardResolverRef.current = null;
+        },
+      });
+    });
+  }, []);
+
+  const handleSaveDiscardCancel = () => {
+    setSaveDiscardState({ isOpen: false, message: '', title: undefined, onSave: undefined, onDiscard: undefined });
+    if (saveDiscardResolverRef.current) {
+      saveDiscardResolverRef.current('cancel');
+      saveDiscardResolverRef.current = null;
+    }
+  };
+
   const AlertComponent = () => (
     <AlertDialog
       isOpen={alertState.isOpen}
@@ -88,11 +130,32 @@ export const useDialog = () => {
     />
   );
 
+  const SaveDiscardComponent = () => (
+    <SaveDiscardDialog
+      isOpen={saveDiscardState.isOpen}
+      message={saveDiscardState.message}
+      title={saveDiscardState.title}
+      onSave={() => {
+        if (saveDiscardState.onSave) {
+          saveDiscardState.onSave();
+        }
+      }}
+      onDiscard={() => {
+        if (saveDiscardState.onDiscard) {
+          saveDiscardState.onDiscard();
+        }
+      }}
+      onCancel={handleSaveDiscardCancel}
+    />
+  );
+
   return {
     alert,
     confirm,
+    saveDiscard,
     AlertComponent,
     ConfirmComponent,
+    SaveDiscardComponent,
   };
 };
 

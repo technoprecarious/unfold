@@ -311,14 +311,7 @@ const TerminalComponent: React.FC<TerminalComponentProps> = ({ onDataUpdate }) =
           }
 
           // Write welcome message
-          terminal.writeln('UNFOLD CLI (Homebrew-style)');
-          terminal.writeln('');
-          terminal.writeln('Quick commands:');
-          terminal.writeln('  list programs      or just: prg');
-          terminal.writeln('  list tasks         or just: tsk');
-          terminal.writeln('');
-          terminal.writeln('  create task "Fix bug"');
-          terminal.writeln('  info task <id>');
+          terminal.writeln('UNFOLD CLI');
           terminal.writeln('');
           terminal.writeln('Type "help" for quick reference or "man" for full manual.');
           terminal.writeln('');

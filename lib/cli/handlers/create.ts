@@ -196,7 +196,7 @@ export class CreateHandler {
   /**
    * Create program
    */
-  private async createProgram(title: string, flags: Record<string, string>): Promise<void> {
+  private async createProgram(title: string, flags: Record<string, string | undefined>): Promise<void> {
     const data: Omit<Program, 'id' | 'createdAt' | 'updatedAt'> = {
       title,
       description: flags.description,
@@ -223,7 +223,7 @@ export class CreateHandler {
   /**
    * Create project
    */
-  private async createProject(title: string, parentId: string, flags: Record<string, string>): Promise<void> {
+  private async createProject(title: string, parentId: string, flags: Record<string, string | undefined>): Promise<void> {
     const data: Omit<Project, 'id' | 'createdAt' | 'updatedAt'> = {
       title,
       parentId,
@@ -252,7 +252,7 @@ export class CreateHandler {
   /**
    * Create task
    */
-  private async createTask(title: string, parentId: string, flags: Record<string, string>): Promise<void> {
+  private async createTask(title: string, parentId: string, flags: Record<string, string | undefined>): Promise<void> {
     const data: Omit<Task, 'id' | 'createdAt' | 'updatedAt'> = {
       title,
       parentId,
@@ -278,7 +278,7 @@ export class CreateHandler {
   /**
    * Create subtask
    */
-  private async createSubtask(title: string, parentId: string, flags: Record<string, string>): Promise<void> {
+  private async createSubtask(title: string, parentId: string, flags: Record<string, string | undefined>): Promise<void> {
     const data: Omit<Subtask, 'id' | 'createdAt' | 'updatedAt'> = {
       title,
       parentId,

@@ -179,38 +179,59 @@ const CircularTimetable: React.FC<CircularTimetableProps> = ({ items, selectedDa
     return markers;
   };
 
-  // Get radius range based on level and whether item has children
+  // Helper function to check if two time ranges overlap
+  const timeRangesOverlap = (start1: number, end1: number, start2: number, end2: number): boolean => {
+    // Normalize times (handle wrap-around)
+    let normalizedEnd1 = end1;
+    let normalizedEnd2 = end2;
+    
+    if (end1 < start1) {
+      normalizedEnd1 = end1 + 24;
+    }
+    if (end2 < start2) {
+      normalizedEnd2 = end2 + 24;
+    }
+    
+    // Check overlap
+    return start1 < normalizedEnd2 && start2 < normalizedEnd1;
+  };
+
+  // Get radius range based on level and whether item has children in the same timeslot
   const getRadiusRange = (item: TimetableItem): { inner: number; outer: number } => {
     const itemLevel = item.level ?? 2;
     
-    // Check if item has children (for daily view: tasks with subtasks)
-    const hasChildren = items.some(otherItem => otherItem.parentId === item.id);
-    
     // For daily view: tasks (level 2) behavior
     if (itemLevel === 2) {
-      if (!hasChildren) {
-        // Task without subtasks: fill entire radius (0-100%)
+      // Check if there are subtasks (level 3) that overlap with this task's timeslot
+      const hasOverlappingSubtasks = items.some(otherItem => 
+        otherItem.level === 3 && 
+        otherItem.parentId === item.id &&
+        timeRangesOverlap(item.startTime, item.endTime, otherItem.startTime, otherItem.endTime)
+      );
+      
+      if (!hasOverlappingSubtasks) {
+        // Task without overlapping subtasks: fill entire radius (0-100%)
         return { inner: 0, outer: radius };
       } else {
-        // Task with subtasks: fill from center to 75% (0-75%)
-        return { inner: 0, outer: radius * 0.75 };
+        // Task with overlapping subtasks: fill from center to 60% (0-60%)
+        return { inner: 0, outer: radius * 0.6 };
       }
     }
     
     // Level 0 (Program): 0% to 25% of radius
     // Level 1 (Project): 25% to 50% of radius
-    // Level 3 (Subtask): 75% to 100% of radius
+    // Level 3 (Subtask): 60% to 100% of radius
     const levelRanges = [
       { inner: 0, outer: radius * 0.25 },           // Level 0
       { inner: radius * 0.25, outer: radius * 0.5 }, // Level 1
-      { inner: radius * 0.75, outer: radius },       // Level 3
+      { inner: radius * 0.6, outer: radius },         // Level 3
     ];
     
     const clampedLevel = Math.max(0, Math.min(3, itemLevel));
     // Level 2 is handled above, so skip it in the array (use index 0, 1, or 2 for levels 0, 1, 3)
     if (clampedLevel === 2) {
       // This shouldn't happen for level 2, but fallback
-      return { inner: 0, outer: radius * 0.75 };
+      return { inner: 0, outer: radius * 0.6 };
     }
     // Map level 3 to index 2
     const index = clampedLevel === 3 ? 2 : clampedLevel;
@@ -446,38 +467,38 @@ const CircularTimetable: React.FC<CircularTimetableProps> = ({ items, selectedDa
       >
         {/* Define fill patterns */}
         <defs>
-          {/* Hatched pattern - less dense, 45 degree tilt */}
+          {/* Hatched pattern - dense, 45 degree tilt */}
           <pattern
             id="hatchPattern"
             x="0"
             y="0"
-            width="16"
-            height="16"
+            width="8"
+            height="8"
             patternUnits="userSpaceOnUse"
-            patternTransform="rotate(45 8 8)"
+            patternTransform="rotate(45 4 4)"
           >
             <line
               x1="0"
-              y1="8"
-              x2="16"
-              y2="8"
+              y1="4"
+              x2="8"
+              y2="4"
               stroke={patternColor}
               strokeWidth="0.5"
             />
           </pattern>
-          {/* Dotted pattern - less dense */}
+          {/* Dotted pattern - dense */}
           <pattern
             id="dotPattern"
             x="0"
             y="0"
-            width="12"
-            height="12"
+            width="6"
+            height="6"
             patternUnits="userSpaceOnUse"
           >
             <circle
-              cx="6"
-              cy="6"
-              r="1.2"
+              cx="3"
+              cy="3"
+              r="1"
               fill={patternColor}
             />
           </pattern>
