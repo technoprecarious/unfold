@@ -9,16 +9,19 @@ import {
   query,
   where,
 } from 'firebase/firestore';
-import { db, auth } from '../firebase/config';
+import { db, auth, isFirebaseInitialized } from '../firebase/config';
 import { Task } from '../types/types';
 import { generateId } from '../utils/idGenerator';
 import { removeUndefined } from './utils';
 
-const getTasksCollection = (uid: string) => 
-  collection(db, `users/${uid}/tasks`);
+const getTasksCollection = (uid: string) => {
+  if (!db) throw new Error('Firebase not initialized');
+  return collection(db, `users/${uid}/tasks`);
+};
 
 export const getTasks = async (parentId?: string): Promise<Task[]> => {
-  const user = auth.currentUser;
+  if (!isFirebaseInitialized() || !db) throw new Error('Firebase not initialized');
+  const user = auth?.currentUser || null;
   if (!user) throw new Error('User not authenticated');
   
   const tasksCollection = getTasksCollection(user.uid);
@@ -39,7 +42,8 @@ export const getTasks = async (parentId?: string): Promise<Task[]> => {
 };
 
 export const getTask = async (taskId: string): Promise<Task | null> => {
-  const user = auth.currentUser;
+  if (!isFirebaseInitialized() || !db) throw new Error('Firebase not initialized');
+  const user = auth?.currentUser || null;
   if (!user) throw new Error('User not authenticated');
   
   const taskDoc = doc(db, `users/${user.uid}/tasks/${taskId}`);
@@ -57,7 +61,8 @@ export const getTask = async (taskId: string): Promise<Task | null> => {
 };
 
 export const createTask = async (taskData: Omit<Task, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> => {
-  const user = auth.currentUser;
+  if (!isFirebaseInitialized() || !db) throw new Error('Firebase not initialized');
+  const user = auth?.currentUser || null;
   if (!user) throw new Error('User not authenticated');
   
   const taskId = generateId();
@@ -76,7 +81,8 @@ export const createTask = async (taskData: Omit<Task, 'id' | 'createdAt' | 'upda
 };
 
 export const updateTask = async (taskId: string, updates: Partial<Omit<Task, 'id' | 'createdAt'>>): Promise<void> => {
-  const user = auth.currentUser;
+  if (!isFirebaseInitialized() || !db) throw new Error('Firebase not initialized');
+  const user = auth?.currentUser || null;
   if (!user) throw new Error('User not authenticated');
   
   console.log('🟠 updateTask - updates received:', JSON.stringify(updates, null, 2));
@@ -111,7 +117,8 @@ export const updateTask = async (taskId: string, updates: Partial<Omit<Task, 'id
 };
 
 export const deleteTask = async (taskId: string): Promise<void> => {
-  const user = auth.currentUser;
+  if (!isFirebaseInitialized() || !db) throw new Error('Firebase not initialized');
+  const user = auth?.currentUser || null;
   if (!user) throw new Error('User not authenticated');
   
   const taskDoc = doc(db, `users/${user.uid}/tasks/${taskId}`);

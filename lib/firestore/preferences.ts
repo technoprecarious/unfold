@@ -1,5 +1,5 @@
 import { doc, getDoc, setDoc, onSnapshot, Unsubscribe } from 'firebase/firestore';
-import { db, auth } from '../firebase/config';
+import { db, auth, isFirebaseInitialized } from '../firebase/config';
 
 export type ColumnKey = 'priority' | 'time' | 'status' | 'parent' | 'tag' | 'recurrence';
 export type ThemeMode = 'dark' | 'light'; // Added for theme preference
@@ -14,10 +14,14 @@ const DEFAULT_PREFERENCES: UserPreferences = {
   theme: 'dark', // Default theme
 };
 
-const getPreferencesDoc = (uid: string) => doc(db, `users/${uid}/preferences/settings`);
+const getPreferencesDoc = (uid: string) => {
+  if (!db) throw new Error('Firebase not initialized');
+  return doc(db, `users/${uid}/preferences/settings`);
+};
 
 export const getUserPreferences = async (): Promise<UserPreferences> => {
-  const user = auth.currentUser;
+  if (!isFirebaseInitialized() || !db) return DEFAULT_PREFERENCES;
+  const user = auth?.currentUser || null;
   if (!user) return DEFAULT_PREFERENCES;
   
   try {
@@ -37,7 +41,8 @@ export const getUserPreferences = async (): Promise<UserPreferences> => {
 };
 
 export const updateUserPreferences = async (preferences: Partial<UserPreferences>): Promise<void> => {
-  const user = auth.currentUser;
+  if (!isFirebaseInitialized() || !db) throw new Error('Firebase not initialized');
+  const user = auth?.currentUser || null;
   if (!user) throw new Error('User not authenticated');
   
   const prefDoc = getPreferencesDoc(user.uid);
@@ -53,7 +58,8 @@ export const updateUserPreferences = async (preferences: Partial<UserPreferences
 export const subscribeToUserPreferences = (
   callback: (preferences: UserPreferences) => void
 ): Unsubscribe | null => {
-  const user = auth.currentUser;
+  if (!isFirebaseInitialized() || !db) return null;
+  const user = auth?.currentUser || null;
   if (!user) return null;
   
   const prefDoc = getPreferencesDoc(user.uid);

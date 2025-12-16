@@ -18,7 +18,7 @@ import { getTasks, getTask, createTask, deleteTask, updateTask } from '@/lib/fir
 import { getSubtasks, getSubtask, createSubtask, deleteSubtask, updateSubtask } from '@/lib/firestore/subtasks';
 import { itemsToTimetable } from '@/lib/utils/timetable/timetableUtils';
 import { TimetableItem, Program, Project, Task, Subtask, Priority } from '@/lib/types/types';
-import { auth } from '@/lib/firebase/config';
+import { auth, isFirebaseInitialized } from '@/lib/firebase/config';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import AccountDrawer from '@/components/drawers/AccountDrawer';
 
@@ -221,6 +221,13 @@ export default function Home() {
 
   // Initialize auth and load data
   useEffect(() => {
+    if (!isFirebaseInitialized() || !auth) {
+      // Firebase not initialized (e.g., missing config in deploy preview)
+      setLoading(false);
+      setError(null);
+      return;
+    }
+    
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
       if (user) {

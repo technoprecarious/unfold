@@ -9,16 +9,19 @@ import {
   query,
   where,
 } from 'firebase/firestore';
-import { db, auth } from '../firebase/config';
+import { db, auth, isFirebaseInitialized } from '../firebase/config';
 import { Project } from '../types/types';
 import { generateId } from '../utils/idGenerator';
 import { removeUndefined } from './utils';
 
-const getProjectsCollection = (uid: string) => 
-  collection(db, `users/${uid}/projects`);
+const getProjectsCollection = (uid: string) => {
+  if (!db) throw new Error('Firebase not initialized');
+  return collection(db, `users/${uid}/projects`);
+};
 
 export const getProjects = async (parentId?: string): Promise<Project[]> => {
-  const user = auth.currentUser;
+  if (!isFirebaseInitialized() || !db) throw new Error('Firebase not initialized');
+  const user = auth?.currentUser || null;
   if (!user) throw new Error('User not authenticated');
   
   const projectsCollection = getProjectsCollection(user.uid);
@@ -39,7 +42,8 @@ export const getProjects = async (parentId?: string): Promise<Project[]> => {
 };
 
 export const getProject = async (projectId: string): Promise<Project | null> => {
-  const user = auth.currentUser;
+  if (!isFirebaseInitialized() || !db) throw new Error('Firebase not initialized');
+  const user = auth?.currentUser || null;
   if (!user) throw new Error('User not authenticated');
   
   const projectDoc = doc(db, `users/${user.uid}/projects/${projectId}`);
@@ -57,7 +61,8 @@ export const getProject = async (projectId: string): Promise<Project | null> => 
 };
 
 export const createProject = async (projectData: Omit<Project, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> => {
-  const user = auth.currentUser;
+  if (!isFirebaseInitialized() || !db) throw new Error('Firebase not initialized');
+  const user = auth?.currentUser || null;
   if (!user) throw new Error('User not authenticated');
   
   const projectId = generateId();
@@ -76,7 +81,8 @@ export const createProject = async (projectData: Omit<Project, 'id' | 'createdAt
 };
 
 export const updateProject = async (projectId: string, updates: Partial<Omit<Project, 'id' | 'createdAt'>>): Promise<void> => {
-  const user = auth.currentUser;
+  if (!isFirebaseInitialized() || !db) throw new Error('Firebase not initialized');
+  const user = auth?.currentUser || null;
   if (!user) throw new Error('User not authenticated');
   
   const projectDoc = doc(db, `users/${user.uid}/projects/${projectId}`);
@@ -103,7 +109,8 @@ export const updateProject = async (projectId: string, updates: Partial<Omit<Pro
 };
 
 export const deleteProject = async (projectId: string): Promise<void> => {
-  const user = auth.currentUser;
+  if (!isFirebaseInitialized() || !db) throw new Error('Firebase not initialized');
+  const user = auth?.currentUser || null;
   if (!user) throw new Error('User not authenticated');
   
   const projectDoc = doc(db, `users/${user.uid}/projects/${projectId}`);

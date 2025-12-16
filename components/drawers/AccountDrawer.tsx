@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { auth } from '@/lib/firebase/config';
+import { auth, isFirebaseInitialized } from '@/lib/firebase/config';
 import {
   GoogleAuthProvider,
   signInWithPopup,
@@ -40,7 +40,7 @@ const AccountDrawer: React.FC<AccountDrawerProps> = ({ isOpen, onClose }) => {
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
 
   useEffect(() => {
-    if (!auth) return;
+    if (!isFirebaseInitialized() || !auth) return;
     const unsub = onAuthStateChanged(auth, (u) => {
       setUser(u);
     });

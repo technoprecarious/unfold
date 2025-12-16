@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import styled from 'styled-components';
 import { Eye, EyeOff } from 'lucide-react';
-import { auth } from '@/lib/firebase/config';
+import { auth, isFirebaseInitialized } from '@/lib/firebase/config';
 import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, User } from 'firebase/auth';
 
 export default function LoginPage() {
@@ -17,6 +17,9 @@ export default function LoginPage() {
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
+    if (!isFirebaseInitialized() || !auth) {
+      return;
+    }
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
       if (user) {

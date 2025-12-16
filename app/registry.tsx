@@ -17,8 +17,12 @@ export default function StyledComponentsRegistry({
     return <>{styles}</>;
   });
 
-  if (typeof window !== 'undefined') return <>{children}</>;
+  // On client-side, just render children (styles are already injected)
+  if (typeof window !== 'undefined') {
+    return <>{children}</>;
+  }
 
+  // On server-side, wrap with StyleSheetManager to collect styles
   return (
     <StyleSheetManager sheet={styledComponentsStyleSheet.instance}>
       {children}

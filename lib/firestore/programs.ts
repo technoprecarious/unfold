@@ -9,16 +9,19 @@ import {
   query,
   where,
 } from 'firebase/firestore';
-import { db, auth } from '../firebase/config';
+import { db, auth, isFirebaseInitialized } from '../firebase/config';
 import { Program } from '../types/types';
 import { generateId } from '../utils/idGenerator';
 import { removeUndefined } from './utils';
 
-const getProgramsCollection = (uid: string) => 
-  collection(db, `users/${uid}/programs`);
+const getProgramsCollection = (uid: string) => {
+  if (!db) throw new Error('Firebase not initialized');
+  return collection(db, `users/${uid}/programs`);
+};
 
 export const getPrograms = async (): Promise<Program[]> => {
-  const user = auth.currentUser;
+  if (!isFirebaseInitialized() || !db) throw new Error('Firebase not initialized');
+  const user = auth?.currentUser || null;
   if (!user) throw new Error('User not authenticated');
   
   const programsCollection = getProgramsCollection(user.uid);
@@ -33,7 +36,8 @@ export const getPrograms = async (): Promise<Program[]> => {
 };
 
 export const getProgram = async (programId: string): Promise<Program | null> => {
-  const user = auth.currentUser;
+  if (!isFirebaseInitialized() || !db) throw new Error('Firebase not initialized');
+  const user = auth?.currentUser || null;
   if (!user) throw new Error('User not authenticated');
   
   const programDoc = doc(db, `users/${user.uid}/programs/${programId}`);
@@ -51,7 +55,8 @@ export const getProgram = async (programId: string): Promise<Program | null> => 
 };
 
 export const createProgram = async (programData: Omit<Program, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> => {
-  const user = auth.currentUser;
+  if (!isFirebaseInitialized() || !db) throw new Error('Firebase not initialized');
+  const user = auth?.currentUser || null;
   if (!user) throw new Error('User not authenticated');
   
   const programId = generateId();
@@ -70,7 +75,8 @@ export const createProgram = async (programData: Omit<Program, 'id' | 'createdAt
 };
 
 export const updateProgram = async (programId: string, updates: Partial<Omit<Program, 'id' | 'createdAt'>>): Promise<void> => {
-  const user = auth.currentUser;
+  if (!isFirebaseInitialized() || !db) throw new Error('Firebase not initialized');
+  const user = auth?.currentUser || null;
   if (!user) throw new Error('User not authenticated');
   
   const programDoc = doc(db, `users/${user.uid}/programs/${programId}`);
@@ -97,7 +103,8 @@ export const updateProgram = async (programId: string, updates: Partial<Omit<Pro
 };
 
 export const deleteProgram = async (programId: string): Promise<void> => {
-  const user = auth.currentUser;
+  if (!isFirebaseInitialized() || !db) throw new Error('Firebase not initialized');
+  const user = auth?.currentUser || null;
   if (!user) throw new Error('User not authenticated');
   
   const programDoc = doc(db, `users/${user.uid}/programs/${programId}`);

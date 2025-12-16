@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { Program, Project, Task, Subtask } from '@/lib/types/types';
 import { timeToHours } from '@/lib/utils/timetable/timetableUtils';
 import { getUserPreferences, subscribeToUserPreferences, ColumnKey } from '@/lib/firestore/preferences';
-import { auth } from '@/lib/firebase/config';
+import { auth, isFirebaseInitialized } from '@/lib/firebase/config';
 import { onAuthStateChanged, User } from 'firebase/auth';
 
 interface DatabasePanelProps {
@@ -169,13 +169,18 @@ const DatabasePanel: React.FC<DatabasePanelProps> = ({
     };
 
     // Listen for auth state changes
-    const unsubscribeAuth = onAuthStateChanged(auth, async (currentUser) => {
-      await setupSubscription(currentUser);
-    });
+    let unsubscribeAuth: (() => void) | null = null;
+    if (isFirebaseInitialized() && auth) {
+      unsubscribeAuth = onAuthStateChanged(auth, async (currentUser) => {
+        await setupSubscription(currentUser);
+      });
+    }
 
     // Cleanup subscriptions on unmount
     return () => {
-      unsubscribeAuth();
+      if (unsubscribeAuth) {
+        unsubscribeAuth();
+      }
       if (unsubscribePrefs) {
         unsubscribePrefs();
       }

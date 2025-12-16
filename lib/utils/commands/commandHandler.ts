@@ -1553,7 +1553,7 @@ export class CommandHandler {
   private async handleWhoAmI() {
     try {
       const { auth } = await import('@/lib/firebase/config');
-      const user = auth.currentUser;
+      const user = auth?.currentUser || null;
       
       if (!user) {
         this.terminal.writeln('\nNot authenticated. Please wait for authentication to complete.');
@@ -1584,7 +1584,7 @@ export class CommandHandler {
   private async handleVerify() {
     try {
       const { auth } = await import('@/lib/firebase/config');
-      const user = auth.currentUser;
+      const user = auth?.currentUser || null;
       
       if (!user) {
         this.terminal.writeln('\nNot authenticated. Please wait for authentication to complete.');

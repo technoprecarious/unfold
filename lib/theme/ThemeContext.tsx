@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { getUserPreferences, updateUserPreferences, ThemeMode } from '@/lib/firestore/preferences';
-import { auth } from '@/lib/firebase/config';
+import { auth, isFirebaseInitialized } from '@/lib/firebase/config';
 import { onAuthStateChanged } from 'firebase/auth';
 
 interface ThemeContextType {
@@ -19,6 +19,9 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
   useEffect(() => {
     // Listen for auth state changes
+    if (!isFirebaseInitialized() || !auth) {
+      return;
+    }
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
     });

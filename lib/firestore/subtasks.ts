@@ -9,16 +9,19 @@ import {
   query,
   where,
 } from 'firebase/firestore';
-import { db, auth } from '../firebase/config';
+import { db, auth, isFirebaseInitialized } from '../firebase/config';
 import { Subtask } from '../types/types';
 import { generateId } from '../utils/idGenerator';
 import { removeUndefined } from './utils';
 
-const getSubtasksCollection = (uid: string) => 
-  collection(db, `users/${uid}/subtasks`);
+const getSubtasksCollection = (uid: string) => {
+  if (!db) throw new Error('Firebase not initialized');
+  return collection(db, `users/${uid}/subtasks`);
+};
 
 export const getSubtasks = async (parentId?: string): Promise<Subtask[]> => {
-  const user = auth.currentUser;
+  if (!isFirebaseInitialized() || !db) throw new Error('Firebase not initialized');
+  const user = auth?.currentUser || null;
   if (!user) throw new Error('User not authenticated');
   
   const subtasksCollection = getSubtasksCollection(user.uid);
@@ -39,7 +42,8 @@ export const getSubtasks = async (parentId?: string): Promise<Subtask[]> => {
 };
 
 export const getSubtask = async (subtaskId: string): Promise<Subtask | null> => {
-  const user = auth.currentUser;
+  if (!isFirebaseInitialized() || !db) throw new Error('Firebase not initialized');
+  const user = auth?.currentUser || null;
   if (!user) throw new Error('User not authenticated');
   
   const subtaskDoc = doc(db, `users/${user.uid}/subtasks/${subtaskId}`);
@@ -57,7 +61,8 @@ export const getSubtask = async (subtaskId: string): Promise<Subtask | null> => 
 };
 
 export const createSubtask = async (subtaskData: Omit<Subtask, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> => {
-  const user = auth.currentUser;
+  if (!isFirebaseInitialized() || !db) throw new Error('Firebase not initialized');
+  const user = auth?.currentUser || null;
   if (!user) throw new Error('User not authenticated');
   
   const subtaskId = generateId();
@@ -76,7 +81,8 @@ export const createSubtask = async (subtaskData: Omit<Subtask, 'id' | 'createdAt
 };
 
 export const updateSubtask = async (subtaskId: string, updates: Partial<Omit<Subtask, 'id' | 'createdAt'>>): Promise<void> => {
-  const user = auth.currentUser;
+  if (!isFirebaseInitialized() || !db) throw new Error('Firebase not initialized');
+  const user = auth?.currentUser || null;
   if (!user) throw new Error('User not authenticated');
   
   const subtaskDoc = doc(db, `users/${user.uid}/subtasks/${subtaskId}`);
@@ -103,7 +109,8 @@ export const updateSubtask = async (subtaskId: string, updates: Partial<Omit<Sub
 };
 
 export const deleteSubtask = async (subtaskId: string): Promise<void> => {
-  const user = auth.currentUser;
+  if (!isFirebaseInitialized() || !db) throw new Error('Firebase not initialized');
+  const user = auth?.currentUser || null;
   if (!user) throw new Error('User not authenticated');
   
   const subtaskDoc = doc(db, `users/${user.uid}/subtasks/${subtaskId}`);
