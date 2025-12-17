@@ -50,7 +50,7 @@ export default ConfirmDialog;
 const ConfirmMessage = styled.div`
   margin-bottom: 1.5rem;
   line-height: 1.6;
-  color: #DEDEE5;
+  color: var(--text-primary, #DEDEE5);
 `;
 
 const ConfirmActions = styled.div`
@@ -61,18 +61,24 @@ const ConfirmActions = styled.div`
 `;
 
 const ConfirmButton = styled.button<{ $secondary?: boolean; $danger?: boolean }>`
-  background: ${props => 
-    props.$danger ? '#3a1f1f' : 
-    props.$secondary ? '#2a2a2d' : 
-    '#2a2a2d'};
-  border: 1px solid ${props => 
-    props.$danger ? '#5a2f2f' : 
-    props.$secondary ? '#3a3a3d' : 
-    '#3a3a3d'};
-  color: ${props => 
-    props.$danger ? '#ff6a6a' : 
-    props.$secondary ? '#8A8A95' : 
-    '#DEDEE5'};
+  background: ${props =>
+    props.$danger
+      ? '#3a1f1f'
+      : props.$secondary
+      ? 'var(--bg-tertiary, #2a2a2d)'
+      : 'var(--bg-tertiary, #2a2a2d)'};
+  border: 1px solid ${props =>
+    props.$danger
+      ? '#5a2f2f'
+      : props.$secondary
+      ? 'var(--border-tertiary, #3a3a3d)'
+      : 'var(--border-tertiary, #3a3a3d)'};
+  color: ${props =>
+    props.$danger
+      ? '#ff6a6a'
+      : props.$secondary
+      ? 'var(--text-secondary, #8A8A95)'
+      : 'var(--text-primary, #DEDEE5)'};
   padding: 0.625rem 1.5rem;
   font-size: 12px;
   font-family: Helvetica, Arial, sans-serif;
@@ -82,18 +88,24 @@ const ConfirmButton = styled.button<{ $secondary?: boolean; $danger?: boolean }>
   text-align: center;
 
   &:hover {
-    background: ${props => 
-      props.$danger ? '#4a2f2f' : 
-      props.$secondary ? '#3a3a3d' : 
-      '#3a3a3d'};
-    border-color: ${props => 
-      props.$danger ? '#6a3f3f' : 
-      props.$secondary ? '#4a4a4d' : 
-      '#4a4a4d'};
-    color: ${props => 
-      props.$danger ? '#ffaaaa' : 
-      props.$secondary ? '#DEDEE5' : 
-      '#ffffff'};
+    background: ${props =>
+      props.$danger
+        ? '#4a2f2f'
+        : props.$secondary
+        ? 'var(--bg-hover, #3a3a3d)'
+        : 'var(--bg-hover, #3a3a3d)'};
+    border-color: ${props =>
+      props.$danger
+        ? '#6a3f3f'
+        : props.$secondary
+        ? 'var(--border-secondary, #4a4a4d)'
+        : 'var(--border-secondary, #4a4a4d)'};
+    color: ${props =>
+      props.$danger
+        ? '#ffaaaa'
+        : props.$secondary
+        ? 'var(--text-primary, #DEDEE5)'
+        : '#ffffff'};
   }
   
   &:active {

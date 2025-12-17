@@ -27,6 +27,7 @@ export default AlertDialog;
 const AlertMessage = styled.div`
   margin-bottom: 1.5rem;
   line-height: 1.6;
+  color: var(--text-primary, #DEDEE5);
 `;
 
 const AlertActions = styled.div`
@@ -36,9 +37,9 @@ const AlertActions = styled.div`
 `;
 
 const AlertButton = styled.button`
-  background: #2a2a2d;
-  border: 1px solid #3a3a3d;
-  color: #DEDEE5;
+  background: var(--bg-tertiary, #2a2a2d);
+  border: 1px solid var(--border-tertiary, #3a3a3d);
+  color: var(--text-primary, #DEDEE5);
   padding: 0.5rem 1.5rem;
   font-size: 12px;
   font-family: Helvetica, Arial, sans-serif;
@@ -46,8 +47,8 @@ const AlertButton = styled.button`
   transition: all 0.2s;
 
   &:hover {
-    background: #3a3a3d;
-    border-color: #4a4a4d;
+    background: var(--bg-hover, #3a3a3d);
+    border-color: var(--border-secondary, #4a4a4d);
   }
 `;
 

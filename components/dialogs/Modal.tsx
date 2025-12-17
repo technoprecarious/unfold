@@ -77,8 +77,8 @@ const ModalOverlay = styled.div`
 `;
 
 const ModalContent = styled.div<{ $width: string }>`
-  background: #161619;
-  border: 1px solid #2a2a2d;
+  background: var(--bg-secondary, #161619);
+  border: 1px solid var(--border-primary, #2a2a2d);
   border-radius: 0;
   width: ${props => props.$width};
   max-width: calc(100vw - 2rem);
@@ -108,14 +108,14 @@ const ModalHeader = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem;
-  border-bottom: 1px solid #2a2a2d;
+  border-bottom: 1px solid var(--border-primary, #2a2a2d);
 `;
 
 const ModalTitle = styled.h3`
   margin: 0;
   font-size: 14px;
   font-weight: 400;
-  color: #DEDEE5;
+  color: var(--text-primary, #DEDEE5);
   font-family: Helvetica, Arial, sans-serif;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -124,7 +124,7 @@ const ModalTitle = styled.h3`
 const CloseButton = styled.button`
   background: none;
   border: none;
-  color: #8A8A95;
+  color: var(--text-secondary, #8A8A95);
   font-size: 28px;
   line-height: 1;
   cursor: pointer;
@@ -138,7 +138,7 @@ const CloseButton = styled.button`
   font-family: Helvetica, Arial, sans-serif;
 
   &:hover {
-    color: #DEDEE5;
+    color: var(--text-primary, #DEDEE5);
   }
   
   &:active {
@@ -148,7 +148,7 @@ const CloseButton = styled.button`
 
 const ModalBody = styled.div`
   padding: 1.5rem;
-  color: #DEDEE5;
+  color: var(--text-primary, #DEDEE5);
   font-size: 12px;
   font-family: Helvetica, Arial, sans-serif;
   overflow-y: auto;
