@@ -23,3 +23,4 @@ export const mapAuthError = (error: unknown): string => {
   return 'Something went wrong. Please try again.';
 };
 
+

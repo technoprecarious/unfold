@@ -55,8 +55,13 @@ export default function LoginPage() {
       router.push('/');
     } catch (err: any) {
       console.error('Google sign-in error:', err);
+      // If user just closed the popup, quietly reset and do nothing
+      if (err?.code === 'auth/popup-closed-by-user') {
+        return;
+      }
       setError(mapAuthError(err));
     } finally {
+      // Always re-enable the UI
       setIsSigningIn(false);
     }
   };
@@ -196,6 +201,16 @@ const LandingInput = styled.input`
 
   &::placeholder {
     color: #8a8a95;
+  }
+
+  &::selection {
+    background: #FFA100;
+    color: #000000;
+  }
+
+  &::-moz-selection {
+    background: #FFA100;
+    color: #000000;
   }
 `;
 

@@ -87,6 +87,9 @@ export default function SignupPage() {
       router.push('/');
     } catch (err: any) {
       console.error('Google sign-in error:', err);
+      if (err?.code === 'auth/popup-closed-by-user') {
+        return;
+      }
       setError(mapAuthError(err));
     } finally {
       setIsSigningUp(false);
@@ -273,6 +276,16 @@ const LandingInput = styled.input`
 
   &::placeholder {
     color: #8a8a95;
+  }
+
+  &::selection {
+    background: #FFA100;
+    color: #000000;
+  }
+
+  &::-moz-selection {
+    background: #FFA100;
+    color: #000000;
   }
 `;
 
