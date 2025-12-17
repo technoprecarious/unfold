@@ -109,7 +109,7 @@ const Drawer: React.FC<DrawerProps> = ({
       }
       // If action === 'cancel', stay open (don't close) so they can continue editing
     } else {
-      onClose();
+    onClose();
     }
   };
 

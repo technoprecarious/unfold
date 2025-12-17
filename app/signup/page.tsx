@@ -278,16 +278,6 @@ const LandingInput = styled.input`
   &::placeholder {
     color: var(--text-secondary, #8a8a95);
   }
-
-  &::selection {
-    background: #ff6a6a;
-    color: #000000;
-  }
-
-  &::-moz-selection {
-    background: #ff6a6a;
-    color: #000000;
-  }
 `;
 
 const LandingPasswordWrapper = styled.div`

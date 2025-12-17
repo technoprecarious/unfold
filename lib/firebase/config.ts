@@ -61,30 +61,30 @@ if (typeof window !== 'undefined') {
       console.warn('Firebase config not properly set. Skipping Firebase initialization.');
       // Don't initialize Firebase if config is invalid
     } else {
-      // Check if Firebase is already initialized
-      if (!getApps().length) {
-        appInstance = initializeApp(firebaseConfig);
-      } else {
-        appInstance = getApps()[0];
-      }
-      
-      // Initialize Firestore
-      dbInstance = getFirestore(appInstance);
-      
-      // Initialize Auth
-      authInstance = getAuth(appInstance);
-      
-      // Connect to emulators in development if needed
-      // Note: Only connect once, check if already connected
-      if (process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATOR === 'true') {
-        try {
+    // Check if Firebase is already initialized
+    if (!getApps().length) {
+      appInstance = initializeApp(firebaseConfig);
+    } else {
+      appInstance = getApps()[0];
+    }
+    
+    // Initialize Firestore
+    dbInstance = getFirestore(appInstance);
+    
+    // Initialize Auth
+    authInstance = getAuth(appInstance);
+    
+    // Connect to emulators in development if needed
+    // Note: Only connect once, check if already connected
+    if (process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATOR === 'true') {
+      try {
           if (dbInstance && authInstance) {
-            connectFirestoreEmulator(dbInstance, 'localhost', 8080);
-            connectAuthEmulator(authInstance, 'http://localhost:9099');
+        connectFirestoreEmulator(dbInstance, 'localhost', 8080);
+        connectAuthEmulator(authInstance, 'http://localhost:9099');
           }
-        } catch (error) {
-          // Emulators already connected, ignore error
-          console.log('Firebase emulators already connected or not available');
+      } catch (error) {
+        // Emulators already connected, ignore error
+        console.log('Firebase emulators already connected or not available');
         }
       }
     }

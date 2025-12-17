@@ -172,14 +172,14 @@ const DatabasePanel: React.FC<DatabasePanelProps> = ({
     let unsubscribeAuth: (() => void) | null = null;
     if (isFirebaseInitialized() && auth) {
       unsubscribeAuth = onAuthStateChanged(auth, async (currentUser) => {
-        await setupSubscription(currentUser);
-      });
+      await setupSubscription(currentUser);
+    });
     }
 
     // Cleanup subscriptions on unmount
     return () => {
       if (unsubscribeAuth) {
-        unsubscribeAuth();
+      unsubscribeAuth();
       }
       if (unsubscribePrefs) {
         unsubscribePrefs();
