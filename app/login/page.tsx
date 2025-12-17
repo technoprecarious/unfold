@@ -55,11 +55,11 @@ export default function LoginPage() {
       router.push('/');
     } catch (err: any) {
       console.error('Google sign-in error:', err);
-      // If user just closed the popup, quietly reset and do nothing
-      if (err?.code === 'auth/popup-closed-by-user') {
-        return;
+      // If user just closed the popup, don't show error but still reset state
+      if (err?.code !== 'auth/popup-closed-by-user') {
+        setError(mapAuthError(err));
       }
-      setError(mapAuthError(err));
+      // Don't return early - let finally block execute to re-enable UI
     } finally {
       // Always re-enable the UI
       setIsSigningIn(false);

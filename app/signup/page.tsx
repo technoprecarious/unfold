@@ -87,10 +87,11 @@ export default function SignupPage() {
       router.push('/');
     } catch (err: any) {
       console.error('Google sign-in error:', err);
-      if (err?.code === 'auth/popup-closed-by-user') {
-        return;
+      // If user just closed the popup, don't show error but still reset state
+      if (err?.code !== 'auth/popup-closed-by-user') {
+        setError(mapAuthError(err));
       }
-      setError(mapAuthError(err));
+      // Don't return early - let finally block execute to re-enable UI
     } finally {
       setIsSigningUp(false);
     }
