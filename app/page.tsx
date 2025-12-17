@@ -1290,7 +1290,7 @@ const ErrorBox = styled.div`
   right: 1rem;
   background: #1a0000;
   border: 1px solid #3a0000;
-  color: #ff8888;
+  color: #ff6a6a;
   padding: 1rem;
   font-size: 12px;
   z-index: 1000;

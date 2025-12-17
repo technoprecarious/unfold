@@ -32,7 +32,7 @@ const CircularTimetable: React.FC<CircularTimetableProps> = ({ items, selectedDa
     textTertiary: '#5a5a5a',
     patternColor: '#676767', // Dark mode default, will be updated from theme
     solidFillColor: '#161616', // Dark mode default, will be updated from theme
-    needleColor: '#8A8A95', // Dark mode default, will be updated from theme
+    needleColor: '#FFFFFF', // Current time needle color - white
   });
 
   // Detect mobile device
@@ -79,7 +79,7 @@ const CircularTimetable: React.FC<CircularTimetableProps> = ({ items, selectedDa
       // Use specific colors based on theme
       const patternColor = theme === 'light' ? '#959595' : '#676767';
       const solidFill = theme === 'light' ? '#F1F1F1' : '#161616';
-      const needleColor = theme === 'light' ? '#000000' : textSecondary; // Absolute black in light mode
+      const needleColor = '#FFFFFF'; // Current time needle color - always white
       setThemeColors({
         bgPrimary: computedStyle.getPropertyValue('--bg-primary').trim() || '#000000',
         textPrimary: computedStyle.getPropertyValue('--text-primary').trim() || '#DEDEE5',

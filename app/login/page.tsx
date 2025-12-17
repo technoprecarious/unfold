@@ -204,12 +204,12 @@ const LandingInput = styled.input`
   }
 
   &::selection {
-    background: #ff0000;
+    background: #ff6a6a;
     color: #000000;
   }
 
   &::-moz-selection {
-    background: #ff0000;
+    background: #ff6a6a;
     color: #000000;
   }
 `;

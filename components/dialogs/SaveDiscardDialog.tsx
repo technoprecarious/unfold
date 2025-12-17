@@ -77,7 +77,7 @@ const DialogButton = styled.button<{ $secondary?: boolean; $danger?: boolean }>`
     props.$secondary ? '#3a3a3d' : 
     '#3a3a3d'};
   color: ${props => 
-    props.$danger ? '#ff8888' : 
+    props.$danger ? '#ff6a6a' : 
     props.$secondary ? '#8A8A95' : 
     '#DEDEE5'};
   padding: 0.625rem 1.5rem;

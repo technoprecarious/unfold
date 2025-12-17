@@ -1046,7 +1046,7 @@ const TimeRow = styled.div`
 const ActionButton = styled.button<{ $danger?: boolean }>`
   background: transparent;
   border: none;
-  color: ${props => props.$danger ? '#ff0000' : 'var(--text-primary, #DEDEE5)'};
+  color: ${props => props.$danger ? '#ff6a6a' : 'var(--text-primary, #DEDEE5)'};
   padding: 0.5rem 1rem;
   font-size: 12px;
   font-family: Helvetica, Arial, sans-serif;
@@ -1054,7 +1054,7 @@ const ActionButton = styled.button<{ $danger?: boolean }>`
   transition: all 0.2s;
 
   &:hover:not(:disabled) {
-    color: ${props => props.$danger ? '#ff0000' : 'var(--text-primary, #ffffff)'};
+    color: ${props => props.$danger ? '#ff6a6a' : 'var(--text-primary, #ffffff)'};
     text-decoration: underline;
     text-decoration-thickness: 0.5px;
     text-underline-offset: 2px;
