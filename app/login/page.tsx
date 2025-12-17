@@ -192,7 +192,7 @@ const LandingInput = styled.input`
   border-radius: 4px;
   
   &:focus {
-    border-color: #0066ff;
+    border-color:#757575;
   }
   
   &:disabled {
@@ -204,12 +204,12 @@ const LandingInput = styled.input`
   }
 
   &::selection {
-    background: #FFA100;
+    background: #ff0000;
     color: #000000;
   }
 
   &::-moz-selection {
-    background: #FFA100;
+    background: #ff0000;
     color: #000000;
   }
 `;
@@ -284,7 +284,7 @@ const LandingLink = styled.button<{ disabled?: boolean }>`
 
 const LandingButton = styled.button<{ disabled?: boolean }>`
   background: transparent;
-  border: 1px solid var(--text-primary, #DEDEE5);
+  border: 0.5px solid var(--text-primary, #DEDEE5);
   color: var(--text-primary, #DEDEE5);
   font-size: 10px;
   font-family: Helvetica, Arial, sans-serif;

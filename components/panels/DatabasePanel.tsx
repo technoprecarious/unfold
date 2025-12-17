@@ -929,7 +929,7 @@ const DatabaseHeaderCell = styled.th<{ $alignLeft?: boolean; $alignRight?: boole
 
   ${props => props.$sortable ? `
     &:hover {
-      color: #ffffff !important;
+      color: var(--text-primary, #ffffff) !important;
       text-decoration: underline !important;
       text-decoration-thickness: 0.5px !important;
       text-underline-offset: 2px !important;
