@@ -25,16 +25,23 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  viewportFit: 'cover',
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-theme="dark">
+    <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        style={{ overflow: 'hidden', margin: 0, padding: 0, height: '100vh', width: '100vw' }}
+        style={{ margin: 0, padding: 0, minHeight: '100vh', width: '100%', overflowX: 'hidden' }}
       >
         <StyledComponentsRegistry>
           <ThemeProvider>{children}</ThemeProvider>

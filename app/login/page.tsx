@@ -134,7 +134,7 @@ export default function LoginPage() {
 const LandingContainer = styled.div`
   width: 100vw;
   height: 100vh;
-  background: #000000;
+  background: var(--bg-primary, #000000);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -149,7 +149,7 @@ const LandingContent = styled.div`
 
 const LandingTitle = styled.h1`
   font-size: 16px;
-  color: #DEDEE5;
+  color: var(--text-primary, #DEDEE5);
   letter-spacing: 0.1em;
   font-weight: normal;
   line-height: 1.2;
@@ -181,9 +181,9 @@ const LandingInputContainer = styled.div`
 const LandingInput = styled.input`
   width: 100%;
   padding: 0.75rem;
-  background: #1a1a1a;
-  border: 1px solid #1a1a1a;
-  color: #DEDEE5;
+  background: var(--bg-tertiary, #1a1a1a);
+  border: 1px solid var(--bg-tertiary, #1a1a1a);
+  color: var(--text-primary, #DEDEE5);
   font-size: 12px;
   font-family: Helvetica, Arial, sans-serif;
   outline: none;
@@ -200,7 +200,7 @@ const LandingInput = styled.input`
   }
 
   &::placeholder {
-    color: #8a8a95;
+    color: var(--text-secondary, #8a8a95);
   }
 
   &::selection {
@@ -236,7 +236,7 @@ const LandingPasswordToggle = styled.button`
   align-items: center;
   justify-content: center;
   z-index: 1;
-  color: #dedee5;
+  color: var(--text-primary, #dedee5);
   font-size: 16px;
 
   &:hover {
@@ -261,7 +261,7 @@ const LandingLinks = styled.div`
 const LandingLink = styled.button<{ disabled?: boolean }>`
   background: transparent;
   border: none;
-  color: #8A8A95;
+  color: var(--text-secondary, #8A8A95);
   font-size: 11px;
   font-family: Helvetica, Arial, sans-serif;
   cursor: pointer;
@@ -270,7 +270,7 @@ const LandingLink = styled.button<{ disabled?: boolean }>`
   text-align: left;
 
   &:hover:not(:disabled) {
-    color: #DEDEE5;
+    color: var(--text-primary, #DEDEE5);
     text-decoration: underline;
     text-decoration-thickness: 0.5px;
     text-underline-offset: 2px;
@@ -284,8 +284,8 @@ const LandingLink = styled.button<{ disabled?: boolean }>`
 
 const LandingButton = styled.button<{ disabled?: boolean }>`
   background: transparent;
-  border: 1px solid #DEDEE5;
-  color: #DEDEE5;
+  border: 1px solid var(--text-primary, #DEDEE5);
+  color: var(--text-primary, #DEDEE5);
   font-size: 10px;
   font-family: Helvetica, Arial, sans-serif;
   padding: 0.75rem 1.5rem;
@@ -295,8 +295,8 @@ const LandingButton = styled.button<{ disabled?: boolean }>`
   letter-spacing: 0.1em;
 
   &:hover:not(:disabled) {
-    background: #DEDEE5;
-    color: #000000;
+    background: var(--text-primary, #DEDEE5);
+    color: var(--bg-primary, #000000);
   }
 
   &:disabled {
@@ -319,7 +319,7 @@ const LandingError = styled.div`
 `;
 
 const LandingStatus = styled.div`
-  color: #DEDEE5;
+  color: var(--text-primary, #DEDEE5);
   font-size: 11px;
   font-family: Helvetica, Arial, sans-serif;
 `;

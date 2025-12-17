@@ -2,7 +2,7 @@ import { doc, getDoc, setDoc, onSnapshot, Unsubscribe } from 'firebase/firestore
 import { db, auth, isFirebaseInitialized } from '../firebase/config';
 
 export type ColumnKey = 'priority' | 'time' | 'status' | 'parent' | 'tag' | 'recurrence';
-export type ThemeMode = 'dark' | 'light'; // Added for theme preference
+export type ThemeMode = 'dark' | 'light' | 'system'; // Added 'system' for browser theme
 
 export interface UserPreferences {
   columnOrder: ColumnKey[];

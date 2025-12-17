@@ -441,6 +441,14 @@ const AccountDrawer: React.FC<AccountDrawerProps> = ({ isOpen, onClose }) => {
                   >
                     Light
                   </ModeButton>
+                  <ModeButton
+                    $active={theme === 'system'}
+                    $isLight={false}
+                    onClick={() => handleThemeChange('system')}
+                    disabled={isBusy}
+                  >
+                    System
+                  </ModeButton>
                 </ModeButtonGroup>
               </Value>
             </Row>
