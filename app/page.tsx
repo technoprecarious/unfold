@@ -748,9 +748,9 @@ export default function Home() {
               {hoveredItem && (
                 <>
                   <div>{hoveredItem.title}</div>
-                  <div style={{ fontSize: '10px', opacity: 0.7 }}>
+                  <HoveredItemTime>
                     {formatTime(hoveredItem.startTime)} - {formatTime(hoveredItem.endTime)}
-                  </div>
+                  </HoveredItemTime>
                 </>
               )}
             </HoveredItemName>
@@ -875,12 +875,12 @@ const mobileBreakpoint = '780px';
 
 const Container = styled.div`
   width: 100vw;
-  min-width: 375px;
+  min-width: var(--width-min-mobile);
   height: 100vh;
   overflow: hidden;
   background: var(--bg-primary, #000000);
-  font-family: Helvetica, Arial, sans-serif;
-  font-size: 12px;
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-md);
   display: flex;
   flex-direction: column;
 `;
@@ -890,30 +890,30 @@ const TopBar = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 1rem;
+  padding: 0 var(--spacing-8);
   background: var(--bg-primary, #000000);
   position: relative;
 
   @media (min-width: ${mobileBreakpoint}) {
-    padding: 0 1.5rem;
+    padding: 0 var(--spacing-12);
   }
 `;
 
 const Logo = styled.div`
-  font-size: 12px;
+  font-size: var(--font-size-md);
   color: var(--text-primary, #DEDEE5);
-  letter-spacing: 0.1em;
+  letter-spacing: var(--letter-spacing-wider);
   font-weight: normal;
-  line-height: 1.2;
+  line-height: var(--line-height-tight);
 `;
 
 const TopBarAccount = styled.div`
-  font-size: 12px;
+  font-size: var(--font-size-md);
   color: var(--text-secondary, #8A8A95);
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: var(--font-family-base);
   text-transform: lowercase;
   cursor: pointer;
-  transition: color 0.2s;
+  transition: color var(--transition-fast);
 
   &:hover {
     color: var(--text-primary, #dedee5);
@@ -925,7 +925,7 @@ const FooterBar = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding: 0 1rem;
+  padding: 0 var(--spacing-8);
   background: var(--bg-primary, #000000);
 
   @media (max-width: ${mobileBreakpoint}) {
@@ -933,7 +933,7 @@ const FooterBar = styled.div`
   }
 
   @media (min-width: ${mobileBreakpoint}) {
-    padding: 0 1.5rem;
+    padding: 0 var(--spacing-12);
   }
 `;
 
@@ -941,7 +941,7 @@ const FooterModeWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 0.25rem;
+  margin-top: var(--spacing-2);
 `;
 
 const ClockWrapper = styled.div`
@@ -957,25 +957,25 @@ const ClockWrapper = styled.div`
 const TopBarRight = styled.div`
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: var(--spacing-8);
 `;
 
 const ModeToggle = styled.div`
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--spacing-5);
 `;
 
 const ModeButton = styled.button<{ $selected: boolean; $hideOnMobile?: boolean }>`
   background: transparent;
   border: none;
   color: ${props => props.$selected ? 'var(--text-primary, #FFFFFF)' : 'var(--text-secondary, #8A8A95)'};
-  font-size: 12px;
-  font-family: Helvetica, Arial, sans-serif;
+  font-size: var(--font-size-md);
+  font-family: var(--font-family-base);
   font-weight: normal;
   cursor: pointer;
-  padding: 0.25rem 0.5rem;
-  transition: color 0.2s;
+  padding: var(--spacing-2) var(--spacing-5);
+  transition: color var(--transition-fast);
   position: relative;
   
   ${props => props.$selected ? `
@@ -994,8 +994,8 @@ const ModeButton = styled.button<{ $selected: boolean; $hideOnMobile?: boolean }
   &:hover {
     color: var(--text-primary, #FFFFFF);
     text-decoration: underline;
-    text-decoration-thickness: 0.5px;
-    text-underline-offset: 2px;
+    text-decoration-thickness: var(--underline-thickness);
+    text-underline-offset: var(--underline-offset);
   }
   
   ${props => props.$hideOnMobile ? `
@@ -1192,21 +1192,26 @@ const TimetableWrapper = styled.div`
 const HoveredItemName = styled.div`
   font-size: clamp(10px, 2.4vw, 12px);
   color: var(--text-primary, #DEDEE5);
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: var(--font-family-base);
   text-align: center;
-  opacity: 0.8;
+  opacity: var(--opacity-secondary);
   pointer-events: none;
-  line-height: 1.2;
+  line-height: var(--line-height-tight);
   max-width: 100%;
   word-wrap: break-word;
   flex-shrink: 0;
   min-height: clamp(1.5rem, 4vw, 2rem);
-  padding: 0 clamp(0.5rem, 1.5vw, 1rem);
+  padding: 0 clamp(var(--spacing-5), 1.5vw, var(--spacing-8));
 
   div {
     white-space: nowrap;
-    line-height: 1.2;
+    line-height: var(--line-height-tight);
   }
+`;
+
+const HoveredItemTime = styled.div`
+  font-size: var(--font-size-sm);
+  opacity: var(--opacity-hover);
 `;
 
 const ViewModeSelector = styled.div`
@@ -1281,20 +1286,20 @@ const LoadingMessage = styled.div`
   justify-content: center;
   height: 100vh;
   color: var(--text-primary, #DEDEE5);
-  font-size: 12px;
+  font-size: var(--font-size-md);
 `;
 
 const ErrorBox = styled.div`
   position: fixed;
-  top: 1rem;
-  right: 1rem;
+  top: var(--spacing-8);
+  right: var(--spacing-8);
   background: #1a0000;
   border: 1px solid #3a0000;
   color: #ff6a6a;
-  padding: 1rem;
-  font-size: 12px;
-  z-index: 1000;
-  max-width: 400px;
+  padding: var(--spacing-8);
+  font-size: var(--font-size-md);
+  z-index: var(--z-modal);
+  max-width: var(--width-modal-default);
   
   [data-theme="light"] & {
     background: #ffe8e8;
@@ -1312,14 +1317,14 @@ const YearlyPlaceholder = styled.div`
   align-items: center;
   justify-content: center;
   color: var(--text-secondary, #8A8A95);
-  font-size: 11px;
+  font-size: var(--font-size-base);
 
   @media (min-width: ${mobileBreakpoint}) {
-    width: 500px;
-    height: 500px;
-    max-width: 500px;
-    max-height: 500px;
-    font-size: 12px;
+    width: var(--width-timetable);
+    height: var(--width-timetable);
+    max-width: var(--width-timetable);
+    max-height: var(--width-timetable);
+    font-size: var(--font-size-md);
   }
 `;
 

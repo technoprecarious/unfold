@@ -3,6 +3,118 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  
+  /* ============================================
+     DESIGN SYSTEM CSS VARIABLES
+     ============================================ */
+  
+  /* Font Family
+     Primary font stack used throughout the application */
+  --font-family-base: Helvetica, Arial, sans-serif;
+  
+  /* Font Sizes
+     Typography scale used for consistent text sizing */
+  --font-size-xs: 9px;          /* Extra small text (e.g., column checkboxes) */
+  --font-size-sm: 10px;         /* Small text (e.g., item IDs, time info) */
+  --font-size-base: 11px;       /* Base text size (e.g., labels, data cells) */
+  --font-size-md: 12px;         /* Medium text (e.g., body text, buttons) */
+  --font-size-lg: 14px;         /* Large text (e.g., section titles, modal headers) */
+  --font-size-xl: 16px;         /* Extra large text (e.g., item titles, add buttons) */
+  --font-size-2xl: 28px;        /* 2XL text (e.g., close button icons) */
+  
+  /* Spacing Scale (rem-based)
+     Consistent spacing values for padding, margin, and gaps */
+  --spacing-1: 0.15rem;         /* 2.4px - Tiny spacing */
+  --spacing-2: 0.25rem;         /* 4px - Small spacing */
+  --spacing-3: 0.3rem;          /* 4.8px - Small-medium spacing */
+  --spacing-4: 0.4rem;          /* 6.4px - Medium-small spacing */
+  --spacing-5: 0.5rem;          /* 8px - Medium spacing */
+  --spacing-6: 0.6rem;          /* 9.6px - Medium-large spacing */
+  --spacing-7: 0.75rem;         /* 12px - Large spacing */
+  --spacing-8: 1rem;            /* 16px - Extra large spacing */
+  --spacing-12: 1.5rem;         /* 24px - 2XL spacing */
+  --spacing-16: 2rem;           /* 32px - 3XL spacing */
+  --spacing-20: 2.5rem;         /* 40px - 4XL spacing */
+  --spacing-32: 4rem;           /* 64px - 5XL spacing */
+  
+  /* Spacing Scale (px-based for precise control)
+     Fixed pixel values for specific layout needs */
+  --spacing-px-4: 4px;          /* 4px - Precise small spacing */
+  --spacing-px-10: 10px;        /* 10px - Precise medium-small spacing */
+  --spacing-px-12: 12px;        /* 12px - Precise medium spacing */
+  --spacing-px-15: 15px;        /* 15px - Column widths */
+  --spacing-px-20: 20px;        /* 20px - Precise large spacing */
+  --spacing-px-32: 32px;        /* 32px - Button/icon sizes */
+  --spacing-px-40: 40px;        /* 40px - Minimum button widths */
+  
+  /* Layout Dimensions
+     Common layout widths and breakpoints */
+  --breakpoint-mobile: 780px;   /* Mobile/tablet breakpoint (consistent with codebase usage) */
+  --width-min-mobile: 375px;    /* Minimum mobile viewport width */
+  --width-drawer-account: 360px;/* Account drawer width */
+  --width-drawer-min: 480px;    /* Drawer minimum width */
+  --width-drawer-max: 700px;    /* Drawer maximum width */
+  --width-timetable: 500px;     /* Timetable display width */
+  --width-table-max: 600px;     /* Database table maximum width */
+  --width-modal-default: 400px; /* Default modal width */
+  
+  /* Border Radius
+     Rounded corner values */
+  --radius-none: 0;             /* No rounding */
+  --radius-sm: 4px;             /* Small rounding (e.g., inputs) */
+  --radius-md: 12px;            /* Medium rounding (e.g., drawer panels) */
+  
+  /* Transitions
+     Standard animation timing */
+  --transition-fast: 0.2s;      /* Fast transitions (default hover/focus) */
+  
+  /* Z-Index Scale
+     Layering system for proper stacking context */
+  --z-base: 1;                  /* Base level */
+  --z-elevated: 2;              /* Slightly elevated */
+  --z-above: 3;                 /* Above base */
+  --z-content: 5;               /* Content above headers */
+  --z-header: 6;                /* Header/sticky elements */
+  --z-overlay: 10;              /* Overlay elements */
+  --z-drawer: 90;               /* Drawer overlay */
+  --z-drawer-content: 100;      /* Drawer panel content */
+  --z-modal: 1000;              /* Modal dialogs */
+  --z-modal-overlay: 10000;     /* Modal overlay backdrop */
+  --z-picker-overlay: 20000;    /* Picker overlay */
+  --z-picker-popup: 20001;      /* Picker popup content */
+  
+  /* Opacity Values
+     Transparency levels */
+  --opacity-disabled: 0.5;      /* Disabled state opacity */
+  --opacity-hover: 0.7;         /* Hover state opacity */
+  --opacity-secondary: 0.8;     /* Secondary content opacity */
+  
+  /* Box Shadows
+     Elevation system for depth */
+  --shadow-sm: 0 -8px 24px rgba(0, 0, 0, 0.3);      /* Small shadow (drawer panels) */
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);       /* Medium shadow (picker popups) */
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.6);       /* Large shadow (modals) */
+  --shadow-overlay: rgba(0, 0, 0, 0.4);              /* Overlay backdrop */
+  --shadow-overlay-strong: rgba(0, 0, 0, 0.5);      /* Strong overlay backdrop */
+  --shadow-overlay-modal: rgba(0, 0, 0, 0.75);      /* Modal overlay backdrop */
+  
+  /* Letter Spacing
+     Typography letter spacing values */
+  --letter-spacing-tight: 0.05em;  /* Tight spacing */
+  --letter-spacing-normal: 0.06em; /* Normal spacing */
+  --letter-spacing-wide: 0.08em;   /* Wide spacing (labels, headers) */
+  --letter-spacing-wider: 0.1em;   /* Wider spacing (logo) */
+  
+  /* Line Height
+     Typography line height values */
+  --line-height-tight: 1.2;       /* Tight line height */
+  --line-height-normal: 1.4;      /* Normal line height */
+  --line-height-relaxed: 1.6;     /* Relaxed line height */
+  
+  /* Text Decoration
+     Underline styling */
+  --underline-thickness: 0.5px;    /* Underline thickness */
+  --underline-offset: 2px;         /* Underline offset from text */
 }
 
 @theme inline {
@@ -86,7 +198,7 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: var(--font-family-base);
 }
 
 /* Style datetime-local calendar popup to match dark theme */
@@ -101,6 +213,7 @@ input[type="datetime-local"] {
 }
 
 /* Hide scrollbars on mobile */
+/* Note: CSS variables cannot be used in media queries, so we use 779px (one less than --breakpoint-mobile) */
 @media (max-width: 779px) {
   * {
     -ms-overflow-style: none;  /* IE and Edge */

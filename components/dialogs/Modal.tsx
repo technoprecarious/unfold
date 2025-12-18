@@ -66,30 +66,30 @@ const ModalOverlay = styled.div`
   bottom: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.75);
+  background: var(--shadow-overlay-modal);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10000;
+  z-index: var(--z-modal-overlay);
   backdrop-filter: blur(4px);
-  padding: 1rem;
+  padding: var(--spacing-8);
   box-sizing: border-box;
 `;
 
 const ModalContent = styled.div<{ $width: string }>`
   background: var(--bg-secondary, #161619);
   border: 1px solid var(--border-primary, #2a2a2d);
-  border-radius: 0;
+  border-radius: var(--radius-none);
   width: ${props => props.$width};
   max-width: calc(100vw - 2rem);
   max-height: calc(100vh - 2rem);
   display: flex;
   flex-direction: column;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  box-shadow: var(--shadow-lg);
   position: relative;
   margin: auto;
   
-  animation: modalFadeIn 0.2s ease-out;
+  animation: modalFadeIn var(--transition-fast) ease-out;
   
   @keyframes modalFadeIn {
     from {
@@ -107,17 +107,17 @@ const ModalHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.5rem;
+  padding: var(--spacing-12);
   border-bottom: 1px solid var(--border-primary, #2a2a2d);
 `;
 
 const ModalTitle = styled.h3`
   margin: 0;
-  font-size: 14px;
+  font-size: var(--font-size-lg);
   font-weight: 400;
   color: var(--text-primary, #DEDEE5);
-  font-family: Helvetica, Arial, sans-serif;
-  letter-spacing: 0.06em;
+  font-family: var(--font-family-base);
+  letter-spacing: var(--letter-spacing-normal);
   text-transform: uppercase;
 `;
 
@@ -125,17 +125,17 @@ const CloseButton = styled.button`
   background: none;
   border: none;
   color: var(--text-secondary, #8A8A95);
-  font-size: 28px;
+  font-size: var(--font-size-2xl);
   line-height: 1;
   cursor: pointer;
   padding: 0;
-  width: 28px;
-  height: 28px;
+  width: var(--font-size-2xl);
+  height: var(--font-size-2xl);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: color 0.2s;
-  font-family: Helvetica, Arial, sans-serif;
+  transition: color var(--transition-fast);
+  font-family: var(--font-family-base);
 
   &:hover {
     color: var(--text-primary, #DEDEE5);
@@ -147,13 +147,13 @@ const CloseButton = styled.button`
 `;
 
 const ModalBody = styled.div`
-  padding: 1.5rem;
+  padding: var(--spacing-12);
   color: var(--text-primary, #DEDEE5);
-  font-size: 12px;
-  font-family: Helvetica, Arial, sans-serif;
+  font-size: var(--font-size-md);
+  font-family: var(--font-family-base);
   overflow-y: auto;
   flex: 1;
-  line-height: 1.6;
+  line-height: var(--line-height-relaxed);
 `;
 
 

@@ -860,12 +860,12 @@ export default Drawer;
 const DrawerOverlay = styled.div`
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: var(--shadow-overlay-strong);
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  z-index: 90;
-  animation: fadeIn 0.2s ease-out;
+  z-index: var(--z-drawer);
+  animation: fadeIn var(--transition-fast) ease-out;
   
   @keyframes fadeIn {
     from {
@@ -889,9 +889,9 @@ const DrawerPanel = styled.div`
   border-top: 1px solid var(--border-primary, #0a0a0a);
   display: flex;
   flex-direction: column;
-  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-sm);
   animation: slideUp 0.3s ease-out;
-  border-radius: 12px 12px 0 0;
+  border-radius: var(--radius-md) var(--radius-md) var(--radius-none) var(--radius-none);
   
   @keyframes slideUp {
     from {
@@ -913,52 +913,52 @@ const DrawerPanel = styled.div`
 
   @media (min-width: 780px) {
     width: 36%;
-    max-width: 700px;
-    min-width: 480px;
+    max-width: var(--width-drawer-max);
+    min-width: var(--width-drawer-min);
     height: 100vh;
     max-height: 100vh;
     border-top: none;
     border-left: 1px solid var(--border-primary, #0a0a0a);
-    border-radius: 0;
+    border-radius: var(--radius-none);
     box-shadow: -8px 0 24px rgba(0, 0, 0, 0.3);
     animation: slideRight 0.3s ease-out;
   }
 `;
 
 const DrawerHeader = styled.header`
-  padding-top: 0.5rem;
-  padding-left: 1.5rem;
-  padding-right: max(1.5rem, 10px);
-  padding-bottom: 0.5rem;
+  padding-top: var(--spacing-5);
+  padding-left: var(--spacing-12);
+  padding-right: max(var(--spacing-12), var(--spacing-px-10));
+  padding-bottom: var(--spacing-5);
   border-bottom: 1px solid var(--border-primary, #0a0a0a);
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: var(--spacing-8);
 `;
 
 const DrawerHeaderTop = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.5rem;
+  gap: var(--spacing-5);
 `;
 
 const DrawerHeaderTopRight = styled.div`
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--spacing-5);
 `;
 
 const DrawerHeaderBottom = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 0.5rem;
+  gap: var(--spacing-5);
 
   @media (max-width: 779px) {
     flex-direction: column;
     width: 100%;
-    gap: 0.25rem;
+    gap: var(--spacing-2);
   }
 `;
 
@@ -976,34 +976,34 @@ const DrawerHeaderTitleRow = styled.div`
   display: flex;
   align-items: baseline;
   gap: 0;
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--spacing-5);
 `;
 
 const ItemTypeLabel = styled.span`
-  font-size: 16px;
+  font-size: var(--font-size-xl);
   font-weight: 400;
   color: var(--text-secondary, #8A8A95);
-  letter-spacing: 0.08em;
-  font-family: Helvetica, Arial, sans-serif;
-  line-height: 1.2;
+  letter-spacing: var(--letter-spacing-wide);
+  font-family: var(--font-family-base);
+  line-height: var(--line-height-tight);
 `;
 
 const ColonSeparator = styled.span`
-  font-size: 16px;
+  font-size: var(--font-size-xl);
   color: var(--text-secondary, #8A8A95);
-  font-family: Helvetica, Arial, sans-serif;
-  margin: 0 0.25rem;
-  line-height: 1.2;
+  font-family: var(--font-family-base);
+  margin: 0 var(--spacing-2);
+  line-height: var(--line-height-tight);
 `;
 
 const ItemTitle = styled.h3`
   margin: 0;
   padding: 0;
-  font-size: 16px;
+  font-size: var(--font-size-xl);
   font-weight: 400;
   color: var(--text-primary, #DEDEE5);
-  font-family: Helvetica, Arial, sans-serif;
-  line-height: 1.2;
+  font-family: var(--font-family-base);
+  line-height: var(--line-height-tight);
 
   @media (max-width: 779px) {
     width: 100%;
@@ -1012,12 +1012,12 @@ const ItemTitle = styled.h3`
 
 const ItemId = styled.div`
   margin-top: 0;
-  font-size: 10px;
+  font-size: var(--font-size-sm);
   font-weight: normal;
   color: var(--text-secondary, #8A8A95);
-  font-family: Helvetica, Arial, sans-serif;
-  opacity: 0.7;
-  line-height: 1.2;
+  font-family: var(--font-family-base);
+  opacity: var(--opacity-hover);
+  line-height: var(--line-height-tight);
 
   @media (max-width: 779px) {
     width: 100%;
@@ -1028,40 +1028,40 @@ const TimeInfo = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 0.25rem;
+  gap: var(--spacing-2);
 
   @media (max-width: 779px) {
     width: 100%;
     align-items: flex-start;
-    margin-top: 0.25rem;
+    margin-top: var(--spacing-2);
   }
 `;
 
 const TimeRow = styled.div`
-  font-size: 10px;
+  font-size: var(--font-size-sm);
   color: var(--text-secondary, #8A8A95);
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: var(--font-family-base);
 `;
 
 const ActionButton = styled.button<{ $danger?: boolean }>`
   background: transparent;
   border: none;
   color: ${props => props.$danger ? 'var(--danger-text, #ff6a6a)' : 'var(--text-primary, #DEDEE5)'};
-  padding: 0.5rem 1rem;
-  font-size: 12px;
-  font-family: Helvetica, Arial, sans-serif;
+  padding: var(--spacing-5) var(--spacing-8);
+  font-size: var(--font-size-md);
+  font-family: var(--font-family-base);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--transition-fast);
 
   &:hover:not(:disabled) {
     color: ${props => props.$danger ? 'var(--danger-text-hover, #ffaaaa)' : 'var(--text-primary, #ffffff)'};
     text-decoration: underline;
-    text-decoration-thickness: 0.5px;
-    text-underline-offset: 2px;
+    text-decoration-thickness: var(--underline-thickness);
+    text-underline-offset: var(--underline-offset);
   }
 
   &:disabled {
-    opacity: 0.5;
+    opacity: var(--opacity-disabled);
     cursor: not-allowed;
   }
 `;
@@ -1069,8 +1069,8 @@ const ActionButton = styled.button<{ $danger?: boolean }>`
 const Content = styled.div`
   flex: 1;
   overflow-y: auto;
-  padding: 1.5rem;
-  padding-right: max(1.5rem, 10px);
+  padding: var(--spacing-12);
+  padding-right: max(var(--spacing-12), var(--spacing-px-10));
 
   /* Hide scrollbar on mobile */
   @media (max-width: 779px) {
@@ -1085,19 +1085,19 @@ const Content = styled.div`
 const PropertiesGrid = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: var(--spacing-8);
 `;
 
 const PropertySection = styled.div`
-  font-size: 14px;
+  font-size: var(--font-size-lg);
   color: var(--text-secondary, #8A8A95);
-  letter-spacing: 0.06em;
+  letter-spacing: var(--letter-spacing-normal);
   text-transform: uppercase;
-  margin-top: 0.5rem;
-  margin-bottom: -0.5rem;
-  padding-top: 1rem;
+  margin-top: var(--spacing-5);
+  margin-bottom: calc(var(--spacing-5) * -1);
+  padding-top: var(--spacing-8);
   border-top: 1px solid var(--border-primary, #0a0a0a);
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: var(--font-family-base);
 `;
 
 const PropertyRow = styled.div`
@@ -1105,14 +1105,14 @@ const PropertyRow = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: var(--spacing-8);
 `;
 
 const PropertyLabel = styled.label`
-  font-size: 11px;
+  font-size: var(--font-size-base);
   color: var(--text-secondary, #8A8A95);
-  letter-spacing: 0.06em;
-  font-family: Helvetica, Arial, sans-serif;
+  letter-spacing: var(--letter-spacing-normal);
+  font-family: var(--font-family-base);
   flex: 1;
   text-align: left;
 `;
@@ -1122,7 +1122,7 @@ const PropertyValue = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: flex-start;
-  padding-right: 10px;
+  padding-right: var(--spacing-px-10);
 `;
 
 const Input = styled.input`
@@ -1130,11 +1130,11 @@ const Input = styled.input`
   background: var(--bg-primary, #0a0a0a);
   border: 1px solid var(--bg-tertiary, #1a1a1a);
   color: var(--text-primary, #DEDEE5);
-  font-size: 12px;
-  font-family: Helvetica, Arial, sans-serif;
-  padding: 0.5rem;
+  font-size: var(--font-size-md);
+  font-family: var(--font-family-base);
+  padding: var(--spacing-5);
   outline: none;
-  transition: all 0.2s;
+  transition: all var(--transition-fast);
   cursor: text;
 
   &:hover {
@@ -1156,8 +1156,8 @@ const Input = styled.input`
     &::-webkit-calendar-picker-indicator {
       filter: invert(0.8);
       cursor: pointer;
-      opacity: 0.7;
-      transition: opacity 0.2s;
+      opacity: var(--opacity-hover);
+      transition: opacity var(--transition-fast);
       
       &:hover {
         opacity: 1;
@@ -1200,12 +1200,12 @@ const Textarea = styled.textarea`
   background: var(--bg-primary, #0a0a0a);
   border: 1px solid var(--bg-tertiary, #1a1a1a);
   color: var(--text-primary, #DEDEE5);
-  font-size: 12px;
-  font-family: Helvetica, Arial, sans-serif;
-  padding: 0.5rem;
+  font-size: var(--font-size-md);
+  font-family: var(--font-family-base);
+  padding: var(--spacing-5);
   outline: none;
   resize: vertical;
-  transition: all 0.2s;
+  transition: all var(--transition-fast);
   cursor: text;
 
   &:hover {
@@ -1226,18 +1226,18 @@ const Textarea = styled.textarea`
 const ChildrenList = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--spacing-5);
   width: 100%;
 `;
 
 const ChildItem = styled.div`
-  padding: 0.5rem;
+  padding: var(--spacing-5);
   background: var(--bg-primary, #0a0a0a);
   color: var(--text-primary, #DEDEE5);
-  font-size: 12px;
-  font-family: Helvetica, Arial, sans-serif;
+  font-size: var(--font-size-md);
+  font-family: var(--font-family-base);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--transition-fast);
   
   &:hover {
     background: var(--bg-tertiary, #1a1a1a);
@@ -1246,22 +1246,22 @@ const ChildItem = styled.div`
 `;
 
 const EmptyChildren = styled.div`
-  padding: 0.5rem;
+  padding: var(--spacing-5);
   color: var(--text-secondary, #8A8A95);
-  font-size: 12px;
-  font-family: Helvetica, Arial, sans-serif;
+  font-size: var(--font-size-md);
+  font-family: var(--font-family-base);
   font-style: italic;
 `;
 
 const AddChildButton = styled.button`
-  padding: 0.5rem;
+  padding: var(--spacing-5);
   background: transparent;
   border: 1px dashed var(--border-tertiary, #333333);
   color: var(--text-secondary, #8A8A95);
-  font-size: 12px;
-  font-family: Helvetica, Arial, sans-serif;
+  font-size: var(--font-size-md);
+  font-family: var(--font-family-base);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--transition-fast);
   
   &:hover {
     border-color: var(--border-secondary, #8A8A95);
@@ -1275,12 +1275,12 @@ const Select = styled.select`
   background-color: var(--bg-primary, #0a0a0a);
   border: 1px solid var(--bg-tertiary, #1a1a1a);
   color: var(--text-primary, #DEDEE5);
-  font-size: 12px;
-  font-family: Helvetica, Arial, sans-serif;
-  padding: 0.5rem;
+  font-size: var(--font-size-md);
+  font-family: var(--font-family-base);
+  padding: var(--spacing-5);
   outline: none;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--transition-fast);
   
   /* Remove native arrow */
   appearance: none;
@@ -1316,7 +1316,7 @@ const Select = styled.select`
 
 const DaysOfWeekContainer = styled.div`
   display: flex;
-  gap: 0.5rem;
+  gap: var(--spacing-5);
   flex-wrap: wrap;
 `;
 
@@ -1324,12 +1324,12 @@ const DayCheckbox = styled.button<{ $selected: boolean }>`
   background: ${props => props.$selected ? 'var(--text-secondary, #8A8A95)' : 'var(--bg-primary, #0a0a0a)'};
   border: 1px solid ${props => props.$selected ? 'var(--text-secondary, #8A8A95)' : 'var(--bg-tertiary, #1a1a1a)'};
   color: ${props => props.$selected ? 'var(--bg-primary, #000000)' : 'var(--text-primary, #DEDEE5)'};
-  font-size: 11px;
-  font-family: Helvetica, Arial, sans-serif;
-  padding: 0.4rem 0.6rem;
+  font-size: var(--font-size-base);
+  font-family: var(--font-family-base);
+  padding: var(--spacing-4) var(--spacing-6);
   cursor: pointer;
-  transition: all 0.2s;
-  min-width: 40px;
+  transition: all var(--transition-fast);
+  min-width: var(--spacing-px-40);
   text-align: center;
 
   &:hover {

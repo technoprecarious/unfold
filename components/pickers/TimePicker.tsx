@@ -406,15 +406,15 @@ const InputWrapper = styled.div`
   background: var(--bg-primary, #0a0a0a);
   border: 1px solid var(--bg-tertiary, #1a1a1a);
   color: var(--text-primary, #DEDEE5);
-  font-size: 12px;
-  font-family: Helvetica, Arial, sans-serif;
-  padding: 0.5rem;
+  font-size: var(--font-size-md);
+  font-family: var(--font-family-base);
+  padding: var(--spacing-5);
   outline: none;
   display: flex;
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--transition-fast);
 
   &:hover {
     background: var(--bg-tertiary, #1a1a1a);
@@ -437,43 +437,43 @@ const PickerOverlay = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 20000;
+  background: var(--shadow-overlay-strong);
+  z-index: var(--z-picker-overlay);
 `;
 
 const PickerPopup = styled.div`
   position: fixed;
   background: var(--bg-tertiary, #1a1a1a);
   border: 1px solid var(--border-primary, #2a2a2a);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-  z-index: 20001;
+  box-shadow: var(--shadow-md);
+  z-index: var(--z-picker-popup);
   min-width: 280px;
   max-width: calc(100vw - 2rem);
   max-height: calc(100vh - 2rem);
-  padding: 1rem;
+  padding: var(--spacing-8);
   box-sizing: border-box;
   overflow-y: auto;
 `;
 
 const PickerContent = styled.div`
   display: flex;
-  gap: 1rem;
+  gap: var(--spacing-8);
 `;
 
 const TimeSection = styled.div`
   width: 100px;
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: var(--spacing-2);
 `;
 
 const TimeLabel = styled.div`
-  font-size: 11px;
+  font-size: var(--font-size-base);
   color: var(--text-secondary, #8A8A95);
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: var(--font-family-base);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 0.25rem;
+  letter-spacing: var(--letter-spacing-tight);
+  margin-bottom: var(--spacing-2);
 `;
 
 const TimeDisplay = styled.div`
@@ -489,10 +489,10 @@ const TimeInput = styled.input`
   background: transparent;
   border: none;
   color: var(--text-primary, #DEDEE5);
-  font-size: 12px;
-  font-family: Helvetica, Arial, sans-serif;
-  padding: 0.15rem 0.3rem;
-  min-width: 32px;
+  font-size: var(--font-size-md);
+  font-family: var(--font-family-base);
+  padding: var(--spacing-1) var(--spacing-3);
+  min-width: var(--spacing-px-32);
   text-align: center;
   outline: none;
   
@@ -503,12 +503,12 @@ const TimeInput = styled.input`
 
 const TimeSeparator = styled.span`
   color: var(--text-primary, #DEDEE5);
-  font-size: 14px;
+  font-size: var(--font-size-lg);
 `;
 
 const TimeScrollers = styled.div`
   display: flex;
-  gap: 0.5rem;
+  gap: var(--spacing-5);
 `;
 
 const TimeScroll = styled.div`
@@ -530,15 +530,15 @@ const TimeScroll = styled.div`
 `;
 
 const TimeOption = styled.div<{ $active: boolean; $isCurrent?: boolean }>`
-  padding: 0.5rem;
+  padding: var(--spacing-5);
   text-align: center;
-  font-size: 12px;
-  font-family: Helvetica, Arial, sans-serif;
+  font-size: var(--font-size-md);
+  font-family: var(--font-family-base);
   color: ${props => props.$active ? 'var(--text-primary, #ffffff)' : 'var(--text-primary, #DEDEE5)'};
   background: ${props => props.$isCurrent ? 'var(--bg-hover, #2a2a2a)' : 'transparent'};
   border: ${props => props.$active ? '1px solid var(--border-secondary, #8A8A95)' : '1px solid transparent'};
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--transition-fast);
 
   &:hover {
     color: var(--text-primary, #ffffff);
@@ -550,26 +550,26 @@ const TimeOption = styled.div<{ $active: boolean; $isCurrent?: boolean }>`
 const PickerFooter = styled.div`
   display: flex;
   justify-content: flex-end;
-  gap: 0.5rem;
-  margin-top: 1rem;
-  padding-top: 1rem;
+  gap: var(--spacing-5);
+  margin-top: var(--spacing-8);
+  padding-top: var(--spacing-8);
 `;
 
 const FooterButton = styled.button`
   background: transparent;
   border: none;
   color: var(--text-secondary, #8A8A95);
-  font-size: 12px;
-  font-family: Helvetica, Arial, sans-serif;
-  padding: 0.5rem 1rem;
+  font-size: var(--font-size-md);
+  font-family: var(--font-family-base);
+  padding: var(--spacing-5) var(--spacing-8);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--transition-fast);
   text-decoration: none;
 
   &:hover {
     color: var(--text-primary, #ffffff);
     text-decoration: underline;
-    text-decoration-thickness: 0.5px;
-    text-underline-offset: 2px;
+    text-decoration-thickness: var(--underline-thickness);
+    text-underline-offset: var(--underline-offset);
   }
 `;

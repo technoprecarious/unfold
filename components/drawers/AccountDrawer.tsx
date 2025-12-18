@@ -561,37 +561,37 @@ export default AccountDrawer;
 const AccountOverlay = styled.div`
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: var(--shadow-overlay);
   display: flex;
   justify-content: flex-end;
   align-items: stretch;
-  z-index: 90;
+  z-index: var(--z-drawer);
 `;
 
 const DrawerPanel = styled.div`
-  width: 360px;
+  width: var(--width-drawer-account);
   height: 100vh;
   background: var(--bg-secondary, #0e0e0e);
   border-left: 1px solid var(--border-primary, #0a0a0a);
   display: flex;
   flex-direction: column;
   position: relative;
-  z-index: 100;
+  z-index: var(--z-drawer-content);
 `;
 
 const AccountHeader = styled.div`
-  padding: 1.5rem;
+  padding: var(--spacing-12);
   border-bottom: 1px solid var(--border-primary, #0a0a0a);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: var(--spacing-8);
 `;
 
 const AccountHeaderLeft = styled.div`
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--spacing-5);
 `;
 
 const AccountHeaderRight = styled.div`
@@ -603,35 +603,35 @@ const AccountHeaderRight = styled.div`
 
 const AccountHeaderTitle = styled.h2`
   margin: 0;
-  font-size: 14px;
+  font-size: var(--font-size-lg);
   font-weight: 400;
   color: var(--text-primary, #dedee5);
-  font-family: Helvetica, Arial, sans-serif;
-  letter-spacing: 0.08em;
+  font-family: var(--font-family-base);
+  letter-spacing: var(--letter-spacing-wide);
   text-transform: uppercase;
 `;
 
 const Content = styled.div`
   flex: 1;
   overflow-y: auto;
-  padding: 1.5rem;
+  padding: var(--spacing-12);
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: var(--spacing-12);
 `;
 
 const SectionTitle = styled.div`
-  font-size: 12px;
+  font-size: var(--font-size-md);
   color: var(--text-secondary, #8a8a95);
-  letter-spacing: 0.08em;
+  letter-spacing: var(--letter-spacing-wide);
   text-transform: uppercase;
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: var(--font-family-base);
 `;
 
 const SectionBlock = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--spacing-5);
   position: relative;
 `;
 
@@ -639,71 +639,71 @@ const Row = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 1rem;
+  gap: var(--spacing-8);
 `;
 
 const Label = styled.div`
-  font-size: 11px;
+  font-size: var(--font-size-base);
   color: var(--text-secondary, #8a8a95);
-  letter-spacing: 0.06em;
-  font-family: Helvetica, Arial, sans-serif;
+  letter-spacing: var(--letter-spacing-normal);
+  font-family: var(--font-family-base);
 `;
 
 const Value = styled.div`
-  font-size: 12px;
+  font-size: var(--font-size-md);
   color: var(--text-primary, #dedee5);
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: var(--font-family-base);
   text-align: right;
 `;
 
 const StatusText = styled.div`
   position: absolute;
-  bottom: -1.5rem;
+  bottom: calc(var(--spacing-12) * -1);
   left: 0;
-  font-size: 11px;
+  font-size: var(--font-size-base);
   color: var(--text-secondary, #8a8a95);
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: var(--font-family-base);
 `;
 
 const InfoText = styled.div`
-  font-size: 11px;
+  font-size: var(--font-size-base);
   color: var(--text-secondary, #8a8a95);
-  font-family: Helvetica, Arial, sans-serif;
-  margin-top: 0.5rem;
-  line-height: 1.4;
+  font-family: var(--font-family-base);
+  margin-top: var(--spacing-5);
+  line-height: var(--line-height-normal);
 `;
 
 const ActionButton = styled.button<{ disabled?: boolean }>`
   background: transparent;
   border: none;
   color: var(--text-primary, #dedee5);
-  padding: 0.25rem 0.5rem;
-  font-size: 12px;
-  font-family: Helvetica, Arial, sans-serif;
+  padding: var(--spacing-2) var(--spacing-5);
+  font-size: var(--font-size-md);
+  font-family: var(--font-family-base);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--transition-fast);
 
   &:hover:not(:disabled) {
     color: var(--text-primary, #ffffff);
     text-decoration: underline;
-    text-decoration-thickness: 0.5px;
-    text-underline-offset: 2px;
+    text-decoration-thickness: var(--underline-thickness);
+    text-underline-offset: var(--underline-offset);
   }
 
   &:disabled {
-    opacity: 0.5;
+    opacity: var(--opacity-disabled);
     cursor: default;
   }
 `;
 
 const ModeToggle = styled.div`
   display: flex;
-  gap: 0.5rem;
+  gap: var(--spacing-5);
 `;
 
 const ModeButtonGroup = styled.div`
   display: flex;
-  gap: 0.5rem;
+  gap: var(--spacing-5);
 `;
 
 const ModeButton = styled.button<{ $active?: boolean; $isLight?: boolean }>`
@@ -717,11 +717,11 @@ const ModeButton = styled.button<{ $active?: boolean; $isLight?: boolean }>`
     // Light button should be darker in dark mode
     return props.$isLight ? '#6a6a6a' : '#8a8a8a';
   }};
-  padding: 0.25rem 0.5rem;
-  font-size: 12px;
-  font-family: Helvetica, Arial, sans-serif;
+  padding: var(--spacing-2) var(--spacing-5);
+  font-size: var(--font-size-md);
+  font-family: var(--font-family-base);
   cursor: pointer;
-  transition: color 0.2s, text-decoration 0.2s;
+  transition: color var(--transition-fast), text-decoration var(--transition-fast);
 
   &:hover {
     color: var(--text-primary, #dedee5);
@@ -732,26 +732,26 @@ const ModeButton = styled.button<{ $active?: boolean; $isLight?: boolean }>`
 const EmailForm = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  margin-top: 0.5rem;
+  gap: var(--spacing-7);
+  margin-top: var(--spacing-5);
 `;
 
 const InputRow = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: var(--spacing-2);
 `;
 
 const EmailInput = styled.input`
   background: var(--bg-tertiary, #1a1a1a);
   border: 1px solid var(--bg-tertiary, #1a1a1a);
   color: var(--text-primary, #dedee5);
-  padding: 0.75rem;
-  font-size: 12px;
-  font-family: Helvetica, Arial, sans-serif;
+  padding: var(--spacing-7);
+  font-size: var(--font-size-md);
+  font-family: var(--font-family-base);
   outline: none;
-  transition: border-color 0.2s;
-  border-radius: 4px;
+  transition: border-color var(--transition-fast);
+  border-radius: var(--radius-sm);
   width: 100%;
   box-sizing: border-box;
 
@@ -760,7 +760,7 @@ const EmailInput = styled.input`
   }
 
   &:disabled {
-    opacity: 0.5;
+    opacity: var(--opacity-disabled);
     cursor: not-allowed;
   }
 
@@ -771,7 +771,7 @@ const EmailInput = styled.input`
 
 const NameRow = styled.div`
   display: flex;
-  gap: 0.75rem;
+  gap: var(--spacing-7);
 `;
 
 const PasswordInputWrapper = styled.div`
@@ -787,7 +787,7 @@ const PasswordInputWrapper = styled.div`
 
 const PasswordToggle = styled.button`
   position: absolute;
-  right: 0.75rem;
+  right: var(--spacing-7);
   background: transparent;
   border: none;
   cursor: pointer;
@@ -795,11 +795,11 @@ const PasswordToggle = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1;
+  z-index: var(--z-base);
   color: var(--text-primary, #dedee5);
 
   &:hover {
-    opacity: 0.8;
+    opacity: var(--opacity-secondary);
   }
 `;
 
@@ -807,8 +807,8 @@ const PasswordToggle = styled.button`
 const Divider = styled.div`
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  margin: 0.75rem 0;
+  gap: var(--spacing-7);
+  margin: var(--spacing-7) 0;
 `;
 
 const DividerLine = styled.div`
@@ -818,15 +818,15 @@ const DividerLine = styled.div`
 `;
 
 const DividerText = styled.div`
-  font-size: 11px;
+  font-size: var(--font-size-base);
   color: var(--text-tertiary, #5a5a5a);
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: var(--font-family-base);
 `;
 
 const ColumnToggleList = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--spacing-5);
   width: 100%;
   max-width: 200px;
 `;
@@ -834,13 +834,13 @@ const ColumnToggleList = styled.div`
 const ColumnToggle = styled.div<{ $checked: boolean }>`
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem;
+  gap: var(--spacing-5);
+  padding: var(--spacing-5);
   background: ${props => props.$checked ? 'var(--bg-tertiary, #1a1a1a)' : 'transparent'};
   border: 1px solid ${props => props.$checked ? 'var(--text-primary, #dedee5)' : 'var(--border-secondary, #8a8a95)'};
   color: ${props => props.$checked ? 'var(--text-primary, #dedee5)' : 'var(--text-secondary, #8a8a95)'};
   cursor: pointer;
-  font-size: 11px;
+  font-size: var(--font-size-base);
   width: 100%;
   
   &:hover {
@@ -851,7 +851,7 @@ const ColumnToggle = styled.div<{ $checked: boolean }>`
 const ColumnOrderList = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--spacing-5);
   width: 100%;
   max-width: 200px;
 `;
@@ -859,11 +859,11 @@ const ColumnOrderList = styled.div`
 const ColumnOrderItem = styled.div`
   display: flex;
   align-items: center;
-  gap: 0.25rem;
-  padding: 0.5rem;
+  gap: var(--spacing-2);
+  padding: var(--spacing-5);
   background: var(--bg-tertiary, #1a1a1a);
   border: 1px solid var(--border-secondary, #8a8a95);
-  font-size: 11px;
+  font-size: var(--font-size-base);
   width: 100%;
 `;
 
@@ -872,8 +872,8 @@ const ColumnOrderButton = styled.button`
   border: 1px solid var(--border-secondary, #8a8a95);
   color: var(--text-primary, #dedee5);
   cursor: pointer;
-  padding: 0.25rem 0.5rem;
-  font-size: 10px;
+  padding: var(--spacing-2) var(--spacing-5);
+  font-size: var(--font-size-sm);
   
   &:hover:not(:disabled) {
     border-color: var(--text-primary, #dedee5);
@@ -903,17 +903,17 @@ const DraggableColumnList = styled.div`
 const DraggableColumnItem = styled.div<{ $active: boolean; $isDragging: boolean; $isDragOver: boolean }>`
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.3rem 0;
+  gap: var(--spacing-5);
+  padding: var(--spacing-3) 0;
   background: ${props => props.$isDragOver ? 'var(--bg-selected, rgba(255, 255, 255, 0.05))' : 'transparent'};
   color: ${props => props.$active ? 'var(--text-primary, #DEDEE5)' : 'var(--text-tertiary, #5a5a5a)'};
   cursor: ${props => props.$isDragging ? 'grabbing' : 'grab'};
-  font-size: 12px;
-  font-family: Helvetica, Arial, sans-serif;
-  line-height: 1.2;
+  font-size: var(--font-size-md);
+  font-family: var(--font-family-base);
+  line-height: var(--line-height-tight);
   width: 100%;
-  opacity: ${props => props.$isDragging ? 0.5 : 1};
-  transition: all 0.2s;
+  opacity: ${props => props.$isDragging ? 'var(--opacity-disabled)' : 1};
+  transition: all var(--transition-fast);
   
   &:hover {
     background: var(--bg-hover, #1a1a1a);
@@ -932,7 +932,7 @@ const DragHandle = styled.div`
   width: 16px;
   height: 16px;
   color: var(--text-secondary, #8a8a95);
-  font-size: 10px;
+  font-size: var(--font-size-sm);
   line-height: 1;
   cursor: grab;
   user-select: none;
@@ -956,7 +956,7 @@ const ListSeparator = styled.div`
   height: 1px;
   width: 100%;
   background: var(--border-primary, #0a0a0a);
-  margin: 0.75rem 0;
+  margin: var(--spacing-7) 0;
 `;
 
 const ColumnCheckbox = styled.div<{ $checked: boolean }>`
@@ -968,9 +968,9 @@ const ColumnCheckbox = styled.div<{ $checked: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 9px;
+  font-size: var(--font-size-xs);
   font-weight: bold;
-  transition: all 0.2s;
+  transition: all var(--transition-fast);
   line-height: 1;
   cursor: pointer;
   flex-shrink: 0;
@@ -982,9 +982,9 @@ const ColumnCheckbox = styled.div<{ $checked: boolean }>`
 
 const SignOutButtonContainer = styled.div`
   position: absolute;
-  bottom: 1.5rem;
-  right: 1.5rem;
-  z-index: 10;
+  bottom: var(--spacing-12);
+  right: var(--spacing-12);
+  z-index: var(--z-overlay);
 `;
 
 
