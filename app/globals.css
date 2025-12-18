@@ -25,6 +25,13 @@
   --border-primary: #0a0a0a;
   --border-secondary: #8a8a95;
   --border-tertiary: #5a5a5a;
+  /* Danger palette for dark theme */
+  --danger-bg: #3a1f1f;
+  --danger-bg-hover: #4a2f2f;
+  --danger-border: #5a2f2f;
+  --danger-border-hover: #6a3f3f;
+  --danger-text: #ff6a6a;
+  --danger-text-hover: #ffaaaa;
 }
 
 [data-theme="dark"] ::selection {
@@ -50,6 +57,13 @@
   --border-primary: #e0e0e0;
   --border-secondary: #5a5a5a;
   --border-tertiary: #8a8a95;
+  /* Danger palette for light theme */
+  --danger-bg: #ffe5e5;
+  --danger-bg-hover: #ffd6d6;
+  --danger-border: #ffb3b3;
+  --danger-border-hover: #ff9494;
+  --danger-text: #b00020;
+  --danger-text-hover: #7f0015;
 }
 
 [data-theme="light"] ::selection {

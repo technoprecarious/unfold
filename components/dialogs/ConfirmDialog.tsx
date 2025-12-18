@@ -63,19 +63,19 @@ const ConfirmActions = styled.div`
 const ConfirmButton = styled.button<{ $secondary?: boolean; $danger?: boolean }>`
   background: ${props =>
     props.$danger
-      ? '#3a1f1f'
+      ? 'var(--danger-bg, #3a1f1f)'
       : props.$secondary
       ? 'var(--bg-tertiary, #2a2a2d)'
       : 'var(--bg-tertiary, #2a2a2d)'};
   border: 1px solid ${props =>
     props.$danger
-      ? '#5a2f2f'
+      ? 'var(--danger-border, #5a2f2f)'
       : props.$secondary
       ? 'var(--border-tertiary, #3a3a3d)'
       : 'var(--border-tertiary, #3a3a3d)'};
   color: ${props =>
     props.$danger
-      ? '#ff6a6a'
+      ? 'var(--danger-text, #ff6a6a)'
       : props.$secondary
       ? 'var(--text-secondary, #8A8A95)'
       : 'var(--text-primary, #DEDEE5)'};
@@ -90,22 +90,20 @@ const ConfirmButton = styled.button<{ $secondary?: boolean; $danger?: boolean }>
   &:hover {
     background: ${props =>
       props.$danger
-        ? '#4a2f2f'
+        ? 'var(--danger-bg-hover, #4a2f2f)'
         : props.$secondary
         ? 'var(--bg-hover, #3a3a3d)'
         : 'var(--bg-hover, #3a3a3d)'};
     border-color: ${props =>
       props.$danger
-        ? '#6a3f3f'
+        ? 'var(--danger-border-hover, #6a3f3f)'
         : props.$secondary
         ? 'var(--border-secondary, #4a4a4d)'
         : 'var(--border-secondary, #4a4a4d)'};
     color: ${props =>
       props.$danger
-        ? '#ffaaaa'
-        : props.$secondary
-        ? 'var(--text-primary, #DEDEE5)'
-        : '#ffffff'};
+        ? 'var(--danger-text-hover, #ffaaaa)'
+        : 'var(--text-primary, #DEDEE5)'};
   }
   
   &:active {

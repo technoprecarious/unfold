@@ -49,6 +49,7 @@ const AlertButton = styled.button`
   &:hover {
     background: var(--bg-hover, #3a3a3d);
     border-color: var(--border-secondary, #4a4a4d);
+    color: var(--text-primary, #DEDEE5);
   }
 `;
 
