@@ -108,9 +108,7 @@ export const deleteProgram = async (programId: string): Promise<void> => {
   if (!user) throw new Error('User not authenticated');
   
   const programDoc = doc(db, `users/${user.uid}/programs/${programId}`);
-  console.log(`Firestore: Deleting program document at users/${user.uid}/programs/${programId}`);
   await deleteDoc(programDoc);
-  console.log(`Firestore: Successfully deleted program document`);
 };
 
 

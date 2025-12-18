@@ -114,9 +114,7 @@ export const deleteSubtask = async (subtaskId: string): Promise<void> => {
   if (!user) throw new Error('User not authenticated');
   
   const subtaskDoc = doc(db, `users/${user.uid}/subtasks/${subtaskId}`);
-  console.log(`Firestore: Deleting subtask document at users/${user.uid}/subtasks/${subtaskId}`);
   await deleteDoc(subtaskDoc);
-  console.log(`Firestore: Successfully deleted subtask document`);
 };
 
 

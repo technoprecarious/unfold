@@ -190,7 +190,7 @@ const Drawer: React.FC<DrawerProps> = ({
           return;
       }
       
-      console.log('🟢 Drawer handleSave - Firestore update completed successfully');
+      // Firestore update completed successfully
       
       // Pass the edited item as the updated item
       await onSave(editedItem);
@@ -240,7 +240,6 @@ const Drawer: React.FC<DrawerProps> = ({
     
     // CRITICAL FIX: Don't check if timeframe exists - CREATE it if it doesn't!
     // The original check `!('timeframe' in editedItem)` was preventing creation of timeframe
-    console.log('🟡 updateTimeframeField called:', { field, value, currentTimeframe: editedItem.timeframe, hasTimeframe: 'timeframe' in editedItem });
     
     // Update directly like other fields - create new object reference for React
     // If timeframe doesn't exist, create it. If it does, merge with existing
@@ -254,8 +253,6 @@ const Drawer: React.FC<DrawerProps> = ({
       timeframe: newTimeframe,
     };
     
-    console.log('🟡 updateTimeframeField - newEditedItem.timeframe:', newEditedItem.timeframe);
-    
     setEditedItem(newEditedItem);
   };
 
@@ -266,7 +263,6 @@ const Drawer: React.FC<DrawerProps> = ({
     
     // CRITICAL FIX: Don't check if recurrence exists - CREATE it if it doesn't!
     // The property exists in the type definition, it just might be undefined
-    console.log('🟡 updateRecurrenceField called:', { field, value, currentRecurrence: (editedItem as any).recurrence, hasRecurrence: 'recurrence' in editedItem });
     setEditedItem({
       ...editedItem,
       recurrence: {

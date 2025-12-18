@@ -73,8 +73,8 @@ export default function LoginPage() {
   return (
     <LandingContainer>
       <LandingContent>
-        <LandingTitle onClick={() => router.push('/')}>UNFOLD</LandingTitle>
-        <LandingForm>
+        <LandingTitle as="h1" onClick={() => router.push('/')}>UNFOLD</LandingTitle>
+        <LandingForm as="form" onSubmit={(e) => { e.preventDefault(); handleEmailSignIn(); }}>
           <LandingInputContainer>
             <LandingInput
               type="email"
@@ -82,6 +82,9 @@ export default function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={isSigningIn}
+              required
+              aria-label="Email address"
+              autoComplete="email"
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && email && password) {
                   handleEmailSignIn();
@@ -97,14 +100,21 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={isSigningIn}
+                required
+                aria-label="Password"
+                autoComplete="current-password"
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && email && password) {
                     handleEmailSignIn();
                   }
                 }}
               />
-              <LandingPasswordToggle onClick={() => setShowPassword(!showPassword)} type="button">
-                {showPassword ? <Eye size={16} /> : <EyeOff size={16} />}
+              <LandingPasswordToggle 
+                onClick={() => setShowPassword(!showPassword)} 
+                type="button"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? <Eye size={16} aria-hidden="true" /> : <EyeOff size={16} aria-hidden="true" />}
               </LandingPasswordToggle>
             </LandingPasswordWrapper>
           </LandingInputContainer>
@@ -117,13 +127,18 @@ export default function LoginPage() {
                 LOGIN WITH GOOGLE
               </LandingLink>
             </LandingLinks>
-            <LandingButton onClick={handleEmailSignIn} disabled={isSigningIn || !email || !password}>
+            <LandingButton 
+              onClick={handleEmailSignIn} 
+              disabled={isSigningIn || !email || !password}
+              type="submit"
+              aria-label="Sign in"
+            >
               LOGIN
             </LandingButton>
           </LandingActions>
-          <LandingMessageContainer>
+          <LandingMessageContainer role="status" aria-live="polite" aria-atomic="true">
             {isSigningIn && <LandingStatus>Logging in...</LandingStatus>}
-            {error && <LandingError>{error}</LandingError>}
+            {error && <LandingError role="alert">{error}</LandingError>}
           </LandingMessageContainer>
         </LandingForm>
       </LandingContent>

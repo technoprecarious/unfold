@@ -85,9 +85,6 @@ export const updateTask = async (taskId: string, updates: Partial<Omit<Task, 'id
   const user = auth?.currentUser || null;
   if (!user) throw new Error('User not authenticated');
   
-  console.log('🟠 updateTask - updates received:', JSON.stringify(updates, null, 2));
-  console.log('🟠 updateTask - timeframe in updates:', updates.timeframe);
-  
   const taskDoc = doc(db, `users/${user.uid}/tasks/${taskId}`);
   
   // Check if document exists
@@ -97,22 +94,16 @@ export const updateTask = async (taskId: string, updates: Partial<Omit<Task, 'id
     updatedAt: new Date().toISOString(),
   });
   
-  console.log('🟠 updateTask - cleanedUpdates:', JSON.stringify(cleanedUpdates, null, 2));
-  console.log('🟠 updateTask - timeframe in cleanedUpdates:', cleanedUpdates.timeframe);
-  
   if (!docSnapshot.exists()) {
     // Document doesn't exist - create it with setDoc
-    console.warn(`🟡 updateTask - Document does not exist, creating new document: ${taskId}`);
     const now = new Date().toISOString();
     await setDoc(taskDoc, {
       ...cleanedUpdates,
       createdAt: now,
     });
-    console.log('🟢 updateTask - Firestore setDoc completed (document created)');
   } else {
     // Document exists - update it
     await updateDoc(taskDoc, cleanedUpdates);
-    console.log('🟢 updateTask - Firestore updateDoc completed');
   }
 };
 
@@ -122,9 +113,7 @@ export const deleteTask = async (taskId: string): Promise<void> => {
   if (!user) throw new Error('User not authenticated');
   
   const taskDoc = doc(db, `users/${user.uid}/tasks/${taskId}`);
-  console.log(`Firestore: Deleting task document at users/${user.uid}/tasks/${taskId}`);
   await deleteDoc(taskDoc);
-  console.log(`Firestore: Successfully deleted task document`);
 };
 
 

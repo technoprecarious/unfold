@@ -277,9 +277,6 @@ export default function Home() {
 
   // Handle item save (after drawer edit)
   const handleItemSave = async (updatedItem: Program | Project | Task | Subtask) => {
-    console.log('🔵 handleItemSave - updatedItem received:', JSON.stringify(updatedItem, null, 2));
-    console.log('🔵 handleItemSave - timeframe in updatedItem:', updatedItem.timeframe);
-    
     // Optimistically update local state immediately for instant timetable update
     switch (itemType) {
       case 'programs':
@@ -318,9 +315,6 @@ export default function Home() {
         refreshedItem = subtasksData.find(s => s.id === updatedItem.id) || null;
         break;
     }
-    
-    console.log('🔵 handleItemSave - refreshedItem from Firestore:', JSON.stringify(refreshedItem, null, 2));
-    console.log('🔵 handleItemSave - timeframe in refreshedItem:', refreshedItem?.timeframe);
     
     // Update selectedItem with refreshed data so drawer shows saved values
     // Keep drawer open so user can see the saved changes
@@ -367,28 +361,22 @@ export default function Home() {
   // Handle item delete
   const handleItemDelete = async (itemId: string) => {
     try {
-      console.log(`Deleting ${itemType} with ID: ${itemId}`);
       switch (itemType) {
         case 'programs':
           await deleteProgram(itemId);
-          console.log(`Successfully deleted program: ${itemId}`);
           break;
         case 'projects':
           await deleteProject(itemId);
-          console.log(`Successfully deleted project: ${itemId}`);
           break;
         case 'tasks':
           await deleteTask(itemId);
-          console.log(`Successfully deleted task: ${itemId}`);
           break;
         case 'subtasks':
           await deleteSubtask(itemId);
-          console.log(`Successfully deleted subtask: ${itemId}`);
           break;
       }
       // Use refreshData instead of loadData to avoid loading state blink
       await refreshData();
-      console.log('Data refreshed after delete');
       setSelectedItem(null);
     } catch (err: any) {
       console.error('Error deleting item:', err);
@@ -647,26 +635,43 @@ export default function Home() {
 
   return (
     <Container>
-      {error && <ErrorBox>{error}</ErrorBox>}
+      {error && <ErrorBox role="alert" aria-live="polite">{error}</ErrorBox>}
       
       {/* Top Bar */}
-      <TopBar>
-        <Logo>UNFOLD</Logo>
+      <TopBar as="header" role="banner">
+        <Logo as="h1">UNFOLD</Logo>
         <ClockWrapper>
           <Clock />
         </ClockWrapper>
-        <TopBarAccount onClick={() => setIsAccountOpen(true)}>account</TopBarAccount>
+        <TopBarAccount 
+          onClick={() => setIsAccountOpen(true)}
+          aria-label="Open account settings"
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              setIsAccountOpen(true);
+            }
+          }}
+        >
+          account
+        </TopBarAccount>
       </TopBar>
 
       {/* Main Content */}
-      <MainContent>
+      <MainContent as="main" role="main">
         {/* Timetable View */}
         <TimetableContainer>
           <TimetableContentWrapper>
-            <DateNavigation>
-              <DateArrow onClick={goToPrevious}>
-                <ArrowIcon>
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <DateNavigation as="nav" role="navigation" aria-label="Date navigation">
+              <DateArrow 
+                onClick={goToPrevious}
+                aria-label="Go to previous period"
+                type="button"
+              >
+                <ArrowIcon aria-hidden="true">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                     <path d="M7.5 9L4.5 6L7.5 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
                 </ArrowIcon>
@@ -675,6 +680,15 @@ export default function Home() {
                 <DateDisplay 
                   onClick={() => setIsDatePickerOpen(true)}
                   $clickable
+                  role="button"
+                  aria-label="Select date"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      setIsDatePickerOpen(true);
+                    }
+                  }}
                 >
                   {formatDate(selectedDate, viewMode)}
                 </DateDisplay>
@@ -689,9 +703,13 @@ export default function Home() {
                   />
                 )}
               </DateDisplayContainer>
-              <DateArrow onClick={goToNext}>
-                <ArrowIcon>
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <DateArrow 
+                onClick={goToNext}
+                aria-label="Go to next period"
+                type="button"
+              >
+                <ArrowIcon aria-hidden="true">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                     <path d="M4.5 3L7.5 6L4.5 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
                 </ArrowIcon>
@@ -754,31 +772,47 @@ export default function Home() {
                 </>
               )}
             </HoveredItemName>
-            <ViewModeSelector>
+            <ViewModeSelector role="tablist" aria-label="View mode selector">
               <ViewModeItem 
                 $selected={viewMode === 'd'} 
                 onClick={() => setViewMode('d')}
+                role="tab"
+                aria-selected={viewMode === 'd'}
+                aria-label="Day view"
+                type="button"
               >
                 D
               </ViewModeItem>
-              <ViewModeSpacer> </ViewModeSpacer>
+              <ViewModeSpacer aria-hidden="true"> </ViewModeSpacer>
               <ViewModeItem 
                 $selected={viewMode === 'w'} 
                 onClick={() => setViewMode('w')}
+                role="tab"
+                aria-selected={viewMode === 'w'}
+                aria-label="Week view"
+                type="button"
               >
                 W
               </ViewModeItem>
-              <ViewModeSpacer> </ViewModeSpacer>
+              <ViewModeSpacer aria-hidden="true"> </ViewModeSpacer>
               <ViewModeItem 
                 $selected={viewMode === 'm'} 
                 onClick={() => setViewMode('m')}
+                role="tab"
+                aria-selected={viewMode === 'm'}
+                aria-label="Month view"
+                type="button"
               >
                 M
               </ViewModeItem>
-              <ViewModeSpacer> </ViewModeSpacer>
+              <ViewModeSpacer aria-hidden="true"> </ViewModeSpacer>
               <ViewModeItem 
                 $selected={viewMode === 'y'} 
                 onClick={() => setViewMode('y')}
+                role="tab"
+                aria-selected={viewMode === 'y'}
+                aria-label="Year view"
+                type="button"
               >
                 Y
               </ViewModeItem>
@@ -820,12 +854,16 @@ export default function Home() {
       </MainContent>
 
       {/* Footer Bar */}
-      <FooterBar>
+      <FooterBar as="footer" role="contentinfo">
         <FooterModeWrapper>
-          <ModeToggle>
+          <ModeToggle role="tablist" aria-label="Panel mode selector">
             <ModeButton 
               $selected={panelMode === 'database'} 
               onClick={() => setPanelMode('database')}
+              role="tab"
+              aria-selected={panelMode === 'database'}
+              aria-label="Database panel"
+              type="button"
             >
               Database
             </ModeButton>
@@ -833,6 +871,10 @@ export default function Home() {
               $selected={panelMode === 'cli'} 
               onClick={() => setPanelMode('cli')}
               $hideOnMobile
+              role="tab"
+              aria-selected={panelMode === 'cli'}
+              aria-label="CLI panel"
+              type="button"
             >
               CLI
             </ModeButton>

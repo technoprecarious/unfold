@@ -104,8 +104,8 @@ export default function SignupPage() {
   return (
     <LandingContainer>
       <LandingContent>
-        <LandingTitle onClick={() => router.push('/')}>UNFOLD</LandingTitle>
-        <LandingForm>
+        <LandingTitle as="h1" onClick={() => router.push('/')}>UNFOLD</LandingTitle>
+        <LandingForm as="form" onSubmit={(e) => { e.preventDefault(); handleEmailSignUp(); }}>
           <LandingInputContainer>
             <LandingInput
               type="email"
@@ -113,6 +113,9 @@ export default function SignupPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={isSigningUp}
+              required
+              aria-label="Email address"
+              autoComplete="email"
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && email && password && confirmPassword) {
                   handleEmailSignUp();
@@ -128,6 +131,8 @@ export default function SignupPage() {
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 disabled={isSigningUp}
+                aria-label="First name"
+                autoComplete="given-name"
               />
             </LandingInputContainer>
             <LandingInputContainer style={{ flex: 1 }}>
@@ -137,6 +142,8 @@ export default function SignupPage() {
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
                 disabled={isSigningUp}
+                aria-label="Last name"
+                autoComplete="family-name"
               />
             </LandingInputContainer>
           </LandingNameRow>
@@ -148,14 +155,21 @@ export default function SignupPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={isSigningUp}
+                required
+                aria-label="Password"
+                autoComplete="new-password"
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && email && password && confirmPassword) {
                     handleEmailSignUp();
                   }
                 }}
               />
-              <LandingPasswordToggle onClick={() => setShowPassword(!showPassword)} type="button">
-                {showPassword ? <Eye size={16} /> : <EyeOff size={16} />}
+              <LandingPasswordToggle 
+                onClick={() => setShowPassword(!showPassword)} 
+                type="button"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? <Eye size={16} aria-hidden="true" /> : <EyeOff size={16} aria-hidden="true" />}
               </LandingPasswordToggle>
             </LandingPasswordWrapper>
           </LandingInputContainer>
@@ -167,14 +181,21 @@ export default function SignupPage() {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 disabled={isSigningUp}
+                required
+                aria-label="Confirm password"
+                autoComplete="new-password"
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && email && password && confirmPassword) {
                     handleEmailSignUp();
                   }
                 }}
               />
-              <LandingPasswordToggle onClick={() => setShowConfirmPassword(!showConfirmPassword)} type="button">
-                {showConfirmPassword ? <Eye size={16} /> : <EyeOff size={16} />}
+              <LandingPasswordToggle 
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)} 
+                type="button"
+                aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
+              >
+                {showConfirmPassword ? <Eye size={16} aria-hidden="true" /> : <EyeOff size={16} aria-hidden="true" />}
               </LandingPasswordToggle>
             </LandingPasswordWrapper>
           </LandingInputContainer>
@@ -187,14 +208,19 @@ export default function SignupPage() {
                 SIGN UP WITH GOOGLE
               </LandingLink>
             </LandingLinks>
-            <LandingButton onClick={handleEmailSignUp} disabled={isSigningUp || !email || !password || !confirmPassword}>
+            <LandingButton 
+              onClick={handleEmailSignUp} 
+              disabled={isSigningUp || !email || !password || !confirmPassword}
+              type="submit"
+              aria-label="Create account"
+            >
               SIGN UP
             </LandingButton>
           </LandingActions>
-          <LandingMessageContainer>
+          <LandingMessageContainer role="status" aria-live="polite" aria-atomic="true">
             {isSigningUp && <LandingStatus>Signing up...</LandingStatus>}
-            {passwordHint && <LandingError>{passwordHint}</LandingError>}
-            {error && <LandingError>{error}</LandingError>}
+            {passwordHint && <LandingError role="alert">{passwordHint}</LandingError>}
+            {error && <LandingError role="alert">{error}</LandingError>}
           </LandingMessageContainer>
         </LandingForm>
       </LandingContent>
