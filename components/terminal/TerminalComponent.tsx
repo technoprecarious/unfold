@@ -246,29 +246,34 @@ const TerminalComponent: React.FC<TerminalComponentProps> = ({ onDataUpdate }) =
     // Only run on client side
     if (typeof window === 'undefined') return;
     if (isInitialized) return;
-    if (!terminalRef.current) return;
     
     // Prevent double initialization
     if (terminalRefInternal.current) {
       console.log('[Terminal] Already initialized, skipping...');
       return;
     }
-    
-    // Mark as initializing immediately to prevent double runs
-    setIsInitialized(true);
 
-    const initTerminal = () => {
+    const initTerminal = (retryCount = 0) => {
       // Prevent double initialization
-      if (terminalRefInternal.current || isInitialized) {
+      if (terminalRefInternal.current) {
         console.log('[Terminal] Already initialized, skipping...');
         return;
       }
       
       const container = terminalRef.current;
       if (!container) {
-        console.error('[Terminal] Container not found');
+        // Retry up to 5 times with increasing delays
+        if (retryCount < 5) {
+          const delay = Math.min(100 * (retryCount + 1), 500);
+          setTimeout(() => initTerminal(retryCount + 1), delay);
+          return;
+        }
+        console.error('[Terminal] Container not found after retries');
         return;
       }
+      
+      // Mark as initializing now that we have the container
+      setIsInitialized(true);
 
       try {
         // Get theme colors from CSS variables

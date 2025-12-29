@@ -27,9 +27,9 @@ export default TerminalInterface;
 const TerminalContainer = styled.div`
   display: flex;
   width: 70%;
-  height: 550px;
+  height: 600px;
   max-width: 70%;
-  max-height: 550px;
+  max-height: 600px;
   background: #000000;
   border: none;
   border-radius: 0;
@@ -123,7 +123,7 @@ const TerminalContainer = styled.div`
 
 const TerminalPlaceholder = styled.div`
   width: 500px;
-  height: 550px;
+  height: 600px;
   background: #000000;
   border: none;
   border-radius: 0;
