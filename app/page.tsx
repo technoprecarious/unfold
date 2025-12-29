@@ -930,7 +930,7 @@ const Container = styled.div`
 const TopBar = styled.div`
   height: 3rem;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
   padding: 0 var(--spacing-8);
   background: var(--bg-primary, #000000);
@@ -981,7 +981,7 @@ const FooterBar = styled.div`
 
 const FooterModeWrapper = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
   margin-top: var(--spacing-2);
 `;
@@ -992,19 +992,19 @@ const ClockWrapper = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
 `;
 
 const TopBarRight = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   gap: var(--spacing-8);
 `;
 
 const ModeToggle = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   gap: var(--spacing-5);
 `;
 
@@ -1053,7 +1053,7 @@ const CLIPanelContainer = styled.div`
   min-height: 0;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
   background: var(--bg-primary, #000000);
   overflow-y: auto;
@@ -1092,7 +1092,7 @@ const TimetableContainer = styled.div`
   flex-grow: 0;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   justify-content: flex-start;
   position: relative;
   padding: 0.5rem 1rem;
@@ -1104,7 +1104,7 @@ const TimetableContainer = styled.div`
   @media (min-width: ${mobileBreakpoint}) {
     width: 50%;
     height: 100%;
-    align-items: center;
+    align-items: flex-start;
     padding: 4rem;
     order: 2;
     justify-content: center;
@@ -1153,7 +1153,7 @@ const DateArrow = styled.button`
   min-width: clamp(24px, 6vw, 32px);
   min-height: clamp(24px, 6vw, 32px);
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
   position: relative;
   z-index: 1;
@@ -1176,7 +1176,7 @@ const DateArrow = styled.button`
 
 const ArrowIcon = styled.span`
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
   width: clamp(10px, 2.5vw, 12px);
   height: clamp(10px, 2.5vw, 12px);
@@ -1220,7 +1220,7 @@ const TimetableWrapper = styled.div`
   flex-shrink: 0;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-end;
   position: relative;
 
   @media (min-width: ${mobileBreakpoint}) {
@@ -1258,7 +1258,7 @@ const HoveredItemTime = styled.div`
 
 const ViewModeSelector = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
   gap: clamp(0.25rem, 0.75vw, 0.5rem);
   white-space: nowrap;
@@ -1324,7 +1324,7 @@ const ViewModeSpacer = styled.span`
 
 const LoadingMessage = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
   height: 100vh;
   color: var(--text-primary, #DEDEE5);
@@ -1356,7 +1356,7 @@ const YearlyPlaceholder = styled.div`
   aspect-ratio: 1;
   max-height: calc(50vh - 6rem);
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
   color: var(--text-secondary, #8A8A95);
   font-size: var(--font-size-base);

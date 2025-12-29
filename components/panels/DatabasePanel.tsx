@@ -662,7 +662,7 @@ const Panel = styled.aside`
   min-height: 0;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-end;
   justify-content: flex-start;
   background: var(--bg-primary, #000000);
   overflow-y: auto;
@@ -678,6 +678,7 @@ const Panel = styled.aside`
     height: 100%;
     padding: 1.25rem;
     justify-content: center;
+    align-items: flex-end;
     order: 1;
     overflow-y: auto;
     overflow-x: hidden;
@@ -687,7 +688,7 @@ const Panel = styled.aside`
 
 const DatabaseHeader = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
   margin-bottom: 0.5rem;
   padding: 0;
@@ -723,7 +724,7 @@ const ItemTypeSelector = styled.div`
   display: flex;
   gap: 0.5rem;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-end;
 `;
 
 const TypeButton = styled.button<{ $active: boolean }>`
@@ -767,7 +768,7 @@ const TypeButton = styled.button<{ $active: boolean }>`
 
 const DatabaseHeaderRight = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: flex-end;
   gap: 0.5rem;
 
@@ -1064,7 +1065,7 @@ const RowCheckbox = styled.div<{ $checked: boolean; $indeterminate?: boolean }>`
   background: ${props => (props.$checked || props.$indeterminate) ? '#8A8A95' : 'transparent'};
   color: #161619;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
   font-size: 9px;
   font-weight: bold;
@@ -1076,7 +1077,7 @@ const RowCheckbox = styled.div<{ $checked: boolean; $indeterminate?: boolean }>`
 
 const IndexCellContent = styled.div<{ $level: number }>`
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: flex-end;
   gap: 0;
   width: 100%;
@@ -1093,7 +1094,7 @@ const ExpandButton = styled.button`
   width: 12px;
   height: 12px;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
   transition: color 0.2s;
   
