@@ -4,6 +4,13 @@ import React from 'react';
 import styled from 'styled-components';
 import Modal from './Modal';
 
+// Constants
+const DEFAULT_TITLE = 'Unsaved Changes';
+const SAVE_DISCARD_MODAL_WIDTH = '420px';
+const BUTTON_TEXT_CANCEL = 'Cancel';
+const BUTTON_TEXT_SAVE = 'Save';
+const BUTTON_TEXT_DISCARD = 'Discard';
+
 interface SaveDiscardDialogProps {
   isOpen: boolean;
   message: string;
@@ -16,7 +23,7 @@ interface SaveDiscardDialogProps {
 const SaveDiscardDialog: React.FC<SaveDiscardDialogProps> = ({
   isOpen,
   message,
-  title = 'Unsaved Changes',
+  title = DEFAULT_TITLE,
   onSave,
   onDiscard,
   onCancel,
@@ -26,19 +33,35 @@ const SaveDiscardDialog: React.FC<SaveDiscardDialogProps> = ({
       isOpen={isOpen} 
       onClose={onCancel} 
       title={title} 
-      width="420px"
+      width={SAVE_DISCARD_MODAL_WIDTH}
     >
-      <DialogMessage>{message}</DialogMessage>
+      <DialogMessage role="alert" aria-live="polite">
+        {message}
+      </DialogMessage>
       <DialogActions>
-        <DialogButton onClick={onCancel} $secondary>
-          Cancel
+        <DialogButton 
+          onClick={onCancel} 
+          $secondary
+          type="button"
+          aria-label={BUTTON_TEXT_CANCEL}
+        >
+          {BUTTON_TEXT_CANCEL}
         </DialogButton>
         <ButtonGroup>
-          <DialogButton onClick={onSave}>
-            Save
+          <DialogButton 
+            onClick={onSave}
+            type="button"
+            aria-label={BUTTON_TEXT_SAVE}
+          >
+            {BUTTON_TEXT_SAVE}
           </DialogButton>
-          <DialogButton onClick={onDiscard} $danger>
-            Discard
+          <DialogButton 
+            onClick={onDiscard} 
+            $danger
+            type="button"
+            aria-label={BUTTON_TEXT_DISCARD}
+          >
+            {BUTTON_TEXT_DISCARD}
           </DialogButton>
         </ButtonGroup>
       </DialogActions>

@@ -4,6 +4,12 @@ import React from 'react';
 import styled from 'styled-components';
 import Modal from './Modal';
 
+// Constants
+const DEFAULT_CONFIRM_TITLE = 'Confirm';
+const DEFAULT_CONFIRM_TEXT = 'Confirm';
+const DEFAULT_CANCEL_TEXT = 'Cancel';
+const CONFIRM_MODAL_WIDTH = '420px';
+
 interface ConfirmDialogProps {
   isOpen: boolean;
   message: string;
@@ -18,9 +24,9 @@ interface ConfirmDialogProps {
 const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   isOpen,
   message,
-  title = 'Confirm',
-  confirmText = 'Confirm',
-  cancelText = 'Cancel',
+  title = DEFAULT_CONFIRM_TITLE,
+  confirmText = DEFAULT_CONFIRM_TEXT,
+  cancelText = DEFAULT_CANCEL_TEXT,
   onConfirm,
   onCancel,
   $danger = false,
@@ -30,14 +36,26 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
       isOpen={isOpen} 
       onClose={onCancel} 
       title={title} 
-      width="420px"
+      width={CONFIRM_MODAL_WIDTH}
     >
-      <ConfirmMessage>{message}</ConfirmMessage>
+      <ConfirmMessage role="alert" aria-live="polite">
+        {message}
+      </ConfirmMessage>
       <ConfirmActions>
-        <ConfirmButton onClick={onCancel} $secondary>
+        <ConfirmButton 
+          onClick={onCancel} 
+          $secondary
+          type="button"
+          aria-label={cancelText}
+        >
           {cancelText}
         </ConfirmButton>
-        <ConfirmButton onClick={onConfirm} $danger={$danger}>
+        <ConfirmButton 
+          onClick={onConfirm} 
+          $danger={$danger}
+          type="button"
+          aria-label={confirmText}
+        >
           {confirmText}
         </ConfirmButton>
       </ConfirmActions>

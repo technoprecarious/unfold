@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import styled from 'styled-components';
 import CircularTimetable from '@/components/timetables/CircularTimetable';
@@ -21,6 +21,13 @@ import { TimetableItem, Program, Project, Task, Subtask, Priority } from '@/lib/
 import { auth, isFirebaseInitialized } from '@/lib/firebase/config';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import AccountDrawer from '@/components/drawers/AccountDrawer';
+
+// Constants
+const MOBILE_BREAKPOINT = 780;
+const MOBILE_BREAKPOINT_PX = '780px';
+const HOURS_PER_DAY = 24;
+const DAYS_PER_WEEK = 7;
+const SCROLL_DELAY_MS = 100;
 
 type ItemType = 'programs' | 'projects' | 'tasks' | 'subtasks';
 type ViewMode = 'd' | 'w' | 'm' | 'y';
@@ -65,7 +72,7 @@ export default function Home() {
   // Disable CLI on mobile - force database mode
   useEffect(() => {
     const checkMobile = () => {
-      const isMobile = window.innerWidth < 780;
+      const isMobile = window.innerWidth < MOBILE_BREAKPOINT;
       if (isMobile && panelMode === 'cli') {
         setPanelMode('database');
       }
@@ -88,11 +95,13 @@ export default function Home() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [subtasks, setSubtasks] = useState<Subtask[]>([]);
 
-  // Format time from decimal hour to HH:MM
+  /**
+   * Formats time from decimal hour to HH:MM format
+   */
   const formatTime = (decimalHour: number): string => {
     const hours = Math.floor(decimalHour);
     const minutes = Math.round((decimalHour - hours) * 60);
-    const displayHours = hours === 24 ? 0 : hours;
+    const displayHours = hours === HOURS_PER_DAY ? 0 : hours;
     const hoursStr = String(displayHours).padStart(2, '0');
     const minutesStr = String(minutes).padStart(2, '0');
     return `${hoursStr}:${minutesStr}`;
@@ -133,7 +142,7 @@ export default function Home() {
       if (viewMode === 'd') {
         newDate.setDate(newDate.getDate() - 1);
       } else if (viewMode === 'w') {
-        newDate.setDate(newDate.getDate() - 7);
+        newDate.setDate(newDate.getDate() - DAYS_PER_WEEK);
       } else if (viewMode === 'm') {
         newDate.setMonth(newDate.getMonth() - 1);
       } else if (viewMode === 'y') {
@@ -149,7 +158,7 @@ export default function Home() {
       if (viewMode === 'd') {
         newDate.setDate(newDate.getDate() + 1);
       } else if (viewMode === 'w') {
-        newDate.setDate(newDate.getDate() + 7);
+        newDate.setDate(newDate.getDate() + DAYS_PER_WEEK);
       } else if (viewMode === 'm') {
         newDate.setMonth(newDate.getMonth() + 1);
       } else if (viewMode === 'y') {
@@ -243,7 +252,7 @@ export default function Home() {
   }, []);
 
   // Update timetable when date or view mode changes (memoized for performance)
-  const timetableItems = React.useMemo(() => {
+  const timetableItems = useMemo(() => {
     return itemsToTimetable(
       programs,
       projects,
@@ -461,7 +470,7 @@ export default function Home() {
       // Use setTimeout to ensure DOM has updated
       setTimeout(() => {
         setScrollToTopTrigger(prev => prev + 1);
-      }, 100);
+      }, SCROLL_DELAY_MS);
     } catch (err: any) {
       console.error('Error creating child item:', err);
       await alert(`Failed to create ${childType.slice(0, -1)}: ${err.message}`, 'Error');
@@ -600,7 +609,7 @@ export default function Home() {
       // Use setTimeout to ensure DOM has updated
       setTimeout(() => {
         setScrollToTopTrigger(prev => prev + 1);
-      }, 100);
+      }, SCROLL_DELAY_MS);
     } catch (err: any) {
       console.error('Error creating item:', err);
       await alert(`Failed to create item: ${err.message}`, 'Error');
@@ -912,8 +921,7 @@ export default function Home() {
   );
 }
 
-// Mobile breakpoint
-const mobileBreakpoint = '780px';
+// Styled Components
 
 const Container = styled.div`
   width: 100vw;
@@ -936,7 +944,7 @@ const TopBar = styled.div`
   background: var(--bg-primary, #000000);
   position: relative;
 
-  @media (min-width: ${mobileBreakpoint}) {
+  @media (min-width: ${MOBILE_BREAKPOINT_PX}) {
     padding: 0 var(--spacing-12);
   }
 `;
@@ -970,11 +978,11 @@ const FooterBar = styled.div`
   padding: 0 var(--spacing-8);
   background: var(--bg-primary, #000000);
 
-  @media (max-width: ${mobileBreakpoint}) {
+  @media (max-width: ${MOBILE_BREAKPOINT_PX}) {
     display: none;
   }
 
-  @media (min-width: ${mobileBreakpoint}) {
+  @media (min-width: ${MOBILE_BREAKPOINT_PX}) {
     padding: 0 var(--spacing-12);
   }
 `;
@@ -1041,7 +1049,7 @@ const ModeButton = styled.button<{ $selected: boolean; $hideOnMobile?: boolean }
   }
   
   ${props => props.$hideOnMobile ? `
-    @media (max-width: ${mobileBreakpoint}) {
+    @media (max-width: ${MOBILE_BREAKPOINT_PX}) {
       display: none;
     }
   ` : ''}
@@ -1059,11 +1067,11 @@ const CLIPanelContainer = styled.div`
   overflow-y: auto;
   overflow-x: hidden;
 
-  @media (max-width: ${mobileBreakpoint}) {
+  @media (max-width: ${MOBILE_BREAKPOINT_PX}) {
     display: none;
   }
 
-  @media (min-width: ${mobileBreakpoint}) {
+  @media (min-width: ${MOBILE_BREAKPOINT_PX}) {
     width: 50%;
     height: 100%;
     order: 1;
@@ -1079,7 +1087,7 @@ const MainContent = styled.div`
   overflow: hidden;
   height: calc(100vh - 3rem); /* Only subtract TopBar on mobile */
 
-  @media (min-width: ${mobileBreakpoint}) {
+  @media (min-width: ${MOBILE_BREAKPOINT_PX}) {
     flex-direction: row;
     align-items: stretch; /* Reset to stretch on desktop */
     height: calc(100vh - (3rem + (3rem + 12px))); /* Subtract TopBar and FooterBar on desktop */
@@ -1101,7 +1109,7 @@ const TimetableContainer = styled.div`
   background: var(--bg-primary, #000000);
   box-sizing: border-box;
 
-  @media (min-width: ${mobileBreakpoint}) {
+  @media (min-width: ${MOBILE_BREAKPOINT_PX}) {
     width: 50%;
     height: 100%;
     align-items: flex-start;
@@ -1123,7 +1131,7 @@ const TimetableContentWrapper = styled.div`
   flex-shrink: 0;
   min-height: fit-content;
 
-  @media (min-width: ${mobileBreakpoint}) {
+  @media (min-width: ${MOBILE_BREAKPOINT_PX}) {
     max-width: 500px;
     gap: clamp(0.75rem, 2vw, 1rem);
   }
@@ -1167,7 +1175,7 @@ const DateArrow = styled.button`
     opacity: 0.7;
   }
 
-  @media (min-width: ${mobileBreakpoint}) {
+  @media (min-width: ${MOBILE_BREAKPOINT_PX}) {
     padding: 0 0.25rem;
     min-width: auto;
     min-height: auto;
@@ -1223,7 +1231,7 @@ const TimetableWrapper = styled.div`
   align-items: flex-end;
   position: relative;
 
-  @media (min-width: ${mobileBreakpoint}) {
+  @media (min-width: ${MOBILE_BREAKPOINT_PX}) {
     width: 500px;
     height: 500px;
     max-width: 500px;
@@ -1270,7 +1278,7 @@ const ViewModeSelector = styled.div`
   /* mobile: restore spacing below ItemDisplay when wrapper gap is 0 */
   margin-top: clamp(0.5rem, 1.5vw, 0.75rem);
 
-  @media (min-width: ${mobileBreakpoint}) {
+  @media (min-width: ${MOBILE_BREAKPOINT_PX}) {
     margin-top: -0.5rem; /* Reduce gap with timetable on desktop */
   }
 `;
@@ -1361,7 +1369,7 @@ const YearlyPlaceholder = styled.div`
   color: var(--text-secondary, #8A8A95);
   font-size: var(--font-size-base);
 
-  @media (min-width: ${mobileBreakpoint}) {
+  @media (min-width: ${MOBILE_BREAKPOINT_PX}) {
     width: var(--width-timetable);
     height: var(--width-timetable);
     max-width: var(--width-timetable);

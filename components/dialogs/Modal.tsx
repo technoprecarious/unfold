@@ -3,6 +3,10 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 
+// Constants
+const ESCAPE_KEY = 'Escape';
+const DEFAULT_MODAL_WIDTH = '400px';
+
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -11,24 +15,29 @@ interface ModalProps {
   width?: string;
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, width = '400px' }) => {
+const Modal: React.FC<ModalProps> = ({ 
+  isOpen, 
+  onClose, 
+  title, 
+  children, 
+  width = DEFAULT_MODAL_WIDTH 
+}) => {
   // Prevent body scroll when modal is open
   useEffect(() => {
     if (isOpen) {
+      const originalOverflow = document.body.style.overflow;
       document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
     }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
   }, [isOpen]);
 
   // Close on Escape key
   useEffect(() => {
     if (!isOpen) return;
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
+      if (e.key === ESCAPE_KEY) {
         onClose();
       }
     };
@@ -39,15 +48,27 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, width =
   if (!isOpen) return null;
 
   return (
-    <ModalOverlay onClick={onClose}>
+    <ModalOverlay 
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby={title ? 'modal-title' : undefined}
+    >
       <ModalContent 
         onClick={(e) => e.stopPropagation()} 
         $width={width}
+        role="document"
       >
         {title && (
           <ModalHeader>
-            <ModalTitle>{title}</ModalTitle>
-            <CloseButton onClick={onClose} aria-label="Close">×</CloseButton>
+            <ModalTitle id="modal-title">{title}</ModalTitle>
+            <CloseButton 
+              onClick={onClose} 
+              aria-label="Close modal"
+              type="button"
+            >
+              ×
+            </CloseButton>
           </ModalHeader>
         )}
         <ModalBody>{children}</ModalBody>

@@ -4,6 +4,11 @@ import React from 'react';
 import styled from 'styled-components';
 import Modal from './Modal';
 
+// Constants
+const DEFAULT_ALERT_TITLE = 'Alert';
+const DEFAULT_MODAL_WIDTH = '400px';
+const BUTTON_TEXT_OK = 'OK';
+
 interface AlertDialogProps {
   isOpen: boolean;
   message: string;
@@ -11,12 +16,25 @@ interface AlertDialogProps {
   onClose: () => void;
 }
 
-const AlertDialog: React.FC<AlertDialogProps> = ({ isOpen, message, title = 'Alert', onClose }) => {
+const AlertDialog: React.FC<AlertDialogProps> = ({ 
+  isOpen, 
+  message, 
+  title = DEFAULT_ALERT_TITLE, 
+  onClose 
+}) => {
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={title} width="400px">
-      <AlertMessage>{message}</AlertMessage>
+    <Modal isOpen={isOpen} onClose={onClose} title={title} width={DEFAULT_MODAL_WIDTH}>
+      <AlertMessage role="alert" aria-live="polite">
+        {message}
+      </AlertMessage>
       <AlertActions>
-        <AlertButton onClick={onClose}>OK</AlertButton>
+        <AlertButton 
+          onClick={onClose}
+          type="button"
+          aria-label="Close alert"
+        >
+          {BUTTON_TEXT_OK}
+        </AlertButton>
       </AlertActions>
     </Modal>
   );

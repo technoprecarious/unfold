@@ -1,12 +1,19 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import styled from 'styled-components';
 import { Program, Project, Task, Subtask } from '@/lib/types/types';
-import { timeToHours } from '@/lib/utils/timetable/timetableUtils';
 import { getUserPreferences, subscribeToUserPreferences, ColumnKey } from '@/lib/firestore/preferences';
 import { auth, isFirebaseInitialized } from '@/lib/firebase/config';
 import { onAuthStateChanged, User } from 'firebase/auth';
+
+// Constants
+const MOBILE_BREAKPOINT = 780;
+const MOBILE_BREAKPOINT_PX = '780px';
+const DEFAULT_COLUMN_ORDER: ColumnKey[] = ['priority', 'time', 'status'];
+const EMPTY_VALUE = '-';
+const PRIORITY_ORDER = { low: 1, medium: 2, high: 3, critical: 4 } as const;
+const ITEM_TYPES = ['programs', 'projects', 'tasks', 'subtasks'] as const;
 
 interface DatabasePanelProps {
   items: (Program | Project | Task | Subtask)[];
@@ -32,23 +39,27 @@ interface DatabasePanelProps {
   scrollToTopTrigger?: number;
 }
 
-// Format time from ISO string to readable format (24-hour)
+/**
+ * Formats time from ISO string to readable 24-hour format (HH:MM)
+ */
 const formatTimeDisplay = (timeStr?: string): string => {
-  if (!timeStr) return '-';
+  if (!timeStr) return EMPTY_VALUE;
   try {
     const date = new Date(timeStr);
     if (isNaN(date.getTime())) return timeStr;
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    return `${hours}:${minutes}`;
   } catch {
     return timeStr;
   }
 };
 
-// Format date to readable format
+/**
+ * Formats date to readable format (M/D)
+ */
 const formatDateDisplay = (dateStr?: string): string => {
-  if (!dateStr) return '-';
+  if (!dateStr) return EMPTY_VALUE;
   try {
     const date = new Date(dateStr);
     if (isNaN(date.getTime())) return dateStr;
@@ -60,37 +71,48 @@ const formatDateDisplay = (dateStr?: string): string => {
   }
 };
 
-// Get time range display for an item
-const getTimeRange = (item: Program | Project | Task | Subtask, itemType: 'programs' | 'projects' | 'tasks' | 'subtasks'): string => {
-  if ('timeframe' in item && item.timeframe) {
-    const start = item.timeframe.start;
-    const end = ('deadline' in item.timeframe && item.timeframe.deadline) 
-      ? item.timeframe.deadline 
-      : item.timeframe.targetEnd || item.timeframe.actualEnd;
+/**
+ * Gets time range display for an item based on its type
+ * Programs/Projects show dates, Tasks/Subtasks show times
+ */
+const getTimeRange = (
+  item: Program | Project | Task | Subtask,
+  itemType: 'programs' | 'projects' | 'tasks' | 'subtasks'
+): string => {
+  if (!('timeframe' in item) || !item.timeframe?.start) {
+    return EMPTY_VALUE;
+  }
+
+  const { start } = item.timeframe;
+  const end = ('deadline' in item.timeframe && item.timeframe.deadline)
+    ? item.timeframe.deadline
+    : item.timeframe.targetEnd || item.timeframe.actualEnd;
+
+  const isDateRange = itemType === 'programs' || itemType === 'projects';
+
+  if (isDateRange) {
+    const startDate = formatDateDisplay(start);
+    const endDate = end ? formatDateDisplay(end) : null;
     
-    if (start) {
-      // For Programs and Projects, show month/date instead of hour/minute
-      if (itemType === 'programs' || itemType === 'projects') {
-        const startDate = formatDateDisplay(start);
-        const endDate = end ? formatDateDisplay(end) : null;
-        if (startDate !== '-' && endDate && endDate !== '-') {
-          return `${startDate} - ${endDate}`;
-        } else if (startDate !== '-') {
-          return startDate;
-        }
-      } else {
-        // For Tasks and Subtasks, show hour/minute
-        const startTime = formatTimeDisplay(start);
-        const endTime = end ? formatTimeDisplay(end) : null;
-        if (startTime !== '-' && endTime && endTime !== '-') {
-          return `${startTime} - ${endTime}`;
-        } else if (startTime !== '-') {
-          return startTime;
-        }
-      }
+    if (startDate !== EMPTY_VALUE && endDate && endDate !== EMPTY_VALUE) {
+      return `${startDate} - ${endDate}`;
+    }
+    if (startDate !== EMPTY_VALUE) {
+      return startDate;
+    }
+  } else {
+    const startTime = formatTimeDisplay(start);
+    const endTime = end ? formatTimeDisplay(end) : null;
+    
+    if (startTime !== EMPTY_VALUE && endTime && endTime !== EMPTY_VALUE) {
+      return `${startTime} - ${endTime}`;
+    }
+    if (startTime !== EMPTY_VALUE) {
+      return startTime;
     }
   }
-  return '-';
+
+  return EMPTY_VALUE;
 };
 
 const DatabasePanel: React.FC<DatabasePanelProps> = ({
@@ -120,13 +142,13 @@ const DatabasePanel: React.FC<DatabasePanelProps> = ({
   const [isSaving, setIsSaving] = useState(false);
   const [sortField, setSortField] = useState<string | null>('createdAt');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
-  const [columnOrder, setColumnOrder] = useState<ColumnKey[]>(['priority', 'time', 'status']);
+  const [columnOrder, setColumnOrder] = useState<ColumnKey[]>(DEFAULT_COLUMN_ORDER);
   const [isMobile, setIsMobile] = useState(false);
 
   // Detect mobile viewport
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 780);
+      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
     };
     
     checkMobile();
@@ -136,7 +158,10 @@ const DatabasePanel: React.FC<DatabasePanelProps> = ({
   }, []);
 
   // Filter columns for mobile - only show 'time'
-  const displayColumns = isMobile ? (['time'] as ColumnKey[]) : columnOrder;
+  const displayColumns = useMemo(
+    () => (isMobile ? (['time'] as ColumnKey[]) : columnOrder),
+    [isMobile, columnOrder]
+  );
 
   // Load preferences on mount and subscribe to real-time updates
   useEffect(() => {
@@ -164,7 +189,7 @@ const DatabasePanel: React.FC<DatabasePanelProps> = ({
         }) || null;
       } else {
         // No user, use default
-        setColumnOrder(['priority', 'time', 'status']);
+        setColumnOrder(DEFAULT_COLUMN_ORDER);
       }
     };
 
@@ -187,30 +212,30 @@ const DatabasePanel: React.FC<DatabasePanelProps> = ({
     };
   }, []);
 
-  const handleCellClick = (itemId: string, column: string, currentValue: string) => {
+  const handleCellClick = (itemId: string, column: string, currentValue: string | undefined) => {
     setEditingCell({ rowId: itemId, column });
     setEditValue(String(currentValue || ''));
   };
 
   const handleCellBlur = async () => {
-    if (editingCell && editValue !== undefined && !isSaving) {
-      setIsSaving(true);
-      try {
-        // Map column names to actual field names
-        const fieldMap: Record<string, string> = {
-          'title': 'title',
-        };
-        
-        const field = fieldMap[editingCell.column] || editingCell.column;
-        await onUpdate(editingCell.rowId, field, editValue);
-      } catch (err) {
-        console.error('Error saving cell:', err);
-      } finally {
-        setIsSaving(false);
-        setEditingCell(null);
-        setEditValue('');
-      }
-    } else {
+    if (!editingCell || editValue === undefined || isSaving) {
+      setEditingCell(null);
+      setEditValue('');
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      const fieldMap: Record<string, string> = {
+        title: 'title',
+      };
+      
+      const field = fieldMap[editingCell.column] || editingCell.column;
+      await onUpdate(editingCell.rowId, field, editValue);
+    } catch (err) {
+      console.error('Error saving cell:', err);
+    } finally {
+      setIsSaving(false);
       setEditingCell(null);
       setEditValue('');
     }
@@ -254,9 +279,8 @@ const DatabasePanel: React.FC<DatabasePanelProps> = ({
           bValue = b.title || '';
           break;
         case 'priority':
-          const priorityOrder = { low: 1, medium: 2, high: 3, critical: 4 };
-          aValue = a.priority ? priorityOrder[a.priority] || 0 : 0;
-          bValue = b.priority ? priorityOrder[b.priority] || 0 : 0;
+          aValue = a.priority ? PRIORITY_ORDER[a.priority] || 0 : 0;
+          bValue = b.priority ? PRIORITY_ORDER[b.priority] || 0 : 0;
           break;
         case 'time':
           aValue = ('timeframe' in a && a.timeframe?.start) ? new Date(a.timeframe.start).getTime() : 0;
@@ -319,25 +343,25 @@ const DatabasePanel: React.FC<DatabasePanelProps> = ({
 
   const selectedCount = selectedItemIds.size;
 
-  // Calculate permanent indices for all items (memoized for performance)
-  const permanentIndexMap = React.useMemo(() => {
-    // Sort all items by createdAt to get creation order
+  /**
+   * Calculate permanent indices for all items based on creation order
+   * Memoized for performance - O(1) lookup instead of O(n)
+   */
+  const permanentIndexMap = useMemo(() => {
     const sortedByCreation = [...items].sort((a, b) => {
       const aTime = a.createdAt ? new Date(a.createdAt).getTime() : 0;
       const bTime = b.createdAt ? new Date(b.createdAt).getTime() : 0;
       return aTime - bTime; // oldest first
     });
     
-    // Create a map of item.id -> index for O(1) lookups
     const indexMap = new Map<string, number>();
     sortedByCreation.forEach((item, index) => {
       indexMap.set(item.id, index + 1); // 1-based index
     });
     
     return indexMap;
-  }, [items]); // Only recalculate when items array changes
+  }, [items]);
 
-  // Fast lookup function - O(1) instead of O(n)
   const getPermanentIndex = (item: Program | Project | Task | Subtask): number => {
     return permanentIndexMap.get(item.id) || 0;
   };
@@ -349,15 +373,17 @@ const DatabasePanel: React.FC<DatabasePanelProps> = ({
     }
   }, [scrollToTopTrigger]);
   
-  // Check if all items are selected
+  // Selection state
   const allSelected = multiSelectMode && items.length > 0 && selectedItemIds.size === items.length;
   const someSelected = multiSelectMode && selectedItemIds.size > 0 && selectedItemIds.size < items.length;
   
-  // Handle select all/deselect all
+  /**
+   * Handle select all/deselect all
+   * Since onItemSelectMulti toggles, we call it for items that need state changes
+   */
   const handleSelectAll = () => {
     if (!multiSelectMode || !onItemSelectMulti) return;
     
-    // Since onItemSelectMulti toggles, we need to call it for items that need to change state
     if (allSelected) {
       // Deselect all - toggle all currently selected items
       items.forEach(item => {
@@ -375,62 +401,98 @@ const DatabasePanel: React.FC<DatabasePanelProps> = ({
     }
   };
 
+  const getItemTypeLabel = (type: typeof ITEM_TYPES[number]): string => {
+    return type.charAt(0).toUpperCase() + type.slice(1, -1);
+  };
+
   return (
-    <Panel>
+    <Panel role="complementary" aria-label={`${itemType} database panel`}>
       <DatabaseHeader>
-        <ItemTypeSelector>
-          {(['programs', 'projects', 'tasks', 'subtasks'] as const).map((type) => (
+        <ItemTypeSelector role="tablist" aria-label="Item type selector">
+          {ITEM_TYPES.map((type) => (
             <TypeButton
               key={type}
+              type="button"
+              role="tab"
+              aria-selected={itemType === type}
+              aria-controls={`${type}-table`}
               $active={itemType === type}
               onClick={() => onItemTypeChange?.(type)}
             >
-              {type.charAt(0).toUpperCase() + type.slice(1, -1)}
+              {getItemTypeLabel(type)}
             </TypeButton>
           ))}
         </ItemTypeSelector>
         <DatabaseHeaderRight>
           {multiSelectMode && selectedCount > 0 && (
-            <DeleteButton onClick={onMultiDelete}>
+            <DeleteButton
+              type="button"
+              aria-label={`Delete ${selectedCount} selected items`}
+              onClick={onMultiDelete}
+            >
               Delete ({selectedCount})
             </DeleteButton>
           )}
           {!multiSelectMode ? (
-            <SelectButton onClick={onMultiSelectToggle}>
+            <SelectButton
+              type="button"
+              aria-label="Enable multi-select mode"
+              onClick={onMultiSelectToggle}
+            >
               Select
             </SelectButton>
           ) : (
-            <SelectButton onClick={onMultiSelectToggle} $active>
+            <SelectButton
+              type="button"
+              aria-label="Disable multi-select mode"
+              $active
+              onClick={onMultiSelectToggle}
+            >
               Cancel
             </SelectButton>
           )}
-          <AddButton onClick={onAdd}>＋</AddButton>
+          <AddButton
+            type="button"
+            aria-label={`Add new ${itemType.slice(0, -1)}`}
+            onClick={onAdd}
+          >
+            ＋
+          </AddButton>
         </DatabaseHeaderRight>
       </DatabaseHeader>
 
       <TableContainer ref={tableContainerRef}>
-        <Table>
+        <Table id={`${itemType}-table`} role="table" aria-label={`${itemType} data table`}>
           <colgroup>
             <col style={{ width: isMobile ? '20px' : '24px' }} />
             <col style={{ width: isMobile ? '28px' : '24px' }} />
             <col style={{ width: isMobile ? 'auto' : '200px' }} />
             <col style={{ width: 'auto' }} />
             {displayColumns.map((columnKey) => {
-              const columnConfig = {
-                priority: { width: '80px' },
-                time: { width: isMobile ? '90px' : '120px' },
-                status: { width: '90px' },
-                parent: { width: '120px' },
-                tag: { width: '100px' },
-                recurrence: { width: '100px' },
-              }[columnKey];
-              return <col key={columnKey} style={{ width: columnConfig?.width || 'auto' }} />;
-            })}</colgroup>
+              const columnWidths = {
+                priority: '80px',
+                time: isMobile ? '90px' : '120px',
+                status: '90px',
+                parent: '120px',
+                tag: '100px',
+                recurrence: '100px',
+              } as const;
+              return (
+                <col key={columnKey} style={{ width: columnWidths[columnKey] || 'auto' }} />
+              );
+            })}
+          </colgroup>
           <TableHeader>
             <DatabaseHeaderRow>
-              <DatabaseHeaderCell style={{ width: isMobile ? '20px' : '24px', padding: '0' }}>
-                {multiSelectMode ? (
-                  <RowCheckbox 
+              <DatabaseHeaderCell
+                $width={isMobile ? '20px' : '24px'}
+                $padding="0"
+              >
+                {multiSelectMode && (
+                  <RowCheckbox
+                    role="checkbox"
+                    aria-checked={allSelected ? 'true' : someSelected ? 'mixed' : 'false'}
+                    aria-label={allSelected ? 'Deselect all items' : 'Select all items'}
                     $checked={allSelected}
                     $indeterminate={someSelected}
                     onClick={(e) => {
@@ -440,206 +502,259 @@ const DatabasePanel: React.FC<DatabasePanelProps> = ({
                   >
                     {allSelected ? '✓' : someSelected ? '−' : ''}
                   </RowCheckbox>
-                ) : ''}
+                )}
               </DatabaseHeaderCell>
-              <DatabaseHeaderCell 
+              <DatabaseHeaderCell
                 $alignRight
                 $sortable
                 $sorted={sortField === 'createdAt'}
                 $sortDirection={sortField === 'createdAt' ? sortDirection : null}
+                $width={isMobile ? '28px' : '24px'}
+                $paddingRight={isMobile ? '2px' : '4px'}
+                $paddingLeft="0"
                 onClick={() => handleSort('createdAt')}
-                style={{ width: isMobile ? '28px' : '24px', paddingRight: isMobile ? '2px' : '4px', paddingLeft: '0' }}
+                aria-sort={sortField === 'createdAt' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}
+                aria-label="Sort by creation date"
               >
                 #
               </DatabaseHeaderCell>
-              <DatabaseHeaderCell 
-                $alignLeft 
+              <DatabaseHeaderCell
+                $alignLeft
                 $sortable
                 $sorted={sortField === 'title'}
                 $sortDirection={sortField === 'title' ? sortDirection : null}
+                $paddingLeft={isMobile ? '2px' : '4px'}
                 onClick={() => handleSort('title')}
-                style={{ paddingLeft: isMobile ? '2px' : '4px' }}
+                aria-sort={sortField === 'title' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}
+                aria-label="Sort by name"
               >
                 Name
               </DatabaseHeaderCell>
               <SpacerHeaderCell />
-              {/* Render customizable columns */}
               {displayColumns.map((columnKey) => {
-                const columnConfig = {
-                  priority: { label: 'Priority', sortField: 'priority', align: 'right' as 'center' | 'left' | 'right', minWidth: '80px' },
-                  time: { label: 'Time', sortField: 'time', align: 'left' as 'center' | 'left' | 'right' },
-                  status: { label: 'Status', sortField: 'status', align: 'left' as 'center' | 'left' | 'right', minWidth: '90px' },
-                  parent: { label: 'Parent', sortField: 'parent', align: 'left' as 'center' | 'left' | 'right', minWidth: '120px' },
-                  tag: { label: 'Tag', sortField: 'tag', align: 'left' as 'center' | 'left' | 'right', minWidth: '100px' },
-                  recurrence: { label: 'Recurrence', sortField: 'recurrence', align: 'center' as 'center' | 'left' | 'right', minWidth: '100px' },
-                }[columnKey];
+                const columnConfigs = {
+                  priority: { label: 'Priority', sortField: 'priority', align: 'right' as const, minWidth: '80px' },
+                  time: { label: 'Time', sortField: 'time', align: 'left' as const, minWidth: undefined },
+                  status: { label: 'Status', sortField: 'status', align: 'left' as const, minWidth: '90px' },
+                  parent: { label: 'Parent', sortField: 'parent', align: 'left' as const, minWidth: '120px' },
+                  tag: { label: 'Tag', sortField: 'tag', align: 'left' as const, minWidth: '100px' },
+                  recurrence: { label: 'Recurrence', sortField: 'recurrence', align: 'center' as const, minWidth: '100px' },
+                } as const;
                 
-                if (!columnConfig) return null;
+                const config = columnConfigs[columnKey];
+                if (!config) return null;
                 
-                const isSorted = sortField === columnConfig.sortField;
+                const isSorted = sortField === config.sortField;
                 const sortDir = isSorted ? sortDirection : null;
                 
                 return (
                   <DatabaseHeaderCell
                     key={columnKey}
-                    $alignLeft={columnConfig.align === 'left'}
-                    $alignRight={columnConfig.align === 'right'}
-                    $centerText={columnConfig.align === 'center'}
+                    $alignLeft={config.align === 'left'}
+                    $alignRight={config.align === 'right'}
+                    $centerText={config.align === 'center'}
                     $sortable
                     $sorted={isSorted}
                     $sortDirection={sortDir}
-                    onClick={() => handleSort(columnConfig.sortField)}
-                    style={{ minWidth: columnConfig.minWidth, whiteSpace: 'nowrap' }}
+                    $minWidth={config.minWidth}
+                    onClick={() => handleSort(config.sortField)}
+                    aria-sort={isSorted ? (sortDir === 'asc' ? 'ascending' : 'descending') : 'none'}
+                    aria-label={`Sort by ${config.label.toLowerCase()}`}
                   >
-                    {columnConfig.label}
+                    {config.label}
                   </DatabaseHeaderCell>
                 );
               })}
             </DatabaseHeaderRow>
           </TableHeader>
           <TableBody>
-            {displayItems.map((item, index) => {
-                const level = 0;
-                const isSelected = selectedItemId === item.id;
-                const isMultiSelected = multiSelectMode && selectedItemIds.has(item.id);
-                const timeRange = getTimeRange(item, itemType);
-                
-                return (
-                  <DataRow
-                    key={item.id}
-                    onClick={() => {
-                      if (multiSelectMode && onItemSelectMulti) {
-                        onItemSelectMulti(item.id);
-                      } else {
-                        onSelect(item);
-                      }
-                    }}
-                    $isSelected={isSelected || isMultiSelected}
+            {displayItems.map((item) => {
+              const isSelected = selectedItemId === item.id;
+              const isMultiSelected = multiSelectMode && selectedItemIds.has(item.id);
+              const timeRange = getTimeRange(item, itemType);
+              const isRowSelected = isSelected || isMultiSelected;
+              
+              return (
+                <DataRow
+                  key={item.id}
+                  role="row"
+                  aria-selected={isRowSelected}
+                  onClick={() => {
+                    if (multiSelectMode && onItemSelectMulti) {
+                      onItemSelectMulti(item.id);
+                    } else {
+                      onSelect(item);
+                    }
+                  }}
+                  $isSelected={isRowSelected}
+                >
+                  <DataCell
+                    $alignLeft
+                    $width={isMobile ? '20px' : '24px'}
+                    $padding={isMobile ? '0.2rem 0' : '0.3rem 0'}
+                    $cursor={multiSelectMode ? 'pointer' : 'default'}
                   >
-                    <DataCell 
-                      $alignLeft 
-                      style={{ width: isMobile ? '20px' : '24px', padding: isMobile ? '0.2rem 0' : '0.3rem 0', cursor: multiSelectMode ? 'pointer' : 'default' }}
-                    >
-                      {multiSelectMode ? (
-                        <RowCheckbox 
-                          $checked={isMultiSelected}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            if (onItemSelectMulti) {
-                              onItemSelectMulti(item.id);
-                            }
-                          }}
-                        >
-                          {isMultiSelected && '✓'}
-                        </RowCheckbox>
-                      ) : null}
-                    </DataCell>
-                    <DataCell $alignLeft style={{ width: isMobile ? '28px' : '24px', paddingRight: isMobile ? '2px' : '4px', paddingLeft: '0' }}>
-                      <IndexCellContent $level={level}>
-                        <ExpandSpacer />
-                        {String(getPermanentIndex(item)).padStart(2, '0')}
-                      </IndexCellContent>
-                    </DataCell>
-                    <DataCell $alignLeft style={{ paddingLeft: isMobile ? '2px' : '4px' }}>
-                      {editingCell?.rowId === item.id && editingCell?.column === 'title' ? (
-                        <EditInputWrapper
+                    {multiSelectMode && (
+                      <RowCheckbox
+                        role="checkbox"
+                        aria-checked={isMultiSelected}
+                        aria-label={`Select ${item.title || 'item'}`}
+                        $checked={isMultiSelected}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (onItemSelectMulti) {
+                            onItemSelectMulti(item.id);
+                          }
+                        }}
+                      >
+                        {isMultiSelected && '✓'}
+                      </RowCheckbox>
+                    )}
+                  </DataCell>
+                  <DataCell
+                    $alignLeft
+                    $width={isMobile ? '28px' : '24px'}
+                    $paddingRight={isMobile ? '2px' : '4px'}
+                    $paddingLeft="0"
+                  >
+                    <IndexCellContent>
+                      <ExpandSpacer />
+                      {String(getPermanentIndex(item)).padStart(2, '0')}
+                    </IndexCellContent>
+                  </DataCell>
+                  <DataCell $alignLeft $paddingLeft={isMobile ? '2px' : '4px'}>
+                    {editingCell?.rowId === item.id && editingCell?.column === 'title' ? (
+                      <EditInputWrapper
+                        onClick={(e) => e.stopPropagation()}
+                        onDoubleClick={(e) => e.stopPropagation()}
+                      >
+                        <EditInput
+                          type="text"
+                          value={editValue}
+                          onChange={(e) => setEditValue(e.target.value)}
+                          onBlur={handleCellBlur}
+                          onKeyDown={(e) => handleKeyPress(e, item.id, 'title')}
                           onClick={(e) => e.stopPropagation()}
-                          onDoubleClick={(e) => e.stopPropagation()}
-                        >
-                          <EditInput
-                            value={editValue}
-                            onChange={(e) => setEditValue(e.target.value)}
-                            onBlur={handleCellBlur}
-                            onKeyDown={(e) => handleKeyPress(e, item.id, 'title')}
-                            onClick={(e) => e.stopPropagation()}
-                            onDoubleClick={(e) => {
-                              e.stopPropagation();
-                              e.currentTarget.select();
-                            }}
-                            autoFocus
-                          />
-                        </EditInputWrapper>
-                      ) : (
-                        <CellText
-                          onClick={(e) => {
+                          onDoubleClick={(e) => {
                             e.stopPropagation();
-                            handleCellClick(item.id, 'title', item.title);
+                            e.currentTarget.select();
                           }}
-                        >
-                          {item.title || '-'}
-                        </CellText>
-                      )}
-                    </DataCell>
-                    <SpacerCell />
-                    {/* Render customizable columns */}
-                    {displayColumns.map((columnKey) => {
-                      switch (columnKey) {
-                        case 'priority':
-                          return (
-                            <DataCell key={columnKey} $alignRight style={{ minWidth: '80px', whiteSpace: 'nowrap' }}>
-                              {item.priority || '-'}
-                            </DataCell>
-                          );
-                        case 'time':
-                          return (
-                            <DataCell key={columnKey} $alignLeft style={{ paddingRight: isMobile ? '4px' : '10px' }}>
-                              {timeRange}
-                            </DataCell>
-                          );
-                        case 'status':
-                          return (
-                            <DataCell key={columnKey} $alignLeft style={{ minWidth: '90px', whiteSpace: 'nowrap' }}>
-                              {'status' in item ? (item.status || '-') : '-'}
-                            </DataCell>
-                          );
-                        case 'parent':
-                          const getParentDisplay = (item: Program | Project | Task | Subtask): string => {
-                            if (!('parentId' in item) || !item.parentId) return '-';
-                            
-                            if (itemType === 'projects') {
-                              const parent = allPrograms.find(p => p.id === item.parentId);
-                              return parent?.title || '-';
-                            } else if (itemType === 'tasks') {
-                              const parent = allProjects.find(p => p.id === item.parentId) || 
-                                             allPrograms.find(p => p.id === item.parentId);
-                              return parent?.title || '-';
-                            } else if (itemType === 'subtasks') {
-                              const parent = allTasks.find(t => t.id === item.parentId);
-                              return parent?.title || '-';
-                            }
-                            return '-';
-                          };
-                          return (
-                            <DataCell key={columnKey} $alignLeft style={{ minWidth: '120px' }}>
-                              {getParentDisplay(item)}
-                            </DataCell>
-                          );
-                        case 'tag':
-                          return (
-                            <DataCell key={columnKey} $alignLeft style={{ minWidth: '100px' }}>
-                              {(item.tags && item.tags.length > 0) ? item.tags[0] : '-'}
-                            </DataCell>
-                          );
-                        case 'recurrence':
-                          const recurrenceType = ('recurrence' in item && item.recurrence) 
-                            ? item.recurrence.type 
-                            : 'none';
-                          return (
-                            <DataCell key={columnKey} $alignRight $centerText style={{ minWidth: '100px', whiteSpace: 'nowrap' }}>
-                              {recurrenceType !== 'none' ? recurrenceType : '-'}
-                            </DataCell>
-                          );
-                        default:
-                          return null;
+                          autoFocus
+                          aria-label="Edit item title"
+                        />
+                      </EditInputWrapper>
+                    ) : (
+                      <CellText
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleCellClick(item.id, 'title', item.title);
+                        }}
+                      >
+                        {item.title || EMPTY_VALUE}
+                      </CellText>
+                    )}
+                  </DataCell>
+                  <SpacerCell />
+                  {displayColumns.map((columnKey) => {
+                    switch (columnKey) {
+                      case 'priority':
+                        return (
+                          <DataCell
+                            key={columnKey}
+                            $alignRight
+                            $minWidth="80px"
+                            $whiteSpace="nowrap"
+                          >
+                            {item.priority || EMPTY_VALUE}
+                          </DataCell>
+                        );
+                      case 'time':
+                        return (
+                          <DataCell
+                            key={columnKey}
+                            $alignLeft
+                            $paddingRight={isMobile ? '4px' : '10px'}
+                          >
+                            {timeRange}
+                          </DataCell>
+                        );
+                      case 'status':
+                        return (
+                          <DataCell
+                            key={columnKey}
+                            $alignLeft
+                            $minWidth="90px"
+                            $whiteSpace="nowrap"
+                          >
+                            {'status' in item ? (item.status || EMPTY_VALUE) : EMPTY_VALUE}
+                          </DataCell>
+                        );
+                      case 'parent': {
+                        const getParentDisplay = (item: Program | Project | Task | Subtask): string => {
+                          if (!('parentId' in item) || !item.parentId) return EMPTY_VALUE;
+                          
+                          if (itemType === 'projects') {
+                            const parent = allPrograms.find(p => p.id === item.parentId);
+                            return parent?.title || EMPTY_VALUE;
+                          } else if (itemType === 'tasks') {
+                            const parent = allProjects.find(p => p.id === item.parentId) ||
+                                           allPrograms.find(p => p.id === item.parentId);
+                            return parent?.title || EMPTY_VALUE;
+                          } else if (itemType === 'subtasks') {
+                            const parent = allTasks.find(t => t.id === item.parentId);
+                            return parent?.title || EMPTY_VALUE;
+                          }
+                          return EMPTY_VALUE;
+                        };
+                        return (
+                          <DataCell key={columnKey} $alignLeft $minWidth="120px">
+                            {getParentDisplay(item)}
+                          </DataCell>
+                        );
                       }
-                    })}
-                  </DataRow>
-                );
-              })}
-            {/* Empty row for quick add */}
+                      case 'tag':
+                        return (
+                          <DataCell key={columnKey} $alignLeft $minWidth="100px">
+                            {(item.tags && item.tags.length > 0) ? item.tags[0] : EMPTY_VALUE}
+                          </DataCell>
+                        );
+                      case 'recurrence': {
+                        const recurrenceType = ('recurrence' in item && item.recurrence)
+                          ? item.recurrence.type
+                          : 'none';
+                        return (
+                          <DataCell
+                            key={columnKey}
+                            $alignRight
+                            $centerText
+                            $minWidth="100px"
+                            $whiteSpace="nowrap"
+                          >
+                            {recurrenceType !== 'none' ? recurrenceType : EMPTY_VALUE}
+                          </DataCell>
+                        );
+                      }
+                      default:
+                        return null;
+                    }
+                  })}
+                </DataRow>
+              );
+            })}
             <EmptyRow>
               <EmptyCell colSpan={4 + displayColumns.length}>
-                <EmptyText onClick={onAdd}>
+                <EmptyText
+                  role="button"
+                  tabIndex={0}
+                  onClick={onAdd}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      onAdd();
+                    }
+                  }}
+                  aria-label={`Add new ${itemType.slice(0, -1)}`}
+                >
                   Click here or ＋ to add new {itemType === 'programs' ? 'program' : itemType === 'projects' ? 'project' : itemType === 'tasks' ? 'task' : 'subtask'}
                 </EmptyText>
               </EmptyCell>
@@ -653,8 +768,7 @@ const DatabasePanel: React.FC<DatabasePanelProps> = ({
 
 export default DatabasePanel;
 
-// Mobile breakpoint
-const mobileBreakpoint = '780px';
+// Styled Components
 
 const Panel = styled.aside`
   width: 100%;
@@ -673,7 +787,7 @@ const Panel = styled.aside`
   box-sizing: border-box;
   max-width: 516px; /* Limit width on mobile */
 
-  @media (min-width: ${mobileBreakpoint}) {
+  @media (min-width: ${MOBILE_BREAKPOINT_PX}) {
     width: 50%;
     height: 100%;
     padding: 1.25rem;
@@ -707,7 +821,7 @@ const DatabaseHeader = styled.div`
   padding-left: 0.75rem;
   padding-right: 1rem;
 
-  @media (min-width: ${mobileBreakpoint}) {
+  @media (min-width: ${MOBILE_BREAKPOINT_PX}) {
     margin-bottom: 2rem;
     max-width: 600px;
     padding-top: 0;
@@ -740,7 +854,7 @@ const TypeButton = styled.button<{ $active: boolean }>`
   text-decoration: none;
   position: relative;
 
-  @media (min-width: ${mobileBreakpoint}) {
+  @media (min-width: ${MOBILE_BREAKPOINT_PX}) {
     padding: 0.25rem 0.75rem;
     font-size: 12px;
   }
@@ -772,7 +886,7 @@ const DatabaseHeaderRight = styled.div`
   justify-content: flex-end;
   gap: 0.5rem;
 
-  @media (min-width: ${mobileBreakpoint}) {
+  @media (min-width: ${MOBILE_BREAKPOINT_PX}) {
     gap: 1rem;
   }
 `;
@@ -789,7 +903,7 @@ const DeleteButton = styled.button`
   line-height: 1.2;
   text-decoration: none;
 
-  @media (min-width: ${mobileBreakpoint}) {
+  @media (min-width: ${MOBILE_BREAKPOINT_PX}) {
     font-size: 12px;
     padding: 0.25rem 0.75rem;
   }
@@ -814,7 +928,7 @@ const SelectButton = styled.button<{ $active?: boolean }>`
   line-height: 1.2;
   text-decoration: none;
 
-  @media (min-width: ${mobileBreakpoint}) {
+  @media (min-width: ${MOBILE_BREAKPOINT_PX}) {
     font-size: 12px;
     padding: 0.25rem 0.75rem;
   }
@@ -852,7 +966,7 @@ const TableContainer = styled.div`
   overflow-x: hidden;
   min-height: fit-content;
 
-  @media (min-width: ${mobileBreakpoint}) {
+  @media (min-width: ${MOBILE_BREAKPOINT_PX}) {
     max-width: 600px;
     overflow-y: visible;
   }
@@ -886,8 +1000,26 @@ const SpacerHeaderCell = styled.th`
   padding: 0;
 `;
 
-const DatabaseHeaderCell = styled.th<{ $alignLeft?: boolean; $alignRight?: boolean; $centerText?: boolean; $sortable?: boolean; $sorted?: boolean; $sortDirection?: 'asc' | 'desc' | null }>`
-  padding: 0.2rem 0;
+interface DatabaseHeaderCellProps {
+  $alignLeft?: boolean;
+  $alignRight?: boolean;
+  $centerText?: boolean;
+  $sortable?: boolean;
+  $sorted?: boolean;
+  $sortDirection?: 'asc' | 'desc' | null;
+  $width?: string;
+  $padding?: string;
+  $paddingLeft?: string;
+  $paddingRight?: string;
+  $minWidth?: string;
+}
+
+const DatabaseHeaderCell = styled.th<DatabaseHeaderCellProps>`
+  padding: ${props => props.$padding || '0.2rem 0'};
+  padding-left: ${props => props.$paddingLeft || (props.$alignLeft ? '0' : 'auto')};
+  padding-right: ${props => props.$paddingRight || (props.$alignRight ? '0' : 'auto')};
+  width: ${props => props.$width || 'auto'};
+  min-width: ${props => props.$minWidth || 'auto'};
   text-align: ${props => props.$centerText ? 'center' : props.$alignRight ? 'right' : props.$alignLeft ? 'left' : 'left'};
   font-size: 11px;
   font-weight: 400;
@@ -898,8 +1030,8 @@ const DatabaseHeaderCell = styled.th<{ $alignLeft?: boolean; $alignRight?: boole
   user-select: none;
   transition: all 0.2s;
 
-  @media (min-width: ${mobileBreakpoint}) {
-    padding: 0.3rem 0;
+  @media (min-width: ${MOBILE_BREAKPOINT_PX}) {
+    padding: ${props => props.$padding || '0.3rem 0'};
     font-size: 12px;
   }
 
@@ -909,7 +1041,7 @@ const DatabaseHeaderCell = styled.th<{ $alignLeft?: boolean; $alignRight?: boole
   ` : props.$alignRight ? `
     padding-left: 10px;
     padding-right: 0;
-    width: 1%;
+    width: ${props.$width || '1%'};
   ` : ''}
 
   &:first-child {
@@ -919,12 +1051,12 @@ const DatabaseHeaderCell = styled.th<{ $alignLeft?: boolean; $alignRight?: boole
   }
 
   &:last-child {
-    padding-right: 1rem; /* Match Header padding on mobile */
+    padding-right: 1rem;
     padding-left: 20px;
     min-width: calc(1% + 10px);
 
-    @media (min-width: ${mobileBreakpoint}) {
-      padding-right: 1.25rem; /* Match Header padding on desktop */
+    @media (min-width: ${MOBILE_BREAKPOINT_PX}) {
+      padding-right: 1.25rem;
     }
   }
 
@@ -955,18 +1087,36 @@ const DataRow = styled.tr<{ $isSelected?: boolean }>`
   }
 `;
 
-const DataCell = styled.td<{ $alignLeft?: boolean; $alignRight?: boolean; $centerText?: boolean }>`
-  padding: 0.2rem 0;
+interface DataCellProps {
+  $alignLeft?: boolean;
+  $alignRight?: boolean;
+  $centerText?: boolean;
+  $width?: string;
+  $padding?: string;
+  $paddingLeft?: string;
+  $paddingRight?: string;
+  $minWidth?: string;
+  $whiteSpace?: string;
+  $cursor?: string;
+}
+
+const DataCell = styled.td<DataCellProps>`
+  padding: ${props => props.$padding || '0.2rem 0'};
+  padding-left: ${props => props.$paddingLeft || (props.$alignLeft ? '0' : 'auto')};
+  padding-right: ${props => props.$paddingRight || (props.$alignRight ? '0' : 'auto')};
+  width: ${props => props.$width || 'auto'};
+  min-width: ${props => props.$minWidth || 'auto'};
+  white-space: ${props => props.$whiteSpace || 'nowrap'};
+  cursor: ${props => props.$cursor || 'default'};
   font-size: 11px;
   color: var(--text-primary, #DEDEE5);
   font-family: Helvetica, Arial, sans-serif;
   line-height: 1.2;
   text-align: ${props => props.$centerText ? 'center' : props.$alignRight ? 'right' : props.$alignLeft ? 'left' : 'left'};
   vertical-align: top;
-  white-space: nowrap;
 
-  @media (min-width: ${mobileBreakpoint}) {
-    padding: 0.3rem 0;
+  @media (min-width: ${MOBILE_BREAKPOINT_PX}) {
+    padding: ${props => props.$padding || '0.3rem 0'};
     font-size: 12px;
   }
 
@@ -976,7 +1126,7 @@ const DataCell = styled.td<{ $alignLeft?: boolean; $alignRight?: boolean; $cente
   ` : props.$alignRight ? `
     padding-left: 10px;
     padding-right: 0;
-    width: 1%;
+    width: ${props.$width || '1%'};
   ` : ''}
 
   &:first-child {
@@ -986,12 +1136,12 @@ const DataCell = styled.td<{ $alignLeft?: boolean; $alignRight?: boolean; $cente
   }
 
   &:last-child {
-    padding-right: 1rem; /* Match Header padding on mobile */
+    padding-right: 1rem;
     padding-left: 20px;
     min-width: calc(1% + 10px);
 
-    @media (min-width: ${mobileBreakpoint}) {
-      padding-right: 1.25rem; /* Match Header padding on desktop */
+    @media (min-width: ${MOBILE_BREAKPOINT_PX}) {
+      padding-right: 1.25rem;
     }
   }
 `;
@@ -1075,32 +1225,13 @@ const RowCheckbox = styled.div<{ $checked: boolean; $indeterminate?: boolean }>`
   cursor: pointer;
 `;
 
-const IndexCellContent = styled.div<{ $level: number }>`
+const IndexCellContent = styled.div`
   display: flex;
   align-items: flex-end;
   justify-content: flex-end;
   gap: 0;
   width: 100%;
   height: 15px;
-`;
-
-const ExpandButton = styled.button`
-  background: transparent;
-  border: none;
-  color: var(--text-secondary, #8A8A95);
-  font-size: 8px;
-  cursor: pointer;
-  padding: 0;
-  width: 12px;
-  height: 12px;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  transition: color 0.2s;
-  
-  &:hover {
-    color: var(--text-primary, #DEDEE5);
-  }
 `;
 
 const ExpandSpacer = styled.div`

@@ -4,6 +4,14 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import styled from 'styled-components';
 
+// Constants
+const MONTHS_IN_YEAR = 12;
+const DAYS_IN_WEEK = 7;
+const CALENDAR_GRID_SIZE = 42; // 6 weeks × 7 days
+const LAST_MONTH_INDEX = 11;
+const FIRST_MONTH_INDEX = 0;
+const SCROLL_THRESHOLD = 50; // Pixels of scroll before changing month
+
 interface DatePickerProps {
   value: Date;
   onChange: (date: Date) => void;
@@ -68,25 +76,28 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange, onClose }) => 
   }
 
   // Next month days
-  const remainingDays = 42 - days.length;
+  const remainingDays = CALENDAR_GRID_SIZE - days.length;
   for (let i = 1; i <= remainingDays; i++) {
     days.push({ day: i, isCurrentMonth: false });
   }
 
-  const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
   const dayNames = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
   const navigateMonth = useCallback((direction: number) => {
     if (direction > 0) {
-      if (currentMonth === 11) {
-        setCurrentMonth(0);
+      if (currentMonth === LAST_MONTH_INDEX) {
+        setCurrentMonth(FIRST_MONTH_INDEX);
         setCurrentYear(currentYear + 1);
       } else {
         setCurrentMonth(currentMonth + 1);
       }
     } else {
-      if (currentMonth === 0) {
-        setCurrentMonth(11);
+      if (currentMonth === FIRST_MONTH_INDEX) {
+        setCurrentMonth(LAST_MONTH_INDEX);
         setCurrentYear(currentYear - 1);
       } else {
         setCurrentMonth(currentMonth - 1);
@@ -97,7 +108,6 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange, onClose }) => 
   // Allow scrolling to navigate months even when mouse is over other elements (like drawer)
   useEffect(() => {
     let scrollAccumulator = 0;
-    const SCROLL_THRESHOLD = 50; // Pixels of scroll before changing month
 
     const handleWheel = (event: WheelEvent) => {
       if (pickerRef.current) {
