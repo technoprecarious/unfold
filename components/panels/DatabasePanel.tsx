@@ -510,7 +510,7 @@ const DatabasePanel: React.FC<DatabasePanelProps> = ({
                 $sorted={sortField === 'createdAt'}
                 $sortDirection={sortField === 'createdAt' ? sortDirection : null}
                 $width={isMobile ? '28px' : '24px'}
-                $paddingRight={isMobile ? '2px' : '4px'}
+                $paddingRight="4px"
                 $paddingLeft="0"
                 onClick={() => handleSort('createdAt')}
                 aria-sort={sortField === 'createdAt' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}
@@ -614,7 +614,7 @@ const DatabasePanel: React.FC<DatabasePanelProps> = ({
                   <DataCell
                     $alignLeft
                     $width={isMobile ? '28px' : '24px'}
-                    $paddingRight={isMobile ? '2px' : '4px'}
+                    $paddingRight="4px"
                     $paddingLeft="0"
                   >
                     <IndexCellContent>
@@ -1030,19 +1030,22 @@ const DatabaseHeaderCell = styled.th<DatabaseHeaderCellProps>`
   user-select: none;
   transition: all 0.2s;
 
-  @media (min-width: ${MOBILE_BREAKPOINT_PX}) {
-    padding: ${props => props.$padding || '0.3rem 0'};
-    font-size: 12px;
-  }
-
   ${props => props.$alignLeft ? `
-    padding-right: 10px;
-    padding-left: 0;
+    padding-right: ${props.$paddingRight || '10px'};
+    padding-left: ${props.$paddingLeft || '0'};
   ` : props.$alignRight ? `
-    padding-left: 10px;
-    padding-right: 0;
+    padding-left: ${props.$paddingLeft || '10px'};
+    padding-right: ${props.$paddingRight || '0'};
     width: ${props.$width || '1%'};
   ` : ''}
+
+  @media (min-width: ${MOBILE_BREAKPOINT_PX}) {
+    padding-top: ${props => props.$padding ? props.$padding.split(' ')[0] : '0.3rem'};
+    padding-bottom: ${props => props.$padding ? props.$padding.split(' ')[0] : '0.3rem'};
+    padding-left: ${props => props.$paddingLeft || (props.$alignLeft ? '0' : 'auto')};
+    padding-right: ${props => props.$paddingRight || (props.$alignRight ? '0' : 'auto')};
+    font-size: 12px;
+  }
 
   &:first-child {
     padding-left: 0;
@@ -1115,19 +1118,22 @@ const DataCell = styled.td<DataCellProps>`
   text-align: ${props => props.$centerText ? 'center' : props.$alignRight ? 'right' : props.$alignLeft ? 'left' : 'left'};
   vertical-align: top;
 
-  @media (min-width: ${MOBILE_BREAKPOINT_PX}) {
-    padding: ${props => props.$padding || '0.3rem 0'};
-    font-size: 12px;
-  }
-
   ${props => props.$alignLeft ? `
-    padding-right: 20px;
-    padding-left: 0;
+    padding-right: ${props.$paddingRight || '20px'};
+    padding-left: ${props.$paddingLeft || '0'};
   ` : props.$alignRight ? `
-    padding-left: 10px;
-    padding-right: 0;
+    padding-left: ${props.$paddingLeft || '10px'};
+    padding-right: ${props.$paddingRight || '0'};
     width: ${props.$width || '1%'};
   ` : ''}
+
+  @media (min-width: ${MOBILE_BREAKPOINT_PX}) {
+    padding-top: ${props => props.$padding ? props.$padding.split(' ')[0] : '0.3rem'};
+    padding-bottom: ${props => props.$padding ? props.$padding.split(' ')[0] : '0.3rem'};
+    padding-left: ${props => props.$paddingLeft || (props.$alignLeft ? '0' : 'auto')};
+    padding-right: ${props => props.$paddingRight || (props.$alignRight ? '0' : 'auto')};
+    font-size: 12px;
+  }
 
   &:first-child {
     padding-left: 0;
