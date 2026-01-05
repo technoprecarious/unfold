@@ -943,7 +943,7 @@ const Container = styled.div`
 const TopBar = styled.div`
   height: 3rem;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
   padding: 0 var(--spacing-8);
   background: var(--bg-primary, #000000);
