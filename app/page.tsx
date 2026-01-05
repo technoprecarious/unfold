@@ -363,7 +363,8 @@ export default function Home() {
       console.error('Error updating item:', err);
       // Revert optimistic update on error by refreshing from Firestore
       await refreshData();
-      await alert(`Failed to update: ${err.message}`, 'Error');
+      const { sanitizeErrorMessage } = await import('@/lib/utils/errorHandler');
+      await alert(`Failed to update: ${sanitizeErrorMessage(err)}`, 'Error');
     }
   };
 
@@ -389,7 +390,8 @@ export default function Home() {
       setSelectedItem(null);
     } catch (err: any) {
       console.error('Error deleting item:', err);
-      await alert(`Failed to delete: ${err.message}`, 'Error');
+      const { sanitizeErrorMessage } = await import('@/lib/utils/errorHandler');
+      await alert(`Failed to delete: ${sanitizeErrorMessage(err)}`, 'Error');
       throw err; // Re-throw so Drawer can handle it
     }
   };
@@ -473,7 +475,8 @@ export default function Home() {
       }, SCROLL_DELAY_MS);
     } catch (err: any) {
       console.error('Error creating child item:', err);
-      await alert(`Failed to create ${childType.slice(0, -1)}: ${err.message}`, 'Error');
+      const { sanitizeErrorMessage } = await import('@/lib/utils/errorHandler');
+      await alert(`Failed to create ${childType.slice(0, -1)}: ${sanitizeErrorMessage(err)}`, 'Error');
     }
   };
   
@@ -538,7 +541,8 @@ export default function Home() {
       setSelectedItem(null);
     } catch (err: any) {
       console.error('Error deleting items:', err);
-      await alert(`Failed to delete items: ${err.message}`, 'Error');
+      const { sanitizeErrorMessage } = await import('@/lib/utils/errorHandler');
+      await alert(`Failed to delete items: ${sanitizeErrorMessage(err)}`, 'Error');
     }
   };
 
@@ -612,7 +616,8 @@ export default function Home() {
       }, SCROLL_DELAY_MS);
     } catch (err: any) {
       console.error('Error creating item:', err);
-      await alert(`Failed to create item: ${err.message}`, 'Error');
+      const { sanitizeErrorMessage } = await import('@/lib/utils/errorHandler');
+      await alert(`Failed to create item: ${sanitizeErrorMessage(err)}`, 'Error');
     }
   };
 

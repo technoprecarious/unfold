@@ -1,0 +1,228 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper function to check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Helper function to check if user owns the resource
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    // Helper function to validate string length
+    function isValidStringLength(value, maxLength) {
+      return value is string && value.size() <= maxLength;
+    }
+    
+    // Helper function to validate priority enum
+    function isValidPriority(value) {
+      return value == null || value in ['low', 'medium', 'high', 'critical'];
+    }
+    
+    // Helper function to validate status enum
+    function isValidStatusPrimary(value) {
+      return value == null || value in ['planned', 'active', 'paused', 'due', 'completed'];
+    }
+    
+    // Helper function to validate status secondary enum
+    function isValidStatusSecondary(value) {
+      return value == null || value in ['planned', 'completed'];
+    }
+    
+    // Helper function to validate recurrence type
+    function isValidRecurrenceType(value) {
+      return value == null || value in ['none', 'daily', 'weekly', 'monthly', 'yearly'];
+    }
+    
+    // Helper function to validate ISO date string
+    function isValidISODate(value) {
+      return value == null || (value is string && value.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}'));
+    }
+    
+    // Helper function to validate array of strings
+    function isValidStringArray(value, maxLength) {
+      return value == null || (value is list && value.size() <= maxLength && 
+        value.size() <= 100);
+    }
+    
+    // Users collection - users can only access their own user document
+    match /users/{userId} {
+      // Users can read their own user document
+      allow read: if isOwner(userId);
+      
+      // Users can write their own user document (for profile updates)
+      allow write: if isOwner(userId);
+      
+      // Programs collection
+      match /programs/{programId} {
+        // Users can only access their own programs
+        allow read, write: if isOwner(userId);
+        
+        // Validate program data on create/update
+        allow create: if isOwner(userId) && 
+          isValidStringLength(resource.data.title, 200) &&
+          isValidStringLength(resource.data.description, 5000) &&
+          isValidStringLength(resource.data.notes, 10000) &&
+          isValidPriority(resource.data.priority) &&
+          isValidStatusPrimary(resource.data.status) &&
+          isValidRecurrenceType(resource.data.get('recurrence', {}).get('type', null)) &&
+          isValidStringArray(resource.data.tags, 50) &&
+          isValidStringArray(resource.data.resources, 50) &&
+          isValidISODate(resource.data.get('timeframe', {}).get('start', null)) &&
+          isValidISODate(resource.data.get('timeframe', {}).get('deadline', null)) &&
+          isValidISODate(resource.data.get('timeframe', {}).get('targetEnd', null)) &&
+          isValidISODate(resource.data.get('timeframe', {}).get('actualEnd', null)) &&
+          resource.data.createdAt is string &&
+          resource.data.updatedAt is string;
+        
+        allow update: if isOwner(userId) &&
+          isValidStringLength(resource.data.title, 200) &&
+          isValidStringLength(resource.data.description, 5000) &&
+          isValidStringLength(resource.data.notes, 10000) &&
+          isValidPriority(resource.data.priority) &&
+          isValidStatusPrimary(resource.data.status) &&
+          isValidRecurrenceType(resource.data.get('recurrence', {}).get('type', null)) &&
+          isValidStringArray(resource.data.tags, 50) &&
+          isValidStringArray(resource.data.resources, 50) &&
+          isValidISODate(resource.data.get('timeframe', {}).get('start', null)) &&
+          isValidISODate(resource.data.get('timeframe', {}).get('deadline', null)) &&
+          isValidISODate(resource.data.get('timeframe', {}).get('targetEnd', null)) &&
+          isValidISODate(resource.data.get('timeframe', {}).get('actualEnd', null)) &&
+          resource.data.createdAt is string &&
+          resource.data.updatedAt is string;
+      }
+      
+      // Projects collection
+      match /projects/{projectId} {
+        allow read, write: if isOwner(userId);
+        
+        allow create: if isOwner(userId) &&
+          isValidStringLength(resource.data.title, 200) &&
+          isValidStringLength(resource.data.description, 5000) &&
+          isValidStringLength(resource.data.notes, 10000) &&
+          isValidPriority(resource.data.priority) &&
+          isValidStatusPrimary(resource.data.status) &&
+          isValidRecurrenceType(resource.data.get('recurrence', {}).get('type', null)) &&
+          isValidStringArray(resource.data.tags, 50) &&
+          isValidStringArray(resource.data.resources, 50) &&
+          isValidStringArray(resource.data.dependencies, 50) &&
+          isValidISODate(resource.data.get('timeframe', {}).get('start', null)) &&
+          isValidISODate(resource.data.get('timeframe', {}).get('deadline', null)) &&
+          isValidISODate(resource.data.get('timeframe', {}).get('targetEnd', null)) &&
+          isValidISODate(resource.data.get('timeframe', {}).get('actualEnd', null)) &&
+          resource.data.parentId is string &&
+          resource.data.createdAt is string &&
+          resource.data.updatedAt is string;
+        
+        allow update: if isOwner(userId) &&
+          isValidStringLength(resource.data.title, 200) &&
+          isValidStringLength(resource.data.description, 5000) &&
+          isValidStringLength(resource.data.notes, 10000) &&
+          isValidPriority(resource.data.priority) &&
+          isValidStatusPrimary(resource.data.status) &&
+          isValidRecurrenceType(resource.data.get('recurrence', {}).get('type', null)) &&
+          isValidStringArray(resource.data.tags, 50) &&
+          isValidStringArray(resource.data.resources, 50) &&
+          isValidStringArray(resource.data.dependencies, 50) &&
+          isValidISODate(resource.data.get('timeframe', {}).get('start', null)) &&
+          isValidISODate(resource.data.get('timeframe', {}).get('deadline', null)) &&
+          isValidISODate(resource.data.get('timeframe', {}).get('targetEnd', null)) &&
+          isValidISODate(resource.data.get('timeframe', {}).get('actualEnd', null)) &&
+          resource.data.parentId is string &&
+          resource.data.createdAt is string &&
+          resource.data.updatedAt is string;
+      }
+      
+      // Tasks collection
+      match /tasks/{taskId} {
+        allow read, write: if isOwner(userId);
+        
+        allow create: if isOwner(userId) &&
+          isValidStringLength(resource.data.title, 200) &&
+          isValidStringLength(resource.data.description, 5000) &&
+          isValidStringLength(resource.data.notes, 10000) &&
+          isValidPriority(resource.data.priority) &&
+          isValidStatusPrimary(resource.data.status) &&
+          isValidRecurrenceType(resource.data.get('recurrence', {}).get('type', null)) &&
+          isValidStringArray(resource.data.tags, 50) &&
+          isValidStringArray(resource.data.dependencies, 50) &&
+          isValidStringArray(resource.data.subtasks, 50) &&
+          isValidISODate(resource.data.get('timeframe', {}).get('start', null)) &&
+          isValidISODate(resource.data.get('timeframe', {}).get('targetEnd', null)) &&
+          isValidISODate(resource.data.get('timeframe', {}).get('actualEnd', null)) &&
+          resource.data.parentId is string &&
+          resource.data.createdAt is string &&
+          resource.data.updatedAt is string;
+        
+        allow update: if isOwner(userId) &&
+          isValidStringLength(resource.data.title, 200) &&
+          isValidStringLength(resource.data.description, 5000) &&
+          isValidStringLength(resource.data.notes, 10000) &&
+          isValidPriority(resource.data.priority) &&
+          isValidStatusPrimary(resource.data.status) &&
+          isValidRecurrenceType(resource.data.get('recurrence', {}).get('type', null)) &&
+          isValidStringArray(resource.data.tags, 50) &&
+          isValidStringArray(resource.data.dependencies, 50) &&
+          isValidStringArray(resource.data.subtasks, 50) &&
+          isValidISODate(resource.data.get('timeframe', {}).get('start', null)) &&
+          isValidISODate(resource.data.get('timeframe', {}).get('targetEnd', null)) &&
+          isValidISODate(resource.data.get('timeframe', {}).get('actualEnd', null)) &&
+          resource.data.parentId is string &&
+          resource.data.createdAt is string &&
+          resource.data.updatedAt is string;
+      }
+      
+      // Subtasks collection
+      match /subtasks/{subtaskId} {
+        allow read, write: if isOwner(userId);
+        
+        allow create: if isOwner(userId) &&
+          isValidStringLength(resource.data.title, 200) &&
+          isValidStringLength(resource.data.description, 5000) &&
+          isValidStringLength(resource.data.notes, 10000) &&
+          isValidPriority(resource.data.priority) &&
+          isValidStatusSecondary(resource.data.status) &&
+          isValidStringArray(resource.data.tags, 50) &&
+          isValidISODate(resource.data.get('timeframe', {}).get('start', null)) &&
+          isValidISODate(resource.data.get('timeframe', {}).get('targetEnd', null)) &&
+          isValidISODate(resource.data.get('timeframe', {}).get('actualEnd', null)) &&
+          resource.data.parentId is string &&
+          resource.data.createdAt is string &&
+          resource.data.updatedAt is string;
+        
+        allow update: if isOwner(userId) &&
+          isValidStringLength(resource.data.title, 200) &&
+          isValidStringLength(resource.data.description, 5000) &&
+          isValidStringLength(resource.data.notes, 10000) &&
+          isValidPriority(resource.data.priority) &&
+          isValidStatusSecondary(resource.data.status) &&
+          isValidStringArray(resource.data.tags, 50) &&
+          isValidISODate(resource.data.get('timeframe', {}).get('start', null)) &&
+          isValidISODate(resource.data.get('timeframe', {}).get('targetEnd', null)) &&
+          isValidISODate(resource.data.get('timeframe', {}).get('actualEnd', null)) &&
+          resource.data.parentId is string &&
+          resource.data.createdAt is string &&
+          resource.data.updatedAt is string;
+      }
+      
+      // Preferences collection
+      match /preferences/{preferenceId} {
+        allow read, write: if isOwner(userId);
+        
+        // Validate preferences structure
+        allow create, update: if isOwner(userId) &&
+          resource.data.columnOrder is list &&
+          resource.data.columnOrder.size() <= 10 &&
+          resource.data.theme in ['dark', 'light', 'system'];
+      }
+    }
+    
+    // Deny all other access
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
+

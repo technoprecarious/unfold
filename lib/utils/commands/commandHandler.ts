@@ -1175,6 +1175,13 @@ export class CommandHandler {
       // Since we can't easily do multi-line in current setup, we'll prompt for single-line JSON
       const jsonInput = await this.prompt('JSON data', true);
       
+      // Validate JSON size before parsing (prevent DoS)
+      const { validateJsonSize } = await import('../validation');
+      if (!validateJsonSize(jsonInput)) {
+        this.terminal.writeln('Error: JSON input is too large. Maximum size is 10KB.');
+        return;
+      }
+      
       let parsedData: Record<string, any>;
       try {
         parsedData = JSON.parse(jsonInput);

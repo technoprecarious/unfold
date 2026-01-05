@@ -396,10 +396,14 @@ const TerminalComponent: React.FC<TerminalComponentProps> = ({ onDataUpdate }) =
       } catch (error) {
         console.error('[Terminal] Initialization error:', error);
         if (container) {
-          container.innerHTML = `<div style="color: #DEDEE5; padding: 1rem; font-family: Helvetica, Arial, sans-serif; font-size: 12px;">
-            Terminal initialization failed: ${error instanceof Error ? error.message : 'Unknown error'}
-            <br/>Check console for details.
-          </div>`;
+          // Use textContent instead of innerHTML to prevent XSS
+          const errorDiv = document.createElement('div');
+          errorDiv.style.color = '#DEDEE5';
+          errorDiv.style.padding = '1rem';
+          errorDiv.style.fontFamily = 'Helvetica, Arial, sans-serif';
+          errorDiv.style.fontSize = '12px';
+          errorDiv.textContent = `Terminal initialization failed: ${error instanceof Error ? error.message : 'Unknown error'}. Check console for details.`;
+          container.appendChild(errorDiv);
         }
       }
     };
