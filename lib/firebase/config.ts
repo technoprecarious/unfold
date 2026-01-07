@@ -95,19 +95,30 @@ if (typeof window !== 'undefined') {
     authInstance = getAuth(appInstance);
     
     // Initialize App Check (only on client side, only if site key is provided)
+    // Skip App Check on localhost in development (reCAPTCHA can be unreliable)
     if (RECAPTCHA_SITE_KEY) {
-      try {
-        // Only initialize if not already initialized
-        if (!(window as any).__FIREBASE_APP_CHECK_INITIALIZED) {
-          initializeAppCheck(appInstance, {
-            provider: new ReCaptchaV3Provider(RECAPTCHA_SITE_KEY),
-            isTokenAutoRefreshEnabled: true,
-          });
-          (window as any).__FIREBASE_APP_CHECK_INITIALIZED = true;
-          logger.info('App Check initialized successfully');
+      const isLocalhost = typeof window !== 'undefined' && 
+        (window.location.hostname === 'localhost' || 
+         window.location.hostname === '127.0.0.1' ||
+         window.location.hostname.includes('localhost'));
+      
+      // Only initialize App Check if not on localhost (production/staging)
+      if (!isLocalhost) {
+        try {
+          // Only initialize if not already initialized
+          if (!(window as any).__FIREBASE_APP_CHECK_INITIALIZED) {
+            initializeAppCheck(appInstance, {
+              provider: new ReCaptchaV3Provider(RECAPTCHA_SITE_KEY),
+              isTokenAutoRefreshEnabled: true,
+            });
+            (window as any).__FIREBASE_APP_CHECK_INITIALIZED = true;
+            logger.info('App Check initialized successfully');
+          }
+        } catch (error) {
+          logger.error('App Check initialization error', error);
         }
-      } catch (error) {
-        logger.error('App Check initialization error', error);
+      } else {
+        logger.info('App Check skipped on localhost (development mode)');
       }
     }
     
