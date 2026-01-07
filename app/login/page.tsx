@@ -7,6 +7,7 @@ import { Eye, EyeOff } from 'lucide-react';
 import { auth, isFirebaseInitialized } from '@/lib/firebase/config';
 import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, User } from 'firebase/auth';
 import { mapAuthError } from '@/lib/auth/errorMessages';
+import { logger } from '@/lib/utils/logger';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -38,7 +39,7 @@ export default function LoginPage() {
       await signInWithEmailAndPassword(auth, email, password);
       router.push('/');
     } catch (err: any) {
-      console.error('Email sign-in error:', err);
+      logger.error('Email sign-in error', err);
       setError(mapAuthError(err));
     } finally {
       setIsSigningIn(false);
@@ -54,7 +55,7 @@ export default function LoginPage() {
       await signInWithPopup(auth, provider);
       router.push('/');
     } catch (err: any) {
-      console.error('Google sign-in error:', err);
+      logger.error('Google sign-in error', err);
       // If user just closed the popup, don't show error but still reset state
       if (err?.code !== 'auth/popup-closed-by-user') {
         setError(mapAuthError(err));

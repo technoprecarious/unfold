@@ -13,6 +13,7 @@ import { db, auth, isFirebaseInitialized } from '../firebase/config';
 import { Subtask } from '../types/types';
 import { generateId } from '../utils/idGenerator';
 import { removeUndefined } from './utils';
+import { logger } from '../utils/logger';
 
 const getSubtasksCollection = (uid: string) => {
   if (!db) throw new Error('Firebase not initialized');
@@ -96,7 +97,7 @@ export const updateSubtask = async (subtaskId: string, updates: Partial<Omit<Sub
   
   if (!docSnapshot.exists()) {
     // Document doesn't exist - create it with setDoc
-    console.warn(`updateSubtask - Document does not exist, creating new document: ${subtaskId}`);
+    logger.warn(`updateSubtask - Document does not exist, creating new document: ${subtaskId}`);
     const now = new Date().toISOString();
     await setDoc(subtaskDoc, {
       ...cleanedUpdates,

@@ -6,6 +6,9 @@ import { FitAddon } from 'xterm-addon-fit';
 import 'xterm/css/xterm.css';
 import { UnfoldCLI } from '@/lib/cli';
 import { useTheme } from '@/lib/theme/ThemeContext';
+import { createLogger } from '@/lib/utils/logger';
+
+const terminalLogger = createLogger('Terminal');
 
 interface TerminalComponentProps {
   onDataUpdate: () => void;
@@ -136,7 +139,7 @@ const TerminalComponent: React.FC<TerminalComponentProps> = ({ onDataUpdate }) =
       }
       
       if (!isReadyRef.current) {
-        console.log('[Terminal] Input blocked - terminal not ready yet. isReadyRef.current:', isReadyRef.current);
+        terminalLogger.debug('Input blocked - terminal not ready yet', { isReady: isReadyRef.current });
         return;
       }
       
@@ -160,7 +163,7 @@ const TerminalComponent: React.FC<TerminalComponentProps> = ({ onDataUpdate }) =
           
           // Execute as command
           const command = input;
-          console.log('[Terminal] Executing command:', command);
+          terminalLogger.debug('Executing command', { command });
           isProcessingCommand = true;
           
           // Handle command asynchronously
@@ -168,7 +171,7 @@ const TerminalComponent: React.FC<TerminalComponentProps> = ({ onDataUpdate }) =
             try {
               if (!commandHandlerRef.current) {
                 terminal.writeln('Error: Command handler not initialized.');
-                console.error('[Terminal] Command handler is null!');
+                terminalLogger.error('Command handler is null');
                 return;
               }
               
@@ -178,7 +181,7 @@ const TerminalComponent: React.FC<TerminalComponentProps> = ({ onDataUpdate }) =
             } catch (error: any) {
               const errorMsg = error?.message || 'An unknown error occurred';
               terminal.writeln(`\nError: ${errorMsg}`);
-              console.error('[Terminal] Command execution error:', error);
+              terminalLogger.error('Command execution error', error);
             } finally {
               isProcessingCommand = false;
               // Only show prompt after command completes if NOT in prompt mode
@@ -249,14 +252,14 @@ const TerminalComponent: React.FC<TerminalComponentProps> = ({ onDataUpdate }) =
     
     // Prevent double initialization
     if (terminalRefInternal.current) {
-      console.log('[Terminal] Already initialized, skipping...');
+      terminalLogger.debug('Already initialized, skipping');
       return;
     }
 
     const initTerminal = (retryCount = 0) => {
       // Prevent double initialization
       if (terminalRefInternal.current) {
-        console.log('[Terminal] Already initialized, skipping...');
+        terminalLogger.debug('Already initialized, skipping');
         return;
       }
       
@@ -268,7 +271,7 @@ const TerminalComponent: React.FC<TerminalComponentProps> = ({ onDataUpdate }) =
           setTimeout(() => initTerminal(retryCount + 1), delay);
           return;
         }
-        console.error('[Terminal] Container not found after retries');
+        terminalLogger.error('Container not found after retries');
         return;
       }
       
@@ -304,7 +307,7 @@ const TerminalComponent: React.FC<TerminalComponentProps> = ({ onDataUpdate }) =
           try {
             fitAddon.fit();
           } catch (error) {
-            console.warn('[Terminal] FitAddon fit failed:', error);
+            terminalLogger.warn('FitAddon fit failed', error);
           }
 
           // Initialize command handler
@@ -312,7 +315,7 @@ const TerminalComponent: React.FC<TerminalComponentProps> = ({ onDataUpdate }) =
             commandHandlerRef.current = new UnfoldCLI(terminal, onDataUpdate);
           } catch (error: any) {
             terminal.writeln(`Error initializing CLI: ${error.message}`);
-            console.error('[Terminal] CLI init error:', error);
+            terminalLogger.error('CLI init error', error);
           }
 
           // Write welcome message
@@ -389,12 +392,12 @@ const TerminalComponent: React.FC<TerminalComponentProps> = ({ onDataUpdate }) =
           prompt(terminal);
           terminal.focus();
 
-          console.log('[Terminal] Terminal fully initialized and ready. isReadyRef.current:', isReadyRef.current);
+          terminalLogger.debug('Terminal fully initialized and ready', { isReady: isReadyRef.current });
 
         }, 200);
 
       } catch (error) {
-        console.error('[Terminal] Initialization error:', error);
+        terminalLogger.error('Initialization error', error);
         if (container) {
           // Use textContent instead of innerHTML to prevent XSS
           const errorDiv = document.createElement('div');
@@ -439,7 +442,7 @@ const TerminalComponent: React.FC<TerminalComponentProps> = ({ onDataUpdate }) =
           terminalRefInternal.current.scrollToBottom();
         }
       } catch (error) {
-        console.warn('[Terminal] Resize fit failed:', error);
+        terminalLogger.warn('Resize fit failed', error);
       }
     };
 

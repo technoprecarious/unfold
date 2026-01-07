@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
+import { logger } from '@/lib/utils/logger';
 
 interface DateTimePickerProps {
   value: string; // ISO string format
@@ -169,10 +170,10 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({ value, onChange, placeh
             setTempMinute(date.getMinutes());
           }
         } else {
-          console.error('Invalid date value (NaN):', value);
+          logger.error('Invalid date value (NaN)', { value });
         }
       } catch (e) {
-        console.error('Invalid date value:', value, e);
+        logger.error('Invalid date value', e);
       }
     } else {
       // Reset to current date if value is cleared

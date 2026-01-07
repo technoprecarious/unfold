@@ -7,6 +7,7 @@ import { timeToHours } from '@/utils/timetableUtils';
 import { getUserPreferences, subscribeToUserPreferences, ColumnKey } from '@/lib/firestore/preferences';
 import { auth, isFirebaseInitialized } from '@/lib/firebase/config';
 import { onAuthStateChanged, User } from 'firebase/auth';
+import { logger } from '@/lib/utils/logger';
 
 interface DatabasePanelProps {
   items: (Program | Project | Task | Subtask)[];
@@ -155,7 +156,7 @@ const DatabasePanel: React.FC<DatabasePanelProps> = ({
           const prefs = await getUserPreferences();
           setColumnOrder(prefs.columnOrder);
         } catch (err) {
-          console.error('Error loading preferences:', err);
+          logger.error('Error loading preferences', err);
         }
 
         // Subscribe to real-time updates
@@ -204,7 +205,7 @@ const DatabasePanel: React.FC<DatabasePanelProps> = ({
         const field = fieldMap[editingCell.column] || editingCell.column;
         await onUpdate(editingCell.rowId, field, editValue);
       } catch (err) {
-        console.error('Error saving cell:', err);
+        logger.error('Error saving cell', err);
       } finally {
         setIsSaving(false);
         setEditingCell(null);

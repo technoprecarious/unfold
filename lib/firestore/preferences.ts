@@ -1,5 +1,6 @@
 import { doc, getDoc, setDoc, onSnapshot, Unsubscribe } from 'firebase/firestore';
 import { db, auth, isFirebaseInitialized } from '../firebase/config';
+import { logger } from '../utils/logger';
 
 export type ColumnKey = 'priority' | 'time' | 'status' | 'parent' | 'tag' | 'recurrence';
 export type ThemeMode = 'dark' | 'light' | 'system'; // Added 'system' for browser theme
@@ -34,7 +35,7 @@ export const getUserPreferences = async (): Promise<UserPreferences> => {
       };
     }
   } catch (error) {
-    console.error('Error loading preferences:', error);
+    logger.error('Error loading preferences', error);
   }
   
   return DEFAULT_PREFERENCES;
@@ -75,7 +76,7 @@ export const subscribeToUserPreferences = (
       callback(DEFAULT_PREFERENCES);
     }
   }, (error) => {
-    console.error('Error listening to preferences:', error);
+    logger.error('Error listening to preferences', error);
     callback(DEFAULT_PREFERENCES);
   });
 };

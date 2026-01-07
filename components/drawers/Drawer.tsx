@@ -10,6 +10,7 @@ import { updateSubtask } from '@/lib/firestore/subtasks';
 import { useDialog } from '../dialogs/useDialog';
 import DateTimePicker from '../pickers/DateTimePicker';
 import TimePicker from '../pickers/TimePicker';
+import { logger } from '@/lib/utils/logger';
 
 interface DrawerProps {
   item: Program | Project | Task | Subtask | null;
@@ -101,7 +102,7 @@ const Drawer: React.FC<DrawerProps> = ({
           onClose();
         } catch (error) {
           // Save failed, don't close
-          console.error('Failed to save before closing:', error);
+          logger.error('Failed to save before closing', error);
         }
       } else if (action === 'discard') {
         // User wants to discard, just close
@@ -128,7 +129,7 @@ const Drawer: React.FC<DrawerProps> = ({
           onAddChild?.(parentId, childType);
         } catch (error) {
           // Save failed, don't proceed with adding child
-          console.error('Failed to save before adding child:', error);
+          logger.error('Failed to save before adding child', error);
         }
       } else {
         // User chose to discard, proceed with adding child
@@ -154,7 +155,7 @@ const Drawer: React.FC<DrawerProps> = ({
           onSelectChild?.(childItem);
         } catch (error) {
           // Save failed, don't proceed with selecting child
-          console.error('Failed to save before selecting child:', error);
+          logger.error('Failed to save before selecting child', error);
         }
       } else {
         // User chose to discard, proceed with selecting child
@@ -198,7 +199,7 @@ const Drawer: React.FC<DrawerProps> = ({
       // The parent will refresh data and update selectedItem
       // onClose(); // Commented out - let user close manually
     } catch (error) {
-      console.error('🔴 Drawer handleSave - Error saving item:', error);
+      logger.error('Drawer handleSave - Error saving item', error);
       await alert('Failed to save. Please try again.', 'Error');
     } finally {
       setIsSaving(false);
@@ -217,7 +218,7 @@ const Drawer: React.FC<DrawerProps> = ({
         await onDelete(item.id);
         onClose();
       } catch (error) {
-        console.error('Error deleting item:', error);
+        logger.error('Error deleting item', error);
         await alert('Failed to delete item. Please try again.', 'Error');
       }
     }

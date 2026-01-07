@@ -15,6 +15,7 @@ import {
 } from 'firebase/auth';
 import { getUserPreferences, updateUserPreferences, ColumnKey, ThemeMode } from '@/lib/firestore/preferences';
 import { useTheme } from '@/lib/theme/ThemeContext';
+import { logger } from '@/lib/utils/logger';
 
 interface AccountDrawerProps {
   isOpen: boolean;
@@ -56,7 +57,7 @@ const AccountDrawer: React.FC<AccountDrawerProps> = ({ isOpen, onClose }) => {
           const prefs = await getUserPreferences();
           setPreferences(prefs);
         } catch (err) {
-          console.error('Error loading preferences:', err);
+          logger.error('Error loading preferences', err);
         } finally {
           setIsLoadingPrefs(false);
         }
@@ -76,7 +77,7 @@ const AccountDrawer: React.FC<AccountDrawerProps> = ({ isOpen, onClose }) => {
       await signInWithPopup(auth, provider);
       setStatus('Signed in with Google');
     } catch (err: any) {
-      console.error('Google sign-in error:', err);
+      logger.error('Google sign-in error', err);
       setStatus(err?.message || 'Failed to sign in');
     } finally {
       setIsBusy(false);
@@ -93,7 +94,7 @@ const AccountDrawer: React.FC<AccountDrawerProps> = ({ isOpen, onClose }) => {
       setEmail('');
       setPassword('');
     } catch (err: any) {
-      console.error('Email sign-in error:', err);
+      logger.error('Email sign-in error', err);
       setStatus(err?.message || 'Failed to sign in');
     } finally {
       setIsBusy(false);
@@ -137,7 +138,7 @@ const AccountDrawer: React.FC<AccountDrawerProps> = ({ isOpen, onClose }) => {
       setFirstName('');
       setLastName('');
     } catch (err: any) {
-      console.error('Email sign-up error:', err);
+      logger.error('Email sign-up error', err);
       setStatus(err?.message || 'Failed to create account');
     } finally {
       setIsBusy(false);
@@ -157,7 +158,7 @@ const AccountDrawer: React.FC<AccountDrawerProps> = ({ isOpen, onClose }) => {
       setFirstName('');
       setLastName('');
     } catch (err: any) {
-      console.error('Sign-out error:', err);
+      logger.error('Sign-out error', err);
       setStatus(err?.message || 'Failed to sign out');
     } finally {
       setIsBusy(false);
@@ -171,7 +172,7 @@ const AccountDrawer: React.FC<AccountDrawerProps> = ({ isOpen, onClose }) => {
       await updateUserPreferences({ columnOrder: newOrder });
       setPreferences(prev => prev ? { ...prev, columnOrder: newOrder } : { columnOrder: newOrder });
     } catch (err: any) {
-      console.error('Error saving preferences:', err);
+      logger.error('Error saving preferences', err);
     } finally {
       setIsBusy(false);
     }
@@ -184,7 +185,7 @@ const AccountDrawer: React.FC<AccountDrawerProps> = ({ isOpen, onClose }) => {
       await updateUserPreferences({ theme: newTheme });
       setTheme(newTheme);
     } catch (err: any) {
-      console.error('Error saving theme:', err);
+      logger.error('Error saving theme', err);
     } finally {
       setIsBusy(false);
     }

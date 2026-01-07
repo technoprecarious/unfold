@@ -39,3 +39,31 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# security - sensitive files (DO NOT commit these)
+# Note: SECURITY.md, firestore.rules, firebase.json, and security code files
+# should be committed as they are needed for the project to run
+
+# Firebase service account keys (if downloaded)
+*-firebase-adminsdk-*.json
+serviceAccountKey.json
+firebase-adminsdk-*.json
+
+# Private keys and certificates
+*.key
+*.crt
+*.cert
+*.p12
+*.pfx
+
+# Security tokens and secrets
+*.token
+*.secret
+secrets.json
+credentials.json
+
+# Local deployment configs (if any)
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log

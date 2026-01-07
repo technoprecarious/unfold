@@ -29,11 +29,12 @@ const nextConfig: NextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-eval' 'unsafe-inline'", // 'unsafe-eval' needed for Next.js, 'unsafe-inline' for styled-components
+              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.google.com https://www.gstatic.com", // reCAPTCHA scripts
               "style-src 'self' 'unsafe-inline'", // 'unsafe-inline' needed for styled-components
               "img-src 'self' data: https:",
               "font-src 'self' data:",
-              "connect-src 'self' https://*.firebaseio.com https://*.googleapis.com https://*.firebaseapp.com",
+              "connect-src 'self' https://*.firebaseio.com https://*.googleapis.com https://*.firebaseapp.com https://www.google.com https://www.gstatic.com", // reCAPTCHA API
+              "frame-src 'self' https://www.google.com", // reCAPTCHA iframe
               "frame-ancestors 'none'",
             ].join('; '),
           },
