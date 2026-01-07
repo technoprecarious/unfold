@@ -22,6 +22,21 @@ export default function LoginPage() {
     if (!isFirebaseInitialized() || !auth) {
       return;
     }
+    
+    // Handle redirect result if user was redirected for Google sign-in
+    getRedirectResult(auth)
+      .then((result) => {
+        if (result) {
+          // User signed in via redirect
+          router.push('/');
+        }
+      })
+      .catch((error) => {
+        if (error?.code !== 'auth/popup-closed-by-user') {
+          logger.error('Redirect sign-in error', error);
+        }
+      });
+    
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
       if (user) {
@@ -52,10 +67,34 @@ export default function LoginPage() {
     setError(null);
     try {
       const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
-      router.push('/');
+      
+      // Try popup first, fallback to redirect if popup fails
+      try {
+        await signInWithPopup(auth, provider);
+        router.push('/');
+      } catch (popupError: any) {
+        // If popup is blocked or fails, try redirect
+        if (popupError?.code === 'auth/popup-blocked' || 
+            popupError?.code === 'auth/popup-closed-by-user' ||
+            popupError?.code === 'auth/internal-error') {
+          logger.warn('Popup sign-in failed, trying redirect method', popupError);
+          await signInWithRedirect(auth, provider);
+          // Note: redirect will navigate away, so we don't need to push to router
+          return;
+        }
+        throw popupError; // Re-throw if it's a different error
+      }
     } catch (err: any) {
       logger.error('Google sign-in error', err);
+      // Log full error details in development
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Full error details:', {
+          code: err?.code,
+          message: err?.message,
+          customData: err?.customData,
+          stack: err?.stack,
+        });
+      }
       // If user just closed the popup, don't show error but still reset state
       if (err?.code !== 'auth/popup-closed-by-user') {
         setError(mapAuthError(err));
