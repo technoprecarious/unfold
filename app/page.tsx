@@ -895,20 +895,37 @@ export default function Home() {
               </ModeButton>
             </ModeToggle>
           </FooterModeWrapper>
-          <PrivacyLink 
-            onClick={() => router.push('/privacy')}
-            aria-label="Privacy Policy"
-            role="link"
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                router.push('/privacy');
-              }
-            }}
-          >
-            privacy
-          </PrivacyLink>
+          <FooterLinks>
+            <PrivacyLink 
+              onClick={() => router.push('/privacy')}
+              aria-label="Privacy Policy"
+              role="link"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  router.push('/privacy');
+                }
+              }}
+            >
+              privacy
+            </PrivacyLink>
+            <FooterLinkSeparator>·</FooterLinkSeparator>
+            <TermsLink 
+              onClick={() => router.push('/terms')}
+              aria-label="Terms and Conditions"
+              role="link"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  router.push('/terms');
+                }
+              }}
+            >
+              terms
+            </TermsLink>
+          </FooterLinks>
         </FooterContent>
       </FooterBar>
 
@@ -1023,6 +1040,16 @@ const FooterModeWrapper = styled.div`
   margin-top: var(--spacing-2);
 `;
 
+const FooterLinks = styled.div`
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  margin-top: var(--spacing-2);
+  position: absolute;
+  right: 0;
+  align-self: flex-end;
+`;
+
 const PrivacyLink = styled.div`
   font-size: var(--font-size-md);
   color: var(--text-secondary, #8A8A95);
@@ -1030,10 +1057,28 @@ const PrivacyLink = styled.div`
   text-transform: lowercase;
   cursor: pointer;
   transition: color var(--transition-fast);
-  margin-top: var(--spacing-2);
-  position: absolute;
-  right: 0;
-  align-self: flex-end;
+
+  &:hover {
+    color: var(--text-primary, #DEDEE5);
+    text-decoration: underline;
+    text-decoration-thickness: var(--underline-thickness);
+    text-underline-offset: var(--underline-offset);
+  }
+`;
+
+const FooterLinkSeparator = styled.span`
+  font-size: var(--font-size-md);
+  color: var(--text-secondary, #8A8A95);
+  font-family: var(--font-family-base);
+`;
+
+const TermsLink = styled.div`
+  font-size: var(--font-size-md);
+  color: var(--text-secondary, #8A8A95);
+  font-family: var(--font-family-base);
+  text-transform: lowercase;
+  cursor: pointer;
+  transition: color var(--transition-fast);
 
   &:hover {
     color: var(--text-primary, #DEDEE5);
