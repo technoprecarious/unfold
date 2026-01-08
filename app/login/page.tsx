@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import styled from 'styled-components';
 import { Eye, EyeOff } from 'lucide-react';
 import { auth, isFirebaseInitialized } from '@/lib/firebase/config';
-import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, User } from 'firebase/auth';
+import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, User } from 'firebase/auth';
 import { mapAuthError } from '@/lib/auth/errorMessages';
 
 export default function LoginPage() {

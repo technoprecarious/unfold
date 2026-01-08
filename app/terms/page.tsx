@@ -20,8 +20,10 @@ export default function TermsPage() {
 
       <Content>
         <TermsContent>
-          <Title>Terms and Conditions</Title>
-          <LastUpdated>Last updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</LastUpdated>
+          <StickyHeader>
+            <Title>Terms and Conditions</Title>
+            <LastUpdated>Last updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</LastUpdated>
+          </StickyHeader>
 
           <Section>
             <SectionTitle>1. Acceptance of Terms</SectionTitle>
@@ -151,7 +153,9 @@ const TopBar = styled.div`
   justify-content: space-between;
   padding: 0 var(--spacing-8);
   background: var(--bg-primary, #000000);
-  position: relative;
+  position: sticky;
+  top: 0;
+  z-index: calc(var(--z-header, 6) + 1);
 
   @media (min-width: ${MOBILE_BREAKPOINT_PX}) {
     padding: 0 var(--spacing-12);
@@ -195,10 +199,11 @@ const Content = styled.main`
   display: flex;
   justify-content: center;
   padding: var(--spacing-16) var(--spacing-8);
-  overflow-y: auto;
+  padding-top: calc(3rem + var(--spacing-16));
 
   @media (min-width: ${MOBILE_BREAKPOINT_PX}) {
     padding: var(--spacing-32) var(--spacing-12);
+    padding-top: calc(3rem + var(--spacing-32));
   }
 `;
 
@@ -206,6 +211,20 @@ const TermsContent = styled.div`
   width: 100%;
   max-width: 800px;
   color: var(--text-primary, #DEDEE5);
+`;
+
+const StickyHeader = styled.div`
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  background: var(--bg-primary, #000000);
+  padding-top: calc(3rem + var(--spacing-16));
+  padding-bottom: var(--spacing-16);
+  margin-bottom: var(--spacing-16);
+  z-index: var(--z-header, 6);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 `;
 
 const Title = styled.h1`
@@ -219,7 +238,7 @@ const Title = styled.h1`
 const LastUpdated = styled.p`
   font-size: var(--font-size-sm);
   color: var(--text-secondary, #8A8A95);
-  margin-bottom: var(--spacing-16);
+  margin-bottom: 0;
 `;
 
 const Section = styled.section`
