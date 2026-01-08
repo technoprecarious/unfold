@@ -869,31 +869,47 @@ export default function Home() {
 
       {/* Footer Bar */}
       <FooterBar as="footer" role="contentinfo">
-        <FooterModeWrapper>
-          <ModeToggle role="tablist" aria-label="Panel mode selector">
-            <ModeButton 
-              $selected={panelMode === 'database'} 
-              onClick={() => setPanelMode('database')}
-              role="tab"
-              aria-selected={panelMode === 'database'}
-              aria-label="Database panel"
-              type="button"
-            >
-              Database
-            </ModeButton>
-            <ModeButton 
-              $selected={panelMode === 'cli'} 
-              onClick={() => setPanelMode('cli')}
-              $hideOnMobile
-              role="tab"
-              aria-selected={panelMode === 'cli'}
-              aria-label="CLI panel"
-              type="button"
-            >
-              CLI
-            </ModeButton>
-          </ModeToggle>
-        </FooterModeWrapper>
+        <FooterContent>
+          <FooterModeWrapper>
+            <ModeToggle role="tablist" aria-label="Panel mode selector">
+              <ModeButton 
+                $selected={panelMode === 'database'} 
+                onClick={() => setPanelMode('database')}
+                role="tab"
+                aria-selected={panelMode === 'database'}
+                aria-label="Database panel"
+                type="button"
+              >
+                Database
+              </ModeButton>
+              <ModeButton 
+                $selected={panelMode === 'cli'} 
+                onClick={() => setPanelMode('cli')}
+                $hideOnMobile
+                role="tab"
+                aria-selected={panelMode === 'cli'}
+                aria-label="CLI panel"
+                type="button"
+              >
+                CLI
+              </ModeButton>
+            </ModeToggle>
+          </FooterModeWrapper>
+          <PrivacyLink 
+            onClick={() => router.push('/privacy')}
+            aria-label="Privacy Policy"
+            role="link"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                router.push('/privacy');
+              }
+            }}
+          >
+            privacy
+          </PrivacyLink>
+        </FooterContent>
       </FooterBar>
 
       {/* Account Drawer */}
@@ -992,11 +1008,39 @@ const FooterBar = styled.div`
   }
 `;
 
+const FooterContent = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  position: relative;
+`;
+
 const FooterModeWrapper = styled.div`
   display: flex;
   align-items: flex-end;
   justify-content: center;
   margin-top: var(--spacing-2);
+`;
+
+const PrivacyLink = styled.div`
+  font-size: var(--font-size-md);
+  color: var(--text-secondary, #8A8A95);
+  font-family: var(--font-family-base);
+  text-transform: lowercase;
+  cursor: pointer;
+  transition: color var(--transition-fast);
+  margin-top: var(--spacing-2);
+  position: absolute;
+  right: 0;
+  align-self: flex-end;
+
+  &:hover {
+    color: var(--text-primary, #DEDEE5);
+    text-decoration: underline;
+    text-decoration-thickness: var(--underline-thickness);
+    text-underline-offset: var(--underline-offset);
+  }
 `;
 
 const ClockWrapper = styled.div`
