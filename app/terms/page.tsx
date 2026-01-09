@@ -41,6 +41,9 @@ export default function TermsPage() {
             <SectionText>
               UNFOLD is a time management system that allows you to organize programs, projects, tasks, and subtasks with visual timetable views. The service is provided "as is" and "as available" without warranties of any kind.
             </SectionText>
+            <SectionText>
+              This service is operated by sun min as an individual developer. UNFOLD is provided as a personal project and is not operated as a commercial business entity.
+            </SectionText>
           </Section>
 
           <Section>
@@ -73,10 +76,10 @@ export default function TermsPage() {
           <Section>
             <SectionTitle>5. Intellectual Property</SectionTitle>
             <SectionText>
-              The service and its original content, features, and functionality are owned by UNFOLD and are protected by international copyright, trademark, patent, trade secret, and other intellectual property laws.
+              The service and its original content, features, and functionality are owned by sun min and are protected by international copyright, trademark, patent, trade secret, and other intellectual property laws.
             </SectionText>
             <SectionText>
-              You retain ownership of any content you create using the service. By using the service, you grant UNFOLD a license to store, process, and display your content solely for the purpose of providing the service to you.
+              You retain ownership of any content you create using the service. By using the service, you grant sun min a license to store, process, and display your content solely for the purpose of providing the service to you.
             </SectionText>
           </Section>
 
@@ -92,12 +95,15 @@ export default function TermsPage() {
             <SectionText>
               We strive to provide continuous availability of the service, but we do not guarantee that the service will be available at all times. The service may be unavailable due to maintenance, updates, or circumstances beyond our control.
             </SectionText>
+            <SectionText>
+              As this is a personal project operated by an individual developer, service availability is not guaranteed and may be subject to interruptions.
+            </SectionText>
           </Section>
 
           <Section>
             <SectionTitle>8. Limitation of Liability</SectionTitle>
             <SectionText>
-              To the maximum extent permitted by law, UNFOLD shall not be liable for any indirect, incidental, special, consequential, or punitive damages, or any loss of profits or revenues, whether incurred directly or indirectly, or any loss of data, use, goodwill, or other intangible losses resulting from your use of the service.
+              To the maximum extent permitted by law, sun min shall not be liable for any indirect, incidental, special, consequential, or punitive damages, or any loss of profits or revenues, whether incurred directly or indirectly, or any loss of data, use, goodwill, or other intangible losses resulting from your use of the service.
             </SectionText>
           </Section>
 
@@ -122,16 +128,48 @@ export default function TermsPage() {
           </Section>
 
           <Section>
-            <SectionTitle>11. Governing Law</SectionTitle>
+            <SectionTitle>11. Governing Law and Jurisdiction</SectionTitle>
             <SectionText>
-              These Terms and Conditions shall be governed by and construed in accordance with applicable laws, without regard to its conflict of law provisions.
+              These Terms and Conditions shall be governed by and construed in accordance with the laws of the Republic of Korea, without regard to its conflict of law provisions.
+            </SectionText>
+            <SectionText>
+              Any disputes arising from these Terms shall be subject to the exclusive jurisdiction of the courts of Seoul, Republic of Korea.
             </SectionText>
           </Section>
 
           <Section>
-            <SectionTitle>12. Contact Information</SectionTitle>
+            <SectionTitle>12. Dispute Resolution</SectionTitle>
             <SectionText>
-              If you have any questions about these Terms and Conditions, please contact us through your account settings or by accessing the support features within the application.
+              If you have any concerns or disputes regarding these Terms, please contact us first to attempt to resolve the issue. If we cannot resolve the dispute informally, any legal action must be brought in the courts of Seoul, Republic of Korea.
+            </SectionText>
+          </Section>
+
+          <Section>
+            <SectionTitle>13. Severability</SectionTitle>
+            <SectionText>
+              If any provision of these Terms is found to be unenforceable or invalid, that provision shall be limited or eliminated to the minimum extent necessary so that these Terms shall otherwise remain in full force and effect.
+            </SectionText>
+          </Section>
+
+          <Section>
+            <SectionTitle>14. Entire Agreement</SectionTitle>
+            <SectionText>
+              These Terms and Conditions, together with the Privacy Policy, constitute the entire agreement between you and sun min regarding the use of the service and supersede all prior agreements and understandings.
+            </SectionText>
+          </Section>
+
+          <Section>
+            <SectionTitle>15. Contact Information</SectionTitle>
+            <SectionText>
+              If you have any questions about these Terms and Conditions, please contact:
+            </SectionText>
+            <List>
+              <ListItem><strong>Name:</strong> sun min</ListItem>
+              <ListItem><strong>Email:</strong> technoprecarious@gmail.com</ListItem>
+              <ListItem><strong>Location:</strong> Seoul, Republic of Korea</ListItem>
+            </List>
+            <SectionText>
+              This service is operated by sun min as an individual developer.
             </SectionText>
           </Section>
         </TermsContent>
