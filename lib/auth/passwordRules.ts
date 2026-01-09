@@ -1,5 +1,5 @@
 // Constants
-const MIN_PASSWORD_LENGTH = 12;
+const MIN_PASSWORD_LENGTH = 8;
 const COMMON_PASSWORDS = ['password', '123456', '123456789', 'qwerty', '111111', '123123'];
 const ALLOWED_SPECIAL_CHARACTERS = '!@#$%^&*';
 
