@@ -3,6 +3,7 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import styled from 'styled-components';
+import Clock from '@/components/ui/Clock';
 
 const MOBILE_BREAKPOINT_PX = '780px';
 
@@ -13,6 +14,9 @@ export default function TermsPage() {
     <Container>
       <TopBar as="header" role="banner">
         <Logo as="h1" onClick={() => router.push('/')}>UNFOLD</Logo>
+        <ClockWrapper>
+          <Clock />
+        </ClockWrapper>
         <BackButton onClick={() => router.push('/')}>
           back
         </BackButton>
@@ -20,10 +24,10 @@ export default function TermsPage() {
 
       <Content>
         <TermsContent>
-          <StickyHeader>
+          <Header>
             <Title>Terms and Conditions</Title>
             <LastUpdated>Last updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</LastUpdated>
-          </StickyHeader>
+          </Header>
 
           <Section>
             <SectionTitle>1. Acceptance of Terms</SectionTitle>
@@ -178,6 +182,16 @@ const Logo = styled.div`
   }
 `;
 
+const ClockWrapper = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+`;
+
 const BackButton = styled.div`
   font-size: var(--font-size-md);
   color: var(--text-secondary, #8A8A95);
@@ -213,15 +227,10 @@ const TermsContent = styled.div`
   color: var(--text-primary, #DEDEE5);
 `;
 
-const StickyHeader = styled.div`
-  position: -webkit-sticky;
-  position: sticky;
-  top: 0;
-  background: var(--bg-primary, #000000);
+const Header = styled.div`
   padding-top: calc(3rem + var(--spacing-16));
   padding-bottom: var(--spacing-16);
   margin-bottom: var(--spacing-16);
-  z-index: calc(var(--z-header, 6) + 1);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
