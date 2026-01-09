@@ -155,7 +155,7 @@ const TopBar = styled.div`
   background: var(--bg-primary, #000000);
   position: sticky;
   top: 0;
-  z-index: calc(var(--z-header, 6) + 1);
+  z-index: var(--z-header, 6);
 
   @media (min-width: ${MOBILE_BREAKPOINT_PX}) {
     padding: 0 var(--spacing-12);
@@ -221,7 +221,7 @@ const StickyHeader = styled.div`
   padding-top: calc(3rem + var(--spacing-16));
   padding-bottom: var(--spacing-16);
   margin-bottom: var(--spacing-16);
-  z-index: var(--z-header, 6);
+  z-index: calc(var(--z-header, 6) + 1);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
