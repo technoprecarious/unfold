@@ -94,15 +94,15 @@ if (typeof window !== 'undefined') {
     // Initialize Auth
     authInstance = getAuth(appInstance);
     
-    // Initialize App Check (only on client side, only if site key is provided)
-    // Skip App Check on localhost in development (reCAPTCHA can be unreliable)
-    if (RECAPTCHA_SITE_KEY) {
+    // Initialize App Check (optional - only if site key is provided and not on localhost)
+    // App Check provides additional security for production but is skipped in development
+    // to avoid reCAPTCHA domain verification issues
+    if (RECAPTCHA_SITE_KEY && process.env.NODE_ENV === 'production') {
       const isLocalhost = typeof window !== 'undefined' && 
         (window.location.hostname === 'localhost' || 
-         window.location.hostname === '127.0.0.1' ||
-         window.location.hostname.includes('localhost'));
+         window.location.hostname === '127.0.0.1');
       
-      // Only initialize App Check if not on localhost (production/staging)
+      // Only initialize App Check in production and not on localhost
       if (!isLocalhost) {
         try {
           // Only initialize if not already initialized
@@ -116,9 +116,8 @@ if (typeof window !== 'undefined') {
           }
         } catch (error) {
           logger.error('App Check initialization error', error);
+          // Don't block app initialization if App Check fails
         }
-      } else {
-        logger.info('App Check skipped on localhost (development mode)');
       }
     }
     

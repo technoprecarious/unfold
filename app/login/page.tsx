@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import styled from 'styled-components';
 import { Eye, EyeOff } from 'lucide-react';
 import { auth, isFirebaseInitialized } from '@/lib/firebase/config';
-import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, User } from 'firebase/auth';
+import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, User } from 'firebase/auth';
 import { mapAuthError } from '@/lib/auth/errorMessages';
 import { logger } from '@/lib/utils/logger';
 
@@ -54,10 +54,10 @@ export default function LoginPage() {
       await signInWithEmailAndPassword(auth, email, password);
       router.push('/');
     } catch (err: any) {
-      console.error('Email sign-in error:', err);
-      console.error('Error code:', err?.code);
-      console.error('Error message:', err?.message);
-      console.error('Full error:', JSON.stringify(err, null, 2));
+      logger.error('Email sign-in error', err);
+      if (process.env.NODE_ENV === 'development') {
+        logger.debug('Error details', { code: err?.code, message: err?.message });
+      }
       setError(mapAuthError(err));
     } finally {
       setIsSigningIn(false);
@@ -71,6 +71,11 @@ export default function LoginPage() {
     try {
       const provider = new GoogleAuthProvider();
       
+      // Add custom parameters to help with domain verification
+      provider.setCustomParameters({
+        prompt: 'select_account'
+      });
+
       // Try popup first, fallback to redirect if popup fails
       try {
         await signInWithPopup(auth, provider);
@@ -91,7 +96,7 @@ export default function LoginPage() {
       logger.error('Google sign-in error', err);
       // Log full error details in development
       if (process.env.NODE_ENV === 'development') {
-        console.error('Full error details:', {
+        logger.debug('Full error details', {
           code: err?.code,
           message: err?.message,
           customData: err?.customData,

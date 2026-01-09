@@ -71,10 +71,10 @@ export default function SignupPage() {
       
       router.push('/');
     } catch (err: any) {
-      console.error('Email sign-up error:', err);
-      console.error('Error code:', err?.code);
-      console.error('Error message:', err?.message);
-      console.error('Full error:', JSON.stringify(err, null, 2));
+      logger.error('Email sign-up error', err);
+      if (process.env.NODE_ENV === 'development') {
+        logger.debug('Error details', { code: err?.code, message: err?.message });
+      }
       setError(mapAuthError(err));
     } finally {
       setIsSigningUp(false);
