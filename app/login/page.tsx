@@ -7,6 +7,7 @@ import { Eye, EyeOff } from 'lucide-react';
 import { auth, isFirebaseInitialized } from '@/lib/firebase/config';
 import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, User } from 'firebase/auth';
 import { mapAuthError } from '@/lib/auth/errorMessages';
+import { logger } from '@/lib/utils/logger';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -21,6 +22,21 @@ export default function LoginPage() {
     if (!isFirebaseInitialized() || !auth) {
       return;
     }
+    
+    // Handle redirect result if user was redirected for Google sign-in
+    getRedirectResult(auth)
+      .then((result) => {
+        if (result) {
+          // User signed in via redirect
+          router.push('/');
+        }
+      })
+      .catch((error) => {
+        if (error?.code !== 'auth/popup-closed-by-user') {
+          logger.error('Redirect sign-in error', error);
+        }
+      });
+    
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
       if (user) {
@@ -38,7 +54,10 @@ export default function LoginPage() {
       await signInWithEmailAndPassword(auth, email, password);
       router.push('/');
     } catch (err: any) {
-      console.error('Email sign-in error:', err);
+      logger.error('Email sign-in error', err);
+      if (process.env.NODE_ENV === 'development') {
+        logger.debug('Error details', { code: err?.code, message: err?.message });
+      }
       setError(mapAuthError(err));
     } finally {
       setIsSigningIn(false);
@@ -51,10 +70,39 @@ export default function LoginPage() {
     setError(null);
     try {
       const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
-      router.push('/');
+      
+      // Add custom parameters to help with domain verification
+      provider.setCustomParameters({
+        prompt: 'select_account'
+      });
+
+      // Try popup first, fallback to redirect if popup fails
+      try {
+        await signInWithPopup(auth, provider);
+        router.push('/');
+      } catch (popupError: any) {
+        // If popup is blocked or fails, try redirect
+        if (popupError?.code === 'auth/popup-blocked' || 
+            popupError?.code === 'auth/popup-closed-by-user' ||
+            popupError?.code === 'auth/internal-error') {
+          logger.warn('Popup sign-in failed, trying redirect method', popupError);
+          await signInWithRedirect(auth, provider);
+          // Note: redirect will navigate away, so we don't need to push to router
+          return;
+        }
+        throw popupError; // Re-throw if it's a different error
+      }
     } catch (err: any) {
-      console.error('Google sign-in error:', err);
+      logger.error('Google sign-in error', err);
+      // Log full error details in development
+      if (process.env.NODE_ENV === 'development') {
+        logger.debug('Full error details', {
+          code: err?.code,
+          message: err?.message,
+          customData: err?.customData,
+          stack: err?.stack,
+        });
+      }
       // If user just closed the popup, don't show error but still reset state
       if (err?.code !== 'auth/popup-closed-by-user') {
         setError(mapAuthError(err));

@@ -21,6 +21,7 @@ import { TimetableItem, Program, Project, Task, Subtask, Priority } from '@/lib/
 import { auth, isFirebaseInitialized } from '@/lib/firebase/config';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import AccountDrawer from '@/components/drawers/AccountDrawer';
+import { logger } from '@/lib/utils/logger';
 
 // Constants
 const MOBILE_BREAKPOINT = 780;
@@ -188,7 +189,7 @@ export default function Home() {
       
       setError(null);
     } catch (err: any) {
-      console.error('Error loading data:', err);
+      logger.error('Error loading data', err);
       setError(err.message || 'Failed to load data');
     } finally {
       setLoading(false);
@@ -215,7 +216,7 @@ export default function Home() {
       // Return the data so callers can use it immediately
       return { programsData, projectsData, tasksData, subtasksData };
     } catch (err: any) {
-      console.error('Error refreshing data:', err);
+      logger.error('Error refreshing data', err);
       // Return empty arrays on error
       return { programsData: [], projectsData: [], tasksData: [], subtasksData: [] };
       // Don't set error state for background refreshes to avoid disrupting UX
@@ -360,7 +361,7 @@ export default function Home() {
       // Refresh from Firestore in the background to ensure consistency
       refreshData();
     } catch (err: any) {
-      console.error('Error updating item:', err);
+      logger.error('Error updating item', err);
       // Revert optimistic update on error by refreshing from Firestore
       await refreshData();
       const { sanitizeErrorMessage } = await import('@/lib/utils/errorHandler');
@@ -389,7 +390,7 @@ export default function Home() {
       await refreshData();
       setSelectedItem(null);
     } catch (err: any) {
-      console.error('Error deleting item:', err);
+      logger.error('Error deleting item', err);
       const { sanitizeErrorMessage } = await import('@/lib/utils/errorHandler');
       await alert(`Failed to delete: ${sanitizeErrorMessage(err)}`, 'Error');
       throw err; // Re-throw so Drawer can handle it
@@ -474,7 +475,7 @@ export default function Home() {
         setScrollToTopTrigger(prev => prev + 1);
       }, SCROLL_DELAY_MS);
     } catch (err: any) {
-      console.error('Error creating child item:', err);
+      logger.error('Error creating child item', err);
       const { sanitizeErrorMessage } = await import('@/lib/utils/errorHandler');
       await alert(`Failed to create ${childType.slice(0, -1)}: ${sanitizeErrorMessage(err)}`, 'Error');
     }
@@ -540,7 +541,7 @@ export default function Home() {
       setMultiSelectMode(false);
       setSelectedItem(null);
     } catch (err: any) {
-      console.error('Error deleting items:', err);
+      logger.error('Error deleting items', err);
       const { sanitizeErrorMessage } = await import('@/lib/utils/errorHandler');
       await alert(`Failed to delete items: ${sanitizeErrorMessage(err)}`, 'Error');
     }
@@ -615,7 +616,7 @@ export default function Home() {
         setScrollToTopTrigger(prev => prev + 1);
       }, SCROLL_DELAY_MS);
     } catch (err: any) {
-      console.error('Error creating item:', err);
+      logger.error('Error creating item', err);
       const { sanitizeErrorMessage } = await import('@/lib/utils/errorHandler');
       await alert(`Failed to create item: ${sanitizeErrorMessage(err)}`, 'Error');
     }

@@ -13,6 +13,7 @@ import { db, auth, isFirebaseInitialized } from '../firebase/config';
 import { Project } from '../types/types';
 import { generateId } from '../utils/idGenerator';
 import { removeUndefined } from './utils';
+import { logger } from '../utils/logger';
 
 const getProjectsCollection = (uid: string) => {
   if (!db) throw new Error('Firebase not initialized');
@@ -96,7 +97,7 @@ export const updateProject = async (projectId: string, updates: Partial<Omit<Pro
   
   if (!docSnapshot.exists()) {
     // Document doesn't exist - create it with setDoc
-    console.warn(`updateProject - Document does not exist, creating new document: ${projectId}`);
+    logger.warn(`updateProject - Document does not exist, creating new document: ${projectId}`);
     const now = new Date().toISOString();
     await setDoc(projectDoc, {
       ...cleanedUpdates,

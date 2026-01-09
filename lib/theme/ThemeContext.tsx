@@ -4,6 +4,7 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { getUserPreferences, updateUserPreferences, ThemeMode } from '@/lib/firestore/preferences';
 import { auth, isFirebaseInitialized } from '@/lib/firebase/config';
 import { onAuthStateChanged } from 'firebase/auth';
+import { logger } from '@/lib/utils/logger';
 
 interface ThemeContextType {
   theme: ThemeMode;
@@ -74,7 +75,7 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) =
           const prefs = await getUserPreferences();
           userTheme = prefs.theme || 'dark';
         } catch (error) {
-          console.error('Failed to load user theme preference:', error);
+          logger.error('Failed to load user theme preference', error);
         }
       } else {
         // For unauthenticated users, try to get from localStorage or default to system
@@ -112,7 +113,7 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       try {
         await updateUserPreferences({ theme: mode });
       } catch (error) {
-        console.error('Failed to save theme preference:', error);
+        logger.error('Failed to save theme preference', error);
       }
     }
   };

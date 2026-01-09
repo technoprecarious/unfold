@@ -1,6 +1,8 @@
 import { initializeApp, getApps, FirebaseApp } from 'firebase/app';
 import { getFirestore, Firestore, connectFirestoreEmulator } from 'firebase/firestore';
 import { getAuth, Auth, connectAuthEmulator } from 'firebase/auth';
+import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check';
+import { logger } from '../utils/logger';
 
 // Constants
 const PLACEHOLDER_API_KEY_1 = 'your-api-key-here';
@@ -12,6 +14,7 @@ const FIRESTORE_EMULATOR_PORT = 8080;
 const AUTH_EMULATOR_PORT = 9099;
 const AUTH_EMULATOR_HOST = 'localhost';
 const FIRESTORE_EMULATOR_HOST = 'localhost';
+const RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
 
 /**
  * Validates Firebase configuration to ensure it's not using placeholder values
@@ -44,7 +47,7 @@ const getFirebaseConfig = () => {
   const isValid = isFirebaseConfigValid(apiKey, authDomain, projectId);
   
   if (!isValid && typeof window !== 'undefined') {
-    console.warn('Firebase config appears to be using placeholder values. Please update your .env.local file with your Firebase credentials.');
+    logger.warn('Firebase config appears to be using placeholder values. Please update your .env.local file with your Firebase credentials.');
   }
   
   return {
@@ -75,7 +78,7 @@ if (typeof window !== 'undefined') {
     const isValid = isFirebaseConfigValid(apiKey, authDomain, projectId);
     
     if (!isValid) {
-      console.warn('Firebase config not properly set. Skipping Firebase initialization.');
+      logger.warn('Firebase config not properly set. Skipping Firebase initialization.');
       // Don't initialize Firebase if config is invalid
     } else {
     // Check if Firebase is already initialized
@@ -91,6 +94,33 @@ if (typeof window !== 'undefined') {
     // Initialize Auth
     authInstance = getAuth(appInstance);
     
+    // Initialize App Check (optional - only if site key is provided and not on localhost)
+    // App Check provides additional security for production but is skipped in development
+    // to avoid reCAPTCHA domain verification issues
+    if (RECAPTCHA_SITE_KEY && process.env.NODE_ENV === 'production') {
+      const isLocalhost = typeof window !== 'undefined' && 
+        (window.location.hostname === 'localhost' || 
+         window.location.hostname === '127.0.0.1');
+      
+      // Only initialize App Check in production and not on localhost
+      if (!isLocalhost) {
+        try {
+          // Only initialize if not already initialized
+          if (!(window as any).__FIREBASE_APP_CHECK_INITIALIZED) {
+            initializeAppCheck(appInstance, {
+              provider: new ReCaptchaV3Provider(RECAPTCHA_SITE_KEY),
+              isTokenAutoRefreshEnabled: true,
+            });
+            (window as any).__FIREBASE_APP_CHECK_INITIALIZED = true;
+            logger.info('App Check initialized successfully');
+          }
+        } catch (error) {
+          logger.error('App Check initialization error', error);
+          // Don't block app initialization if App Check fails
+        }
+      }
+    }
+    
     // Connect to emulators in development if needed
     // Note: Only connect once, check if already connected
     if (process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATOR === 'true') {
@@ -101,12 +131,12 @@ if (typeof window !== 'undefined') {
         }
       } catch (error) {
         // Emulators already connected, ignore error
-        console.log('Firebase emulators already connected or not available');
+        logger.debug('Firebase emulators already connected or not available');
       }
     }
     }
   } catch (error) {
-    console.error('Firebase initialization error:', error);
+    logger.error('Firebase initialization error', error);
     // Keep instances as null on error
     appInstance = null;
     dbInstance = null;

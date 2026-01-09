@@ -26,6 +26,7 @@ import {
   validateStringArray,
   isValidISODate,
 } from '../utils/validation';
+import { logger } from '../utils/logger';
 
 const getProgramsCollection = (uid: string) => {
   if (!db) throw new Error('Firebase not initialized');
@@ -164,7 +165,7 @@ export const updateProgram = async (programId: string, updates: Partial<Omit<Pro
   
   if (!docSnapshot.exists()) {
     // Document doesn't exist - create it with setDoc
-    console.warn(`updateProgram - Document does not exist, creating new document: ${programId}`);
+    logger.warn(`updateProgram - Document does not exist, creating new document: ${programId}`);
     const now = new Date().toISOString();
     await setDoc(programDoc, {
       ...cleanedUpdates,

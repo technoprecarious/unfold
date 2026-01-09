@@ -29,6 +29,9 @@ import {
 } from '@/lib/firestore/subtasks';
 import { Program, Project, Task, Subtask, Priority, StatusPrimary, StatusSecondary } from '@/lib/types/types';
 import { timeToHours } from '@/lib/utils/timetable/timetableUtils';
+import { createLogger } from '@/lib/utils/logger';
+
+const commandLogger = createLogger('CommandHandler');
 
 export class CommandHandler {
   private terminal: Terminal;
@@ -140,7 +143,7 @@ export class CommandHandler {
     } catch (error: any) {
       const errorMsg = error?.message || error?.toString() || 'An unknown error occurred';
       this.terminal.writeln(`\nError executing command "${command}": ${errorMsg}`);
-      console.error('Command handler error:', error);
+      commandLogger.error('Command handler error', error);
     }
   }
 
@@ -190,11 +193,11 @@ export class CommandHandler {
         }
       } catch (e) {
         // Ignore render errors
-        console.warn('Could not force render:', e);
+        commandLogger.warn('Could not force render', e);
       }
       
     } catch (error: any) {
-      console.error('showHelp error:', error);
+      commandLogger.error('showHelp error', error);
       // If writeln fails, try write as fallback
     }
   }

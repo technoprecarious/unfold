@@ -3,6 +3,8 @@
  * Sanitizes error messages to prevent information leakage
  */
 
+import { logger } from './logger';
+
 /**
  * Sanitizes error messages for user display
  * Prevents sensitive information from being exposed
@@ -43,14 +45,7 @@ export const sanitizeErrorMessage = (error: unknown): string => {
  * Logs detailed error information for debugging (server-side only)
  */
 export const logError = (error: unknown, context?: string): void => {
-  if (typeof window === 'undefined') {
-    // Server-side logging
-    console.error(`[${context || 'Error'}]`, error);
-  } else {
-    // Client-side: only log in development
-    if (process.env.NODE_ENV === 'development') {
-      console.error(`[${context || 'Error'}]`, error);
-    }
-  }
+  const contextMessage = context ? `${context}: ` : '';
+  logger.error(`${contextMessage}Error occurred`, error);
 };
 

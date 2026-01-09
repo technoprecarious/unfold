@@ -10,6 +10,10 @@ const ERROR_MAP: AuthErrorMap = {
   'auth/popup-blocked': 'Your browser blocked the sign-in popup. Please allow popups and try again.',
   'auth/unauthorized-domain':
     'This domain is not authorized for sign-in. Please contact support if this persists.',
+  'auth/internal-error':
+    'An internal error occurred. This may be due to App Check or configuration issues. Please try again or use email sign-in.',
+  'auth/app-check-token-expired':
+    'Security token expired. Please refresh the page and try again.',
 };
 
 export const mapAuthError = (error: unknown): string => {

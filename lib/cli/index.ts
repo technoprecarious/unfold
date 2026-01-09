@@ -24,6 +24,7 @@ import { addToHistory } from './utils/context';
 import { CreateHandler } from './handlers/create';
 import { ListHandler } from './handlers/list';
 import { Manual } from './ui/manual';
+import { logger } from '@/lib/utils/logger';
 
 export class UnfoldCLI {
   private terminal: Terminal;
@@ -133,7 +134,7 @@ export class UnfoldCLI {
       }
     } catch (error: any) {
       this.terminal.writeln(`Error: ${error.message}`);
-      console.error('[CLI Error]', error);
+      logger.error('CLI Error', error);
     }
   }
 
