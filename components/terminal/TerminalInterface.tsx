@@ -45,7 +45,7 @@ const TerminalContainer = styled.div`
     padding: 1rem;
     padding-bottom: 2rem !important; /* Extra bottom padding to ensure cursor is visible */
     box-sizing: border-box;
-    line-height: 1.2 !important; /* Reduce line height for tighter spacing */
+    line-height: var(--line-height-tight) !important; /* Reduce line height for tighter spacing */
   }
 
   .xterm-viewport {
@@ -101,7 +101,7 @@ const TerminalContainer = styled.div`
     /* Ensure rows handle wrapping */
     word-wrap: break-word !important;
     overflow-wrap: break-word !important;
-    line-height: 1.2 !important; /* Reduce line height for tighter spacing */
+    line-height: var(--line-height-tight) !important; /* Reduce line height for tighter spacing */
   }
   
   .xterm-text-layer {
@@ -109,11 +109,11 @@ const TerminalContainer = styled.div`
     word-wrap: break-word !important;
     overflow-wrap: break-word !important;
     white-space: pre-wrap !important; /* Preserve whitespace but allow wrapping */
-    line-height: 1.2 !important; /* Reduce line height for tighter spacing */
+    line-height: var(--line-height-tight) !important; /* Reduce line height for tighter spacing */
   }
   
   .xterm-char-measure-element {
-    line-height: 1.2 !important; /* Reduce line height for character measurement */
+    line-height: var(--line-height-tight) !important; /* Reduce line height for character measurement */
   }
   
   .xterm-cursor-layer {
@@ -131,8 +131,8 @@ const TerminalPlaceholder = styled.div`
   align-items: center;
   justify-content: center;
   color: #DEDEE5;
-  font-family: Helvetica, Arial, sans-serif;
-  font-size: 12px;
-  line-height: 12px;
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-md);
+  line-height: var(--font-size-md);
 `;
 

@@ -382,16 +382,16 @@ const CalendarGrid = styled.div<{ $isEmpty?: boolean }>`
   padding: 1rem;
   box-sizing: border-box;
   opacity: ${props => props.$isEmpty ? '0.8' : '1'};
-  transition: opacity 0.2s ease;
+  transition: opacity var(--transition-fast) ease;
 `;
 
 const DayHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
+  font-size: var(--font-size-md);
   color: var(--text-primary, #DEDEE5);
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: var(--font-family-base);
   font-weight: normal;
   padding: 0.5rem 0;
   text-align: center;
@@ -419,7 +419,7 @@ const DayCell = styled.div<{ $isCurrentMonth: boolean; $isPrevMonth: boolean; $i
 
 const DayNumber = styled.div`
   font-size: 12px;
-  line-height: 1.2;
+  line-height: var(--line-height-tight);
 `;
 
 const MonthLabel = styled.div`
@@ -447,7 +447,7 @@ const GanttLine = styled.div<{
 }>`
   position: absolute;
   pointer-events: all;
-  transition: all 0.2s ease-out;
+  transition: all var(--transition-fast) ease-out;
   box-shadow: ${props => props.$isHovered ? '0 0 4px rgba(255, 255, 255, 0.3)' : 'none'};
   
   /* Base background color - use solid fill for solid pattern, transparent for patterns */
@@ -479,7 +479,7 @@ const GanttLine = styled.div<{
       ${props.$patternColor} 1.2px,
       transparent 1.2px
     );
-    background-size: 12px 12px;
+    background-size: var(--font-size-md) var(--font-size-md);
   ` : ''}
 `;
 
@@ -488,9 +488,9 @@ const EmptyState = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 12px;
+  font-size: var(--font-size-md);
   color: var(--text-primary, #DEDEE5);
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: var(--font-family-base);
   font-weight: normal;
   opacity: 0.6;
   pointer-events: none;

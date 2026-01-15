@@ -977,7 +977,7 @@ const TopBarAccount = styled.div`
 `;
 
 const FooterBar = styled.div`
-  height: calc(3rem + 12px);
+  height: calc(3rem + var(--spacing-px-12));
   display: flex;
   align-items: flex-start;
   justify-content: center;
@@ -1096,7 +1096,7 @@ const MainContent = styled.div`
   @media (min-width: ${MOBILE_BREAKPOINT_PX}) {
     flex-direction: row;
     align-items: stretch; /* Reset to stretch on desktop */
-    height: calc(100vh - (3rem + (3rem + 12px))); /* Subtract TopBar and FooterBar on desktop */
+    height: calc(100vh - (3rem + (3rem + var(--spacing-px-12)))); /* Subtract TopBar and FooterBar on desktop */
   }
 `;
 
@@ -1163,7 +1163,7 @@ const DateArrow = styled.button`
   color: var(--text-primary, #DEDEE5);
   cursor: pointer;
   padding: clamp(0.25rem, 0.75vw, 0.5rem) clamp(0.25rem, 1vw, 0.5rem);
-  transition: color 0.2s;
+  transition: color var(--transition-fast);
   min-width: clamp(24px, 6vw, 32px);
   min-height: clamp(24px, 6vw, 32px);
   display: flex;
@@ -1192,8 +1192,8 @@ const ArrowIcon = styled.span`
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  width: clamp(10px, 2.5vw, 12px);
-  height: clamp(10px, 2.5vw, 12px);
+  width: clamp(var(--spacing-px-10), 2.5vw, var(--font-size-md));
+  height: clamp(var(--spacing-px-10), 2.5vw, var(--font-size-md));
   pointer-events: none;
   
   svg {
@@ -1209,20 +1209,20 @@ const DateDisplayContainer = styled.div`
 `;
 
 const DateDisplay = styled.div<{ $clickable?: boolean }>`
-  font-size: clamp(10px, 2.4vw, 12px);
+  font-size: clamp(var(--spacing-px-10), 2.4vw, var(--font-size-md));
   color: var(--text-primary, #DEDEE5);
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: var(--font-family-base);
   min-width: clamp(100px, 30vw, 134px);
   text-align: center;
   ${props => props.$clickable ? `
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all var(--transition-fast);
     
     &:hover {
       color: var(--text-primary, #ffffff);
       text-decoration: underline;
-      text-decoration-thickness: 0.5px;
-      text-underline-offset: 2px;
+      text-decoration-thickness: var(--underline-thickness);
+      text-underline-offset: var(--underline-offset);
     }
   ` : ''}
 `;
@@ -1246,7 +1246,7 @@ const TimetableWrapper = styled.div`
 `;
 
 const HoveredItemName = styled.div`
-  font-size: clamp(10px, 2.4vw, 12px);
+  font-size: clamp(var(--spacing-px-10), 2.4vw, var(--font-size-md));
   color: var(--text-primary, #DEDEE5);
   font-family: var(--font-family-base);
   text-align: center;
@@ -1293,17 +1293,17 @@ const ViewModeItem = styled.button<{ $selected: boolean }>`
   background: transparent;
   border: none;
   color: var(--text-primary, #DEDEE5);
-  font-size: clamp(9px, 2.2vw, 12px);
-  font-family: Helvetica, Arial, sans-serif;
+  font-size: clamp(var(--font-size-xs), 2.2vw, var(--font-size-md));
+  font-family: var(--font-family-base);
   font-weight: normal;
   cursor: pointer;
   padding: 0;
-  transition: color 0.2s;
+  transition: color var(--transition-fast);
   user-select: none;
   width: clamp(1.25rem, 3.5vw, 1.5rem);
   text-align: center;
   position: relative;
-  line-height: 1.2;
+  line-height: var(--line-height-tight);
   
   ${props => props.$selected ? `
     &::before {
@@ -1321,18 +1321,18 @@ const ViewModeItem = styled.button<{ $selected: boolean }>`
   &:hover {
     color: var(--text-primary, #ffffff);
     text-decoration: underline;
-    text-decoration-thickness: 0.5px;
-    text-underline-offset: 2px;
+    text-decoration-thickness: var(--underline-thickness);
+    text-underline-offset: var(--underline-offset);
   }
 `;
 
 const ViewModeSpacer = styled.span`
-  font-size: clamp(10px, 2.4vw, 12px);
+  font-size: clamp(var(--spacing-px-10), 2.4vw, var(--font-size-md));
   color: var(--text-primary, #DEDEE5);
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: var(--font-family-base);
   width: clamp(0.375rem, 1vw, 0.5rem);
   text-align: center;
-  line-height: 1.2;
+  line-height: var(--line-height-tight);
 `;
 
 
@@ -1350,7 +1350,7 @@ const ErrorBox = styled.div`
   top: var(--spacing-8);
   right: var(--spacing-8);
   background: #1a0000;
-  border: 1px solid #3a0000;
+  border: var(--border-width) solid #3a0000;
   color: #ff6a6a;
   padding: var(--spacing-8);
   font-size: var(--font-size-md);

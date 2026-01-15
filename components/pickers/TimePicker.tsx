@@ -404,7 +404,7 @@ const PickerContainer = styled.div`
 const InputWrapper = styled.div`
   width: 100%;
   background: var(--bg-primary, #0a0a0a);
-  border: 1px solid var(--bg-tertiary, #1a1a1a);
+  border: var(--border-width) solid var(--bg-tertiary, #1a1a1a);
   color: var(--text-primary, #DEDEE5);
   font-size: var(--font-size-md);
   font-family: var(--font-family-base);
@@ -444,7 +444,7 @@ const PickerOverlay = styled.div`
 const PickerPopup = styled.div`
   position: fixed;
   background: var(--bg-tertiary, #1a1a1a);
-  border: 1px solid var(--border-primary, #2a2a2a);
+  border: var(--border-width) solid var(--border-primary, #2a2a2a);
   box-shadow: var(--shadow-md);
   z-index: var(--z-picker-popup);
   min-width: 280px;
@@ -536,7 +536,7 @@ const TimeOption = styled.div<{ $active: boolean; $isCurrent?: boolean }>`
   font-family: var(--font-family-base);
   color: ${props => props.$active ? 'var(--text-primary, #ffffff)' : 'var(--text-primary, #DEDEE5)'};
   background: ${props => props.$isCurrent ? 'var(--bg-hover, #2a2a2a)' : 'transparent'};
-  border: ${props => props.$active ? '1px solid var(--border-secondary, #8A8A95)' : '1px solid transparent'};
+  border: ${props => props.$active ? 'var(--border-width) solid var(--border-secondary, #8A8A95)' : 'var(--border-width) solid transparent'};
   cursor: pointer;
   transition: all var(--transition-fast);
 

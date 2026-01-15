@@ -65,12 +65,12 @@ const Clock: React.FC = () => {
 export default Clock;
 
 const ClockDisplay = styled.div`
-  font-family: Helvetica, Arial, sans-serif;
-  font-size: 12px;
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-md);
   font-weight: normal;
   color: var(--text-primary, #DEDEE5);
   letter-spacing: 0.1em;
-  line-height: 12px;
+  line-height: var(--font-size-md);
   text-transform: uppercase;
   
   /* Absolute black in light mode */
