@@ -68,49 +68,105 @@ export default function LoginPage() {
     if (!auth || isSigningIn) return;
     setIsSigningIn(true);
     setError(null);
+    
+    // Proactive monitoring: timeout and window focus detection
+    // This is how other services (GitHub, Google, etc.) handle popup closing
+    let timeoutId: NodeJS.Timeout | null = null;
+    let focusHandler: (() => void) | null = null;
+    let isResolved = false; // Track if sign-in completed or was cancelled
+    
+    const cleanup = () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+      }
+      if (focusHandler) {
+        window.removeEventListener('focus', focusHandler);
+        focusHandler = null;
+      }
+    };
+    
+    const resetState = () => {
+      if (!isResolved) {
+        isResolved = true;
+        cleanup();
+        setIsSigningIn(false);
+      }
+    };
+    
+    // Timeout: if no response in 8 seconds, assume user closed popup
+    timeoutId = setTimeout(() => {
+      logger.debug('Google sign-in timeout - assuming popup was closed');
+      resetState();
+    }, 8000);
+    
+    // Window focus monitoring: when user clicks back on main window,
+    // wait a moment then check if we should reset (popup likely closed)
+    focusHandler = () => {
+      // Small delay to allow Firebase to process if sign-in succeeded
+      setTimeout(() => {
+        if (!isResolved && isSigningIn) {
+          logger.debug('Window regained focus - checking if popup was closed');
+          resetState();
+        }
+      }, 500);
+    };
+    window.addEventListener('focus', focusHandler);
+    
     try {
       const provider = new GoogleAuthProvider();
       
-      // Add custom parameters to help with domain verification
       provider.setCustomParameters({
         prompt: 'select_account'
       });
 
-      // Try popup first, fallback to redirect if popup fails
       try {
         await signInWithPopup(auth, provider);
+        isResolved = true;
+        cleanup();
         router.push('/');
+        return;
       } catch (popupError: any) {
-        // If popup is blocked or fails, try redirect
+        isResolved = true;
+        cleanup();
+        
+        // If user closed the popup, just reset state - don't try redirect
+        if (popupError?.code === 'auth/popup-closed-by-user') {
+          setIsSigningIn(false);
+          return;
+        }
+        
+        // If popup is blocked or has internal error, try redirect
         if (popupError?.code === 'auth/popup-blocked' || 
-            popupError?.code === 'auth/popup-closed-by-user' ||
             popupError?.code === 'auth/internal-error') {
           logger.warn('Popup sign-in failed, trying redirect method', popupError);
           await signInWithRedirect(auth, provider);
-          // Note: redirect will navigate away, so we don't need to push to router
           return;
         }
-        throw popupError; // Re-throw if it's a different error
+        throw popupError;
       }
     } catch (err: any) {
+      isResolved = true;
+      cleanup();
+      
       logger.error('Google sign-in error', err);
-      // Log full error details in development
+      
       if (process.env.NODE_ENV === 'development') {
         logger.debug('Full error details', {
           code: err?.code,
           message: err?.message,
-          customData: err?.customData,
-          stack: err?.stack,
         });
       }
-      // If user just closed the popup, don't show error but still reset state
+      
       if (err?.code !== 'auth/popup-closed-by-user') {
         setError(mapAuthError(err));
       }
-      // Don't return early - let finally block execute to re-enable UI
     } finally {
-      // Always re-enable the UI
-      setIsSigningIn(false);
+      // Safety net: always reset if not already resolved
+      if (!isResolved) {
+        cleanup();
+        setIsSigningIn(false);
+      }
     }
   };
 
@@ -201,7 +257,7 @@ const LandingContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: var(--font-family-base);
 `;
 
 const LandingContent = styled.div`
@@ -211,20 +267,20 @@ const LandingContent = styled.div`
 `;
 
 const LandingTitle = styled.h1`
-  font-size: 16px;
+  font-size: var(--font-size-xl);
   color: var(--text-primary, #DEDEE5);
   letter-spacing: 0.1em;
   font-weight: normal;
-  line-height: 1.2;
+  line-height: var(--line-height-tight);
   margin-bottom: 50px;
   text-align: left;
   cursor: pointer;
-  transition: opacity 0.2s;
+  transition: opacity var(--transition-fast);
 
   &:hover {
     opacity: 0.7;
     text-decoration: underline;
-    text-decoration-thickness: 0.5px;
+    text-decoration-thickness: var(--underline-thickness);
   }
 `;
 
@@ -245,12 +301,12 @@ const LandingInput = styled.input`
   width: 100%;
   padding: 0.75rem;
   background: var(--bg-tertiary, #1a1a1a);
-  border: 1px solid var(--bg-tertiary, #1a1a1a);
+  border: var(--border-width) solid var(--bg-tertiary, #1a1a1a);
   color: var(--text-primary, #DEDEE5);
-  font-size: 12px;
-  font-family: Helvetica, Arial, sans-serif;
+  font-size: var(--font-size-md);
+  font-family: var(--font-family-base);
   outline: none;
-  transition: all 0.2s;
+  transition: all var(--transition-fast);
   box-sizing: border-box;
   border-radius: 4px;
   
@@ -290,7 +346,7 @@ const LandingPasswordToggle = styled.button`
   justify-content: center;
   z-index: 1;
   color: var(--text-primary, #dedee5);
-  font-size: 16px;
+  font-size: var(--font-size-xl);
 
   &:hover {
     opacity: 0.8;
@@ -316,17 +372,17 @@ const LandingLink = styled.button<{ disabled?: boolean }>`
   border: none;
   color: var(--text-secondary, #8A8A95);
   font-size: 11px;
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: var(--font-family-base);
   cursor: pointer;
   padding: 0;
-  transition: color 0.2s;
+  transition: color var(--transition-fast);
   text-align: left;
 
   &:hover:not(:disabled) {
     color: var(--text-primary, #DEDEE5);
     text-decoration: underline;
-    text-decoration-thickness: 0.5px;
-    text-underline-offset: 2px;
+    text-decoration-thickness: var(--underline-thickness);
+    text-underline-offset: var(--underline-offset);
   }
 
   &:disabled {
@@ -337,13 +393,13 @@ const LandingLink = styled.button<{ disabled?: boolean }>`
 
 const LandingButton = styled.button<{ disabled?: boolean }>`
   background: transparent;
-  border: 0.5px solid var(--text-primary, #DEDEE5);
+  border: var(--underline-thickness) solid var(--text-primary, #DEDEE5);
   color: var(--text-primary, #DEDEE5);
   font-size: 10px;
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: var(--font-family-base);
   padding: 0.75rem 1.5rem;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--transition-fast);
   text-transform: uppercase;
   letter-spacing: 0.1em;
 
@@ -368,12 +424,12 @@ const LandingMessageContainer = styled.div`
 const LandingError = styled.div`
   color: #ff4444;
   font-size: 11px;
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: var(--font-family-base);
 `;
 
 const LandingStatus = styled.div`
   color: var(--text-primary, #DEDEE5);
   font-size: 11px;
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: var(--font-family-base);
 `;
 

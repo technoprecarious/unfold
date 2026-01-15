@@ -403,8 +403,8 @@ const TerminalComponent: React.FC<TerminalComponentProps> = ({ onDataUpdate }) =
           const errorDiv = document.createElement('div');
           errorDiv.style.color = '#DEDEE5';
           errorDiv.style.padding = '1rem';
-          errorDiv.style.fontFamily = 'Helvetica, Arial, sans-serif';
-          errorDiv.style.fontSize = '12px';
+          errorDiv.style.fontFamily = 'var(--font-family-base)';
+          errorDiv.style.fontSize = 'var(--font-size-md)';
           errorDiv.textContent = `Terminal initialization failed: ${error instanceof Error ? error.message : 'Unknown error'}. Check console for details.`;
           container.appendChild(errorDiv);
         }

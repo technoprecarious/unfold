@@ -461,7 +461,7 @@ const AccountDrawer: React.FC<AccountDrawerProps> = ({ isOpen, onClose }) => {
               <ColumnSection>
                 <Label>DB Columns</Label>
                 {isLoadingPrefs ? (
-                  <span style={{ fontSize: '11px', color: '#8a8a95' }}>Loading...</span>
+                  <span style={{ fontSize: 'var(--font-size-base)', color: '#8a8a95' }}>Loading...</span>
                 ) : preferences ? (
                   <>
                     <DraggableColumnList>
@@ -573,7 +573,7 @@ const DrawerPanel = styled.div`
   width: var(--width-drawer-account);
   height: 100vh;
   background: var(--bg-secondary, #0e0e0e);
-  border-left: 1px solid var(--border-primary, #0a0a0a);
+  border-left: var(--border-width) solid var(--border-primary, #0a0a0a);
   display: flex;
   flex-direction: column;
   position: relative;
@@ -582,7 +582,7 @@ const DrawerPanel = styled.div`
 
 const AccountHeader = styled.div`
   padding: var(--spacing-12);
-  border-bottom: 1px solid var(--border-primary, #0a0a0a);
+  border-bottom: var(--border-width) solid var(--border-primary, #0a0a0a);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -605,7 +605,7 @@ const AccountHeaderRight = styled.div`
 const AccountHeaderTitle = styled.h2`
   margin: 0;
   font-size: var(--font-size-lg);
-  font-weight: 400;
+  font-weight: var(--font-weight-normal);
   color: var(--text-primary, #dedee5);
   font-family: var(--font-family-base);
   letter-spacing: var(--letter-spacing-wide);
@@ -745,7 +745,7 @@ const InputRow = styled.div`
 
 const EmailInput = styled.input`
   background: var(--bg-tertiary, #1a1a1a);
-  border: 1px solid var(--bg-tertiary, #1a1a1a);
+  border: var(--border-width) solid var(--bg-tertiary, #1a1a1a);
   color: var(--text-primary, #dedee5);
   padding: var(--spacing-7);
   font-size: var(--font-size-md);
@@ -814,7 +814,7 @@ const Divider = styled.div`
 
 const DividerLine = styled.div`
   flex: 1;
-  height: 1px;
+  height: var(--border-width);
   background: var(--bg-tertiary, #1a1a1a);
 `;
 
@@ -838,7 +838,7 @@ const ColumnToggle = styled.div<{ $checked: boolean }>`
   gap: var(--spacing-5);
   padding: var(--spacing-5);
   background: ${props => props.$checked ? 'var(--bg-tertiary, #1a1a1a)' : 'transparent'};
-  border: 1px solid ${props => props.$checked ? 'var(--text-primary, #dedee5)' : 'var(--border-secondary, #8a8a95)'};
+  border: var(--border-width) solid ${props => props.$checked ? 'var(--text-primary, #dedee5)' : 'var(--border-secondary, #8a8a95)'};
   color: ${props => props.$checked ? 'var(--text-primary, #dedee5)' : 'var(--text-secondary, #8a8a95)'};
   cursor: pointer;
   font-size: var(--font-size-base);
@@ -863,14 +863,14 @@ const ColumnOrderItem = styled.div`
   gap: var(--spacing-2);
   padding: var(--spacing-5);
   background: var(--bg-tertiary, #1a1a1a);
-  border: 1px solid var(--border-secondary, #8a8a95);
+  border: var(--border-width) solid var(--border-secondary, #8a8a95);
   font-size: var(--font-size-base);
   width: 100%;
 `;
 
 const ColumnOrderButton = styled.button`
   background: transparent;
-  border: 1px solid var(--border-secondary, #8a8a95);
+  border: var(--border-width) solid var(--border-secondary, #8a8a95);
   color: var(--text-primary, #dedee5);
   cursor: pointer;
   padding: var(--spacing-2) var(--spacing-5);
@@ -930,8 +930,8 @@ const DragHandle = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 16px;
-  height: 16px;
+  width: var(--font-size-xl);
+  height: var(--font-size-xl);
   color: var(--text-secondary, #8a8a95);
   font-size: var(--font-size-sm);
   line-height: 1;
@@ -954,23 +954,23 @@ const ColumnLabel = styled.div`
 `;
 
 const ListSeparator = styled.div`
-  height: 1px;
+  height: var(--border-width);
   width: 100%;
   background: var(--border-primary, #0a0a0a);
   margin: var(--spacing-7) 0;
 `;
 
 const ColumnCheckbox = styled.div<{ $checked: boolean }>`
-  width: 14px;
-  height: 14px;
-  border: 1px solid ${props => props.$checked ? 'var(--border-secondary, #8A8A95)' : 'var(--border-tertiary, #5a5a5d)'};
+  width: var(--spacing-px-14);
+  height: var(--spacing-px-14);
+  border: var(--border-width) solid ${props => props.$checked ? 'var(--border-secondary, #8A8A95)' : 'var(--border-tertiary, #5a5a5d)'};
   background: ${props => props.$checked ? 'var(--text-secondary, #8A8A95)' : 'transparent'};
   color: ${props => props.$checked ? 'var(--bg-primary, #161619)' : 'transparent'};
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: var(--font-size-xs);
-  font-weight: bold;
+  font-weight: var(--font-weight-bold);
   transition: all var(--transition-fast);
   line-height: 1;
   cursor: pointer;

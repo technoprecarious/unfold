@@ -99,7 +99,7 @@ const ModalOverlay = styled.div`
 
 const ModalContent = styled.div<{ $width: string }>`
   background: var(--bg-secondary, #161619);
-  border: 1px solid var(--border-primary, #2a2a2d);
+  border: var(--border-width) solid var(--border-primary, #2a2a2d);
   border-radius: var(--radius-none);
   width: ${props => props.$width};
   max-width: calc(100vw - 2rem);
@@ -129,13 +129,13 @@ const ModalHeader = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: var(--spacing-12);
-  border-bottom: 1px solid var(--border-primary, #2a2a2d);
+  border-bottom: var(--border-width) solid var(--border-primary, #2a2a2d);
 `;
 
 const ModalTitle = styled.h3`
   margin: 0;
   font-size: var(--font-size-lg);
-  font-weight: 400;
+  font-weight: var(--font-weight-normal);
   color: var(--text-primary, #DEDEE5);
   font-family: var(--font-family-base);
   letter-spacing: var(--letter-spacing-normal);

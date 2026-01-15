@@ -243,7 +243,7 @@ const PickerPopup = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
   background: var(--bg-primary, #ffffff);
-  border: 1px solid var(--border-primary, #d0d0d0);
+  border: var(--border-width) solid var(--border-primary, #d0d0d0);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
   color: var(--text-primary, #111111);
   z-index: 20001;
@@ -273,7 +273,7 @@ const MonthNavButton = styled.button`
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: color 0.2s;
+  transition: color var(--transition-fast);
 
   &:hover {
     color: var(--text-primary, #000000);
@@ -288,10 +288,10 @@ const MonthYear = styled.div`
 
 const MonthSelect = styled.select`
   background: var(--bg-primary, #ffffff);
-  border: 1px solid var(--border-primary, #d0d0d0);
+  border: var(--border-width) solid var(--border-primary, #d0d0d0);
   color: var(--text-primary, #111111);
-  font-size: 12px;
-  font-family: Helvetica, Arial, sans-serif;
+  font-size: var(--font-size-md);
+  font-family: var(--font-family-base);
   padding: 0.25rem 0.5rem;
   outline: none;
   cursor: pointer;
@@ -299,10 +299,10 @@ const MonthSelect = styled.select`
 
 const YearInput = styled.input`
   background: var(--bg-primary, #ffffff);
-  border: 1px solid var(--border-primary, #d0d0d0);
+  border: var(--border-width) solid var(--border-primary, #d0d0d0);
   color: var(--text-primary, #111111);
-  font-size: 12px;
-  font-family: Helvetica, Arial, sans-serif;
+  font-size: var(--font-size-md);
+  font-family: var(--font-family-base);
   padding: 0.25rem 0.5rem;
   width: 80px;
   outline: none;
@@ -326,7 +326,7 @@ const DayNames = styled.div`
 
 const DayName = styled.div`
   text-align: center;
-  font-size: 11px;
+  font-size: var(--font-size-base);
   color: var(--text-secondary, #666666);
   font-family: Helvetica, Arial, sans-serif;
   padding: 0.25rem;
@@ -343,8 +343,8 @@ const CalendarDay = styled.div<{ $isCurrentMonth: boolean; $isSelected: boolean;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
-  font-family: Helvetica, Arial, sans-serif;
+  font-size: var(--font-size-md);
+  font-family: var(--font-family-base);
   cursor: ${props => props.$isCurrentMonth ? 'pointer' : 'default'};
   color: ${props => 
     props.$isSelected ? 'var(--text-primary, #000000)' : 
@@ -353,7 +353,7 @@ const CalendarDay = styled.div<{ $isCurrentMonth: boolean; $isSelected: boolean;
     props.$isToday ? 'var(--bg-tertiary, #f2f2f2)' : 'transparent'};
   border: ${props => 
     props.$isSelected ? '1px solid var(--border-secondary, #999999)' : '1px solid transparent'};
-  transition: all 0.2s;
+  transition: all var(--transition-fast);
 
   &:hover {
     ${props => props.$isCurrentMonth ? `
@@ -369,24 +369,24 @@ const PickerFooter = styled.div`
   gap: 0.5rem;
   margin-top: 1rem;
   padding-top: 1rem;
-  border-top: 1px solid var(--border-primary, #d0d0d0);
+  border-top: var(--border-width) solid var(--border-primary, #d0d0d0);
 `;
 
 const FooterButton = styled.button`
   background: transparent;
   border: none;
   color: var(--text-secondary, #666666);
-  font-size: 12px;
-  font-family: Helvetica, Arial, sans-serif;
+  font-size: var(--font-size-md);
+  font-family: var(--font-family-base);
   padding: 0.5rem 1rem;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--transition-fast);
   text-decoration: none;
 
   &:hover {
     color: var(--text-primary, #111111);
     text-decoration: underline;
-    text-decoration-thickness: 0.5px;
-    text-underline-offset: 2px;
+    text-decoration-thickness: var(--underline-thickness);
+    text-underline-offset: var(--underline-offset);
   }
 `;

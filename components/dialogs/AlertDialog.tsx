@@ -56,13 +56,13 @@ const AlertActions = styled.div`
 
 const AlertButton = styled.button`
   background: var(--bg-tertiary, #2a2a2d);
-  border: 1px solid var(--border-tertiary, #3a3a3d);
+  border: var(--border-width) solid var(--border-tertiary, #3a3a3d);
   color: var(--text-primary, #DEDEE5);
   padding: 0.5rem 1.5rem;
-  font-size: 12px;
-  font-family: Helvetica, Arial, sans-serif;
+  font-size: var(--font-size-md);
+  font-family: var(--font-family-base);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--transition-fast);
 
   &:hover {
     background: var(--bg-hover, #3a3a3d);

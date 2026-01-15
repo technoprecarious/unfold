@@ -45,8 +45,16 @@ yarn-error.log*
 next-env.d.ts
 
 # security - sensitive files (DO NOT commit these)
-# Note: SECURITY.md, firestore.rules, firebase.json, and security code files
+# Note: firestore.rules, firebase.json, and security code files (like securityLogger.ts)
 # should be committed as they are needed for the project to run
+
+# Security-related documentation (excluded from git)
+**/SECURITY*.md
+**/*SECURITY*.md
+SECURITY.md
+SECURITY_OPTIONS_SUMMARY.md
+FIRESTORE_SECURITY_ANALYSIS.md
+firestore.rules.enhanced
 
 # Firebase service account keys (if downloaded)
 *-firebase-adminsdk-*.json

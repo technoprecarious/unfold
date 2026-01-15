@@ -473,17 +473,17 @@ const PickerContainer = styled.div`
 const InputWrapper = styled.div`
   width: 100%;
   background: var(--bg-primary, #0a0a0a);
-  border: 1px solid var(--bg-tertiary, #1a1a1a);
+  border: var(--border-width) solid var(--bg-tertiary, #1a1a1a);
   color: var(--text-primary, #DEDEE5);
-  font-size: 12px;
-  font-family: Helvetica, Arial, sans-serif;
+  font-size: var(--font-size-md);
+  font-family: var(--font-family-base);
   padding: 0.5rem;
   outline: none;
   display: flex;
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--transition-fast);
 
   &:hover {
     background: var(--bg-tertiary, #1a1a1a);
@@ -501,7 +501,7 @@ const InputValue = styled.span`
 `;
 
 const CalendarIcon = styled.span`
-  font-size: 14px;
+  font-size: var(--font-size-lg);
   opacity: 0.7;
   margin-left: 0.5rem;
 `;
@@ -519,7 +519,7 @@ const PickerOverlay = styled.div`
 const PickerPopup = styled.div`
   position: fixed;
   background: var(--bg-tertiary, #1a1a1a);
-  border: 1px solid var(--border-primary, #2a2a2a);
+  border: var(--border-width) solid var(--border-primary, #2a2a2a);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
   z-index: 20001;
   min-width: 360px;
@@ -554,7 +554,7 @@ const MonthNavButton = styled.button`
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--transition-fast);
 
   &:hover {
     color: var(--text-primary, #ffffff);
@@ -569,10 +569,10 @@ const MonthYear = styled.div`
 
 const MonthSelect = styled.select`
   background: var(--bg-tertiary, #1a1a1a);
-  border: 1px solid var(--border-primary, #2a2a2a);
+  border: var(--border-width) solid var(--border-primary, #2a2a2a);
   color: var(--text-primary, #DEDEE5);
-  font-size: 12px;
-  font-family: Helvetica, Arial, sans-serif;
+  font-size: var(--font-size-md);
+  font-family: var(--font-family-base);
   padding: 0.25rem 0.5rem;
   outline: none;
   cursor: pointer;
@@ -580,10 +580,10 @@ const MonthSelect = styled.select`
 
 const YearInput = styled.input`
   background: var(--bg-tertiary, #1a1a1a);
-  border: 1px solid var(--border-primary, #2a2a2a);
+  border: var(--border-width) solid var(--border-primary, #2a2a2a);
   color: var(--text-primary, #DEDEE5);
-  font-size: 12px;
-  font-family: Helvetica, Arial, sans-serif;
+  font-size: var(--font-size-md);
+  font-family: var(--font-family-base);
   padding: 0.25rem 0.5rem;
   width: 80px;
   outline: none;
@@ -607,9 +607,9 @@ const DayNames = styled.div`
 
 const DayName = styled.div`
   text-align: center;
-  font-size: 11px;
+  font-size: var(--font-size-base);
   color: var(--text-secondary, #8A8A95);
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: var(--font-family-base);
   padding: 0.25rem;
 `;
 
@@ -624,8 +624,8 @@ const CalendarDay = styled.div<{ $isCurrentMonth: boolean; $isSelected: boolean;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
-  font-family: Helvetica, Arial, sans-serif;
+  font-size: var(--font-size-md);
+  font-family: var(--font-family-base);
   cursor: ${props => props.$isCurrentMonth ? 'pointer' : 'default'};
   color: ${props => 
     props.$isSelected ? 'var(--text-primary, #ffffff)' : 
@@ -633,8 +633,8 @@ const CalendarDay = styled.div<{ $isCurrentMonth: boolean; $isSelected: boolean;
   background: ${props => 
     props.$isToday ? 'var(--bg-hover, #2a2a2a)' : 'transparent'};
   border: ${props => 
-    props.$isSelected ? '1px solid var(--border-secondary, #8A8A95)' : '1px solid transparent'};
-  transition: all 0.2s;
+    props.$isSelected ? 'var(--border-width) solid var(--border-secondary, #8A8A95)' : 'var(--border-width) solid transparent'};
+  transition: all var(--transition-fast);
 
   &:hover {
     ${props => props.$isCurrentMonth ? `
@@ -652,9 +652,9 @@ const TimeSection = styled.div`
 `;
 
 const TimeLabel = styled.div`
-  font-size: 11px;
+  font-size: var(--font-size-base);
   color: var(--text-secondary, #8A8A95);
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: var(--font-family-base);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-bottom: 0.25rem;
@@ -673,8 +673,8 @@ const TimeButton = styled.button<{ $active: boolean }>`
   background: transparent;
   border: none;
   color: var(--text-primary, #DEDEE5);
-  font-size: 12px;
-  font-family: Helvetica, Arial, sans-serif;
+  font-size: var(--font-size-md);
+  font-family: var(--font-family-base);
   padding: 0.15rem 0.3rem;
   cursor: pointer;
   min-width: 32px;
@@ -682,7 +682,7 @@ const TimeButton = styled.button<{ $active: boolean }>`
 
 const TimeSeparator = styled.span`
   color: var(--text-primary, #DEDEE5);
-  font-size: 12px;
+  font-size: var(--font-size-md);
 `;
 
 const TimeScrollers = styled.div`
@@ -711,13 +711,13 @@ const TimeScroll = styled.div`
 const TimeOption = styled.div<{ $active: boolean; $isCurrent?: boolean }>`
   padding: 0.25rem;
   text-align: center;
-  font-size: 11px;
-  font-family: Helvetica, Arial, sans-serif;
+  font-size: var(--font-size-base);
+  font-family: var(--font-family-base);
   color: ${props => props.$active ? 'var(--text-primary, #ffffff)' : 'var(--text-primary, #DEDEE5)'};
   background: ${props => props.$isCurrent ? 'var(--bg-hover, #2a2a2a)' : 'transparent'};
-  border: ${props => props.$active ? '1px solid var(--border-secondary, #8A8A95)' : '1px solid transparent'};
+  border: ${props => props.$active ? 'var(--border-width) solid var(--border-secondary, #8A8A95)' : 'var(--border-width) solid transparent'};
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--transition-fast);
 
   &:hover {
     color: var(--text-primary, #ffffff);
@@ -732,25 +732,25 @@ const PickerFooter = styled.div`
   gap: 0.5rem;
   margin-top: 0.75rem;
   padding-top: 0.75rem;
-  border-top: 1px solid var(--border-primary, #2a2a2a);
+  border-top: var(--border-width) solid var(--border-primary, #2a2a2a);
 `;
 
 const FooterButton = styled.button`
   background: transparent;
   border: none;
   color: var(--text-secondary, #8A8A95);
-  font-size: 12px;
-  font-family: Helvetica, Arial, sans-serif;
+  font-size: var(--font-size-md);
+  font-family: var(--font-family-base);
   padding: 0.5rem 1rem;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--transition-fast);
   text-decoration: none;
 
   &:hover {
     color: var(--text-primary, #ffffff);
     text-decoration: underline;
-    text-decoration-thickness: 0.5px;
-    text-underline-offset: 2px;
+    text-decoration-thickness: var(--underline-thickness);
+    text-underline-offset: var(--underline-offset);
   }
 `;
 

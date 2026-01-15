@@ -85,7 +85,7 @@ const ConfirmButton = styled.button<{ $secondary?: boolean; $danger?: boolean }>
       : props.$secondary
       ? 'var(--bg-tertiary, #2a2a2d)'
       : 'var(--bg-tertiary, #2a2a2d)'};
-  border: 1px solid ${props =>
+  border: var(--border-width) solid ${props =>
     props.$danger
       ? 'var(--danger-border, #5a2f2f)'
       : props.$secondary
@@ -98,10 +98,10 @@ const ConfirmButton = styled.button<{ $secondary?: boolean; $danger?: boolean }>
       ? 'var(--text-secondary, #8A8A95)'
       : 'var(--text-primary, #DEDEE5)'};
   padding: 0.625rem 1.5rem;
-  font-size: 12px;
-  font-family: Helvetica, Arial, sans-serif;
+  font-size: var(--font-size-md);
+  font-family: var(--font-family-base);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--transition-fast);
   min-width: 80px;
   text-align: center;
 

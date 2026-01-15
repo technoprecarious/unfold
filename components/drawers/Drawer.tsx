@@ -883,7 +883,7 @@ const DrawerPanel = styled.div`
   width: 100%;
   max-height: 85vh;
   background: var(--bg-secondary, #0e0e0e);
-  border-top: 1px solid var(--border-primary, #0a0a0a);
+  border-top: var(--border-width) solid var(--border-primary, #0a0a0a);
   display: flex;
   flex-direction: column;
   box-shadow: var(--shadow-sm);
@@ -927,7 +927,7 @@ const DrawerHeader = styled.header`
   padding-left: var(--spacing-12);
   padding-right: max(var(--spacing-12), var(--spacing-px-10));
   padding-bottom: var(--spacing-5);
-  border-bottom: 1px solid var(--border-primary, #0a0a0a);
+  border-bottom: var(--border-width) solid var(--border-primary, #0a0a0a);
   display: flex;
   flex-direction: column;
   gap: var(--spacing-8);
@@ -978,7 +978,7 @@ const DrawerHeaderTitleRow = styled.div`
 
 const ItemTypeLabel = styled.span`
   font-size: var(--font-size-xl);
-  font-weight: 400;
+  font-weight: var(--font-weight-normal);
   color: var(--text-secondary, #8A8A95);
   letter-spacing: var(--letter-spacing-wide);
   font-family: var(--font-family-base);
@@ -997,7 +997,7 @@ const ItemTitle = styled.h3`
   margin: 0;
   padding: 0;
   font-size: var(--font-size-xl);
-  font-weight: 400;
+  font-weight: var(--font-weight-normal);
   color: var(--text-primary, #DEDEE5);
   font-family: var(--font-family-base);
   line-height: var(--line-height-tight);
@@ -1093,7 +1093,7 @@ const PropertySection = styled.div`
   margin-top: var(--spacing-5);
   margin-bottom: calc(var(--spacing-5) * -1);
   padding-top: var(--spacing-8);
-  border-top: 1px solid var(--border-primary, #0a0a0a);
+  border-top: var(--border-width) solid var(--border-primary, #0a0a0a);
   font-family: var(--font-family-base);
 `;
 
@@ -1125,7 +1125,7 @@ const PropertyValue = styled.div`
 const Input = styled.input`
   width: 100%;
   background: var(--bg-primary, #0a0a0a);
-  border: 1px solid var(--bg-tertiary, #1a1a1a);
+  border: var(--border-width) solid var(--bg-tertiary, #1a1a1a);
   color: var(--text-primary, #DEDEE5);
   font-size: var(--font-size-md);
   font-family: var(--font-family-base);
@@ -1195,7 +1195,7 @@ const Input = styled.input`
 const Textarea = styled.textarea`
   width: 100%;
   background: var(--bg-primary, #0a0a0a);
-  border: 1px solid var(--bg-tertiary, #1a1a1a);
+  border: var(--border-width) solid var(--bg-tertiary, #1a1a1a);
   color: var(--text-primary, #DEDEE5);
   font-size: var(--font-size-md);
   font-family: var(--font-family-base);
@@ -1253,7 +1253,7 @@ const EmptyChildren = styled.div`
 const AddChildButton = styled.button`
   padding: var(--spacing-5);
   background: transparent;
-  border: 1px dashed var(--border-tertiary, #333333);
+  border: var(--border-width) dashed var(--border-tertiary, #333333);
   color: var(--text-secondary, #8A8A95);
   font-size: var(--font-size-md);
   font-family: var(--font-family-base);
@@ -1270,7 +1270,7 @@ const AddChildButton = styled.button`
 const Select = styled.select`
   width: 100%;
   background-color: var(--bg-primary, #0a0a0a);
-  border: 1px solid var(--bg-tertiary, #1a1a1a);
+  border: var(--border-width) solid var(--bg-tertiary, #1a1a1a);
   color: var(--text-primary, #DEDEE5);
   font-size: var(--font-size-md);
   font-family: var(--font-family-base);
@@ -1319,7 +1319,7 @@ const DaysOfWeekContainer = styled.div`
 
 const DayCheckbox = styled.button<{ $selected: boolean }>`
   background: ${props => props.$selected ? 'var(--text-secondary, #8A8A95)' : 'var(--bg-primary, #0a0a0a)'};
-  border: 1px solid ${props => props.$selected ? 'var(--text-secondary, #8A8A95)' : 'var(--bg-tertiary, #1a1a1a)'};
+  border: var(--border-width) solid ${props => props.$selected ? 'var(--text-secondary, #8A8A95)' : 'var(--bg-tertiary, #1a1a1a)'};
   color: ${props => props.$selected ? 'var(--bg-primary, #000000)' : 'var(--text-primary, #DEDEE5)'};
   font-size: var(--font-size-base);
   font-family: var(--font-family-base);

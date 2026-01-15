@@ -169,7 +169,7 @@ const CircularTimetable: React.FC<CircularTimetableProps> = ({ items, selectedDa
           dominantBaseline="middle"
           fontSize="12"
           fill={themeColors.textSecondary}
-          fontFamily="Helvetica, Arial, sans-serif"
+          fontFamily="var(--font-family-base)"
           fontWeight="500"
         >
           {hour.toString().padStart(2, '0')}
@@ -539,7 +539,7 @@ const CircularTimetable: React.FC<CircularTimetableProps> = ({ items, selectedDa
             dominantBaseline="middle"
             fontSize="12"
             fill={themeColors.textPrimary}
-            fontFamily="Helvetica, Arial, sans-serif"
+            fontFamily="var(--font-family-base)"
             fontWeight="normal"
             opacity="0.6"
           >

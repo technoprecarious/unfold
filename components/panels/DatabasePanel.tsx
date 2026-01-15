@@ -465,18 +465,18 @@ const DatabasePanel: React.FC<DatabasePanelProps> = ({
       <TableContainer ref={tableContainerRef}>
         <Table id={`${itemType}-table`} role="table" aria-label={`${itemType} data table`}>
           <colgroup>
-            <col style={{ width: isMobile ? '20px' : '24px' }} />
-            <col style={{ width: isMobile ? '28px' : '24px' }} />
-            <col style={{ width: isMobile ? 'auto' : '200px' }} />
+            <col style={{ width: 'var(--spacing-px-20)' }} />
+            <col style={{ width: isMobile ? 'var(--spacing-px-32)' : 'var(--spacing-px-28)' }} />
+            <col style={{ width: isMobile ? 'auto' : 'var(--spacing-px-200)' }} />
             <col style={{ width: 'auto' }} />
             {displayColumns.map((columnKey) => {
               const columnWidths = {
-                priority: '80px',
-                time: isMobile ? '90px' : '120px',
-                status: '90px',
-                parent: '120px',
-                tag: '100px',
-                recurrence: '100px',
+                priority: 'var(--spacing-px-80)',
+                time: isMobile ? 'var(--spacing-px-90)' : 'var(--spacing-px-120)',
+                status: 'var(--spacing-px-90)',
+                parent: 'var(--spacing-px-120)',
+                tag: 'var(--spacing-px-100)',
+                recurrence: 'var(--spacing-px-100)',
               } as const;
               return (
                 <col key={columnKey} style={{ width: columnWidths[columnKey] || 'auto' }} />
@@ -486,8 +486,9 @@ const DatabasePanel: React.FC<DatabasePanelProps> = ({
           <TableHeader>
             <DatabaseHeaderRow>
               <DatabaseHeaderCell
-                $width={isMobile ? '20px' : '24px'}
-                $padding="0"
+                $alignLeft
+                $width={isMobile ? 'var(--spacing-px-20)' : 'var(--spacing-px-24)'}
+                $padding={isMobile ? 'var(--spacing-02) 0' : 'var(--spacing-3) 0'}
               >
                 {multiSelectMode && (
                   <RowCheckbox
@@ -510,9 +511,9 @@ const DatabasePanel: React.FC<DatabasePanelProps> = ({
                 $sortable
                 $sorted={sortField === 'createdAt'}
                 $sortDirection={sortField === 'createdAt' ? sortDirection : null}
-                $width={isMobile ? '28px' : '24px'}
-                $paddingRight="4px"
-                $paddingLeft="0"
+                $width={isMobile ? 'var(--spacing-px-32)' : 'var(--spacing-px-28)'}
+                $paddingRight="var(--spacing-px-4)"
+                $paddingLeft="var(--spacing-px-4)"
                 onClick={() => handleSort('createdAt')}
                 aria-sort={sortField === 'createdAt' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}
                 aria-label="Sort by creation date"
@@ -524,7 +525,7 @@ const DatabasePanel: React.FC<DatabasePanelProps> = ({
                 $sortable
                 $sorted={sortField === 'title'}
                 $sortDirection={sortField === 'title' ? sortDirection : null}
-                $paddingLeft={isMobile ? '2px' : '4px'}
+                $paddingLeft={isMobile ? 'var(--spacing-px-4)' : 'var(--spacing-px-4)'}
                 onClick={() => handleSort('title')}
                 aria-sort={sortField === 'title' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}
                 aria-label="Sort by name"
@@ -534,12 +535,12 @@ const DatabasePanel: React.FC<DatabasePanelProps> = ({
               <SpacerHeaderCell />
               {displayColumns.map((columnKey) => {
                 const columnConfigs = {
-                  priority: { label: 'Priority', sortField: 'priority', align: 'right' as const, minWidth: '80px' },
+                  priority: { label: 'Priority', sortField: 'priority', align: 'right' as const, minWidth: 'var(--spacing-px-80)' },
                   time: { label: 'Time', sortField: 'time', align: 'left' as const, minWidth: undefined },
-                  status: { label: 'Status', sortField: 'status', align: 'left' as const, minWidth: '90px' },
-                  parent: { label: 'Parent', sortField: 'parent', align: 'left' as const, minWidth: '120px' },
-                  tag: { label: 'Tag', sortField: 'tag', align: 'left' as const, minWidth: '100px' },
-                  recurrence: { label: 'Recurrence', sortField: 'recurrence', align: 'center' as const, minWidth: '100px' },
+                  status: { label: 'Status', sortField: 'status', align: 'left' as const, minWidth: 'var(--spacing-px-90)' },
+                  parent: { label: 'Parent', sortField: 'parent', align: 'left' as const, minWidth: 'var(--spacing-px-120)' },
+                  tag: { label: 'Tag', sortField: 'tag', align: 'left' as const, minWidth: 'var(--spacing-px-100)' },
+                  recurrence: { label: 'Recurrence', sortField: 'recurrence', align: 'center' as const, minWidth: 'var(--spacing-px-100)' },
                 } as const;
                 
                 const config = columnConfigs[columnKey];
@@ -558,6 +559,7 @@ const DatabasePanel: React.FC<DatabasePanelProps> = ({
                     $sorted={isSorted}
                     $sortDirection={sortDir}
                     $minWidth={config.minWidth}
+                    $paddingLeft={columnKey === 'priority' || columnKey === 'time' || columnKey === 'status' ? 'var(--spacing-px-12)' : undefined}
                     onClick={() => handleSort(config.sortField)}
                     aria-sort={isSorted ? (sortDir === 'asc' ? 'ascending' : 'descending') : 'none'}
                     aria-label={`Sort by ${config.label.toLowerCase()}`}
@@ -591,8 +593,8 @@ const DatabasePanel: React.FC<DatabasePanelProps> = ({
                 >
                   <DataCell
                     $alignLeft
-                    $width={isMobile ? '20px' : '24px'}
-                    $padding={isMobile ? '0.2rem 0' : '0.3rem 0'}
+                    $width={isMobile ? 'var(--spacing-px-20)' : 'var(--spacing-px-24)'}
+                    $padding={isMobile ? 'var(--spacing-02) 0' : 'var(--spacing-3) 0'}
                     $cursor={multiSelectMode ? 'pointer' : 'default'}
                   >
                     {multiSelectMode && (
@@ -614,16 +616,16 @@ const DatabasePanel: React.FC<DatabasePanelProps> = ({
                   </DataCell>
                   <DataCell
                     $alignLeft
-                    $width={isMobile ? '28px' : '24px'}
-                    $paddingRight="4px"
-                    $paddingLeft="0"
+                    $width={isMobile ? 'var(--spacing-px-32)' : 'var(--spacing-px-28)'}
+                    $paddingRight="var(--spacing-px-4)"
+                    $paddingLeft="var(--spacing-px-4)"
                   >
                     <IndexCellContent>
                       <ExpandSpacer />
                       {String(getPermanentIndex(item)).padStart(2, '0')}
                     </IndexCellContent>
                   </DataCell>
-                  <DataCell $alignLeft $paddingLeft={isMobile ? '2px' : '4px'}>
+                  <DataCell $alignLeft $paddingLeft={isMobile ? 'var(--spacing-px-4)' : 'var(--spacing-px-4)'}>
                     {editingCell?.rowId === item.id && editingCell?.column === 'title' ? (
                       <EditInputWrapper
                         onClick={(e) => e.stopPropagation()}
@@ -663,7 +665,8 @@ const DatabasePanel: React.FC<DatabasePanelProps> = ({
                           <DataCell
                             key={columnKey}
                             $alignRight
-                            $minWidth="80px"
+                            $paddingLeft="var(--spacing-px-12)"
+                            $minWidth="var(--spacing-px-80)"
                             $whiteSpace="nowrap"
                           >
                             {item.priority || EMPTY_VALUE}
@@ -674,7 +677,8 @@ const DatabasePanel: React.FC<DatabasePanelProps> = ({
                           <DataCell
                             key={columnKey}
                             $alignLeft
-                            $paddingRight={isMobile ? '4px' : '10px'}
+                            $paddingLeft="var(--spacing-px-12)"
+                            $paddingRight={isMobile ? 'var(--spacing-px-4)' : 'var(--spacing-px-10)'}
                           >
                             {timeRange}
                           </DataCell>
@@ -684,7 +688,8 @@ const DatabasePanel: React.FC<DatabasePanelProps> = ({
                           <DataCell
                             key={columnKey}
                             $alignLeft
-                            $minWidth="90px"
+                            $paddingLeft="var(--spacing-px-12)"
+                            $minWidth="var(--spacing-px-90)"
                             $whiteSpace="nowrap"
                           >
                             {'status' in item ? (item.status || EMPTY_VALUE) : EMPTY_VALUE}
@@ -708,14 +713,14 @@ const DatabasePanel: React.FC<DatabasePanelProps> = ({
                           return EMPTY_VALUE;
                         };
                         return (
-                          <DataCell key={columnKey} $alignLeft $minWidth="120px">
+                          <DataCell key={columnKey} $alignLeft $minWidth="var(--spacing-px-120)">
                             {getParentDisplay(item)}
                           </DataCell>
                         );
                       }
                       case 'tag':
                         return (
-                          <DataCell key={columnKey} $alignLeft $minWidth="100px">
+                          <DataCell key={columnKey} $alignLeft $minWidth="var(--spacing-px-100)">
                             {(item.tags && item.tags.length > 0) ? item.tags[0] : EMPTY_VALUE}
                           </DataCell>
                         );
@@ -728,7 +733,7 @@ const DatabasePanel: React.FC<DatabasePanelProps> = ({
                             key={columnKey}
                             $alignRight
                             $centerText
-                            $minWidth="100px"
+                            $minWidth="var(--spacing-px-100)"
                             $whiteSpace="nowrap"
                           >
                             {recurrenceType !== 'none' ? recurrenceType : EMPTY_VALUE}
@@ -782,16 +787,16 @@ const Panel = styled.aside`
   background: var(--bg-primary, #000000);
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 0.5rem 0.75rem;
-  padding-right: 1rem;
-  padding-bottom: 0.5rem;
+  padding: var(--spacing-5) var(--spacing-7);
+  padding-right: var(--spacing-8);
+  padding-bottom: var(--spacing-5);
   box-sizing: border-box;
-  max-width: 516px; /* Limit width on mobile */
+  max-width: var(--width-panel-mobile); /* Limit width on mobile */
 
   @media (min-width: ${MOBILE_BREAKPOINT_PX}) {
     width: 50%;
     height: 100%;
-    padding: 1.25rem;
+    padding: var(--spacing-10);
     justify-content: center;
     align-items: flex-end;
     order: 1;
@@ -805,39 +810,39 @@ const DatabaseHeader = styled.div`
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--spacing-5);
   padding: 0;
   width: 100%;
   max-width: 100%;
   position: sticky;
   top: 0;
   background: var(--bg-primary, #000000);
-  z-index: 6; /* above TableHeader */
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
+  z-index: var(--z-header);
+  padding-top: var(--spacing-5);
+  padding-bottom: var(--spacing-5);
   /* Offset Panel padding to align with top edge */
-  margin-top: -0.5rem;
-  margin-left: -0.75rem;
-  margin-right: -1rem;
-  padding-left: 0.75rem;
-  padding-right: 1rem;
+  margin-top: calc(-1 * var(--spacing-5));
+  margin-left: calc(-1 * var(--spacing-7));
+  margin-right: calc(-1 * var(--spacing-8));
+  padding-left: var(--spacing-7);
+  padding-right: var(--spacing-8);
 
   @media (min-width: ${MOBILE_BREAKPOINT_PX}) {
     margin-bottom: 2rem;
-    max-width: 600px;
+    max-width: var(--width-table-max);
     padding-top: 0;
     padding-bottom: 0;
-    margin-top: -1.25rem;
-    margin-left: -1.25rem;
-    margin-right: -1.25rem;
-    padding-left: 1.25rem;
-    padding-right: 1.25rem;
+    margin-top: calc(-1 * var(--spacing-10));
+    margin-left: calc(-1 * var(--spacing-10));
+    margin-right: calc(-1 * var(--spacing-10));
+    padding-left: var(--spacing-10);
+    padding-right: var(--spacing-10);
   }
 `;
 
 const ItemTypeSelector = styled.div`
   display: flex;
-  gap: 0.5rem;
+  gap: var(--spacing-5);
   justify-content: flex-start;
   align-items: flex-end;
 `;
@@ -846,18 +851,18 @@ const TypeButton = styled.button<{ $active: boolean }>`
   background: transparent;
   border: none;
   color: ${props => props.$active ? 'var(--text-primary, #DEDEE5)' : 'var(--text-secondary, #8A8A95)'};
-  padding: 0.25rem 0.5rem;
-  font-size: 11px;
-  font-family: Helvetica, Arial, sans-serif;
+  padding: var(--spacing-2) var(--spacing-5);
+  font-size: var(--font-size-base);
+  font-family: var(--font-family-base);
   cursor: pointer;
-  transition: all 0.2s;
-  line-height: 1.2;
+  transition: all var(--transition-fast);
+  line-height: var(--line-height-tight);
   text-decoration: none;
   position: relative;
 
   @media (min-width: ${MOBILE_BREAKPOINT_PX}) {
-    padding: 0.25rem 0.75rem;
-    font-size: 12px;
+    padding: var(--spacing-2) var(--spacing-7);
+    font-size: var(--font-size-md);
   }
 
   ${props => props.$active ? `
@@ -876,8 +881,8 @@ const TypeButton = styled.button<{ $active: boolean }>`
   &:hover {
     color: var(--text-primary, #ffffff);
     text-decoration: underline;
-    text-decoration-thickness: 0.5px;
-    text-underline-offset: 2px;
+    text-decoration-thickness: var(--underline-thickness);
+    text-underline-offset: var(--underline-offset);
   }
 `;
 
@@ -885,10 +890,10 @@ const DatabaseHeaderRight = styled.div`
   display: flex;
   align-items: flex-end;
   justify-content: flex-end;
-  gap: 0.5rem;
+  gap: var(--spacing-5);
 
   @media (min-width: ${MOBILE_BREAKPOINT_PX}) {
-    gap: 1rem;
+    gap: var(--spacing-8);
   }
 `;
 
@@ -896,24 +901,24 @@ const DeleteButton = styled.button`
   background: transparent;
   border: none;
   color: var(--text-secondary, #8A8A95);
-  font-size: 11px;
-  font-family: Helvetica, Arial, sans-serif;
-  padding: 0.25rem 0.5rem;
+  font-size: var(--font-size-base);
+  font-family: var(--font-family-base);
+  padding: var(--spacing-2) var(--spacing-5);
   cursor: pointer;
-  transition: all 0.2s;
-  line-height: 1.2;
+  transition: all var(--transition-fast);
+  line-height: var(--line-height-tight);
   text-decoration: none;
 
   @media (min-width: ${MOBILE_BREAKPOINT_PX}) {
-    font-size: 12px;
-    padding: 0.25rem 0.75rem;
+    font-size: var(--font-size-md);
+    padding: var(--spacing-2) var(--spacing-7);
   }
 
   &:hover {
     color: var(--text-primary, #ffffff);
     text-decoration: underline;
-    text-decoration-thickness: 0.5px;
-    text-underline-offset: 2px;
+    text-decoration-thickness: var(--underline-thickness);
+    text-underline-offset: var(--underline-offset);
   }
 `;
 
@@ -921,38 +926,38 @@ const SelectButton = styled.button<{ $active?: boolean }>`
   background: transparent;
   border: none;
   color: ${props => props.$active ? 'var(--text-primary, #DEDEE5)' : 'var(--text-secondary, #8A8A95)'};
-  font-size: 11px;
-  font-family: Helvetica, Arial, sans-serif;
-  padding: 0.25rem 0.5rem;
+  font-size: var(--font-size-base);
+  font-family: var(--font-family-base);
+  padding: var(--spacing-2) var(--spacing-5);
   cursor: pointer;
-  transition: all 0.2s;
-  line-height: 1.2;
+  transition: all var(--transition-fast);
+  line-height: var(--line-height-tight);
   text-decoration: none;
 
   @media (min-width: ${MOBILE_BREAKPOINT_PX}) {
-    font-size: 12px;
-    padding: 0.25rem 0.75rem;
+    font-size: var(--font-size-md);
+    padding: var(--spacing-2) var(--spacing-7);
   }
 
   &:hover {
     color: var(--text-primary, #ffffff);
     text-decoration: underline;
-    text-decoration-thickness: 0.5px;
-    text-underline-offset: 2px;
+    text-decoration-thickness: var(--underline-thickness);
+    text-underline-offset: var(--underline-offset);
   }
 `;
 
 const AddButton = styled.button`
   background: none;
   border: none;
-  font-size: 16px;
-  font-weight: 300;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-light);
   color: var(--text-primary, #DEDEE5);
   cursor: pointer;
   padding: 0;
-  line-height: 1.2;
-  transition: color 0.2s;
-  font-family: Helvetica, Arial, sans-serif;
+  line-height: var(--line-height-tight);
+  transition: color var(--transition-fast);
+  font-family: var(--font-family-base);
 
   &:hover {
     color: var(--text-primary, #ffffff);
@@ -968,7 +973,7 @@ const TableContainer = styled.div`
   min-height: fit-content;
 
   @media (min-width: ${MOBILE_BREAKPOINT_PX}) {
-    max-width: 600px;
+    max-width: var(--width-table-max);
     overflow-y: visible;
   }
 `;
@@ -986,7 +991,7 @@ const TableHeader = styled.thead`
   position: sticky;
   top: 0; /* Stick at top of TableContainer when scrolling */
   background: var(--bg-primary, #000000);
-  z-index: 5; /* below Header (z-index: 6) and global overlays */
+  z-index: var(--z-content);
 `;
 
 const DatabaseHeaderRow = styled.tr``;
@@ -1016,51 +1021,53 @@ interface DatabaseHeaderCellProps {
 }
 
 const DatabaseHeaderCell = styled.th<DatabaseHeaderCellProps>`
-  padding: ${props => props.$padding || '0.2rem 0'};
+  padding: ${props => props.$padding || 'var(--spacing-02) 0'};
   padding-left: ${props => props.$paddingLeft || (props.$alignLeft ? '0' : 'auto')};
   padding-right: ${props => props.$paddingRight || (props.$alignRight ? '0' : 'auto')};
   width: ${props => props.$width || 'auto'};
   min-width: ${props => props.$minWidth || 'auto'};
   text-align: ${props => props.$centerText ? 'center' : props.$alignRight ? 'right' : props.$alignLeft ? 'left' : 'left'};
-  font-size: 11px;
-  font-weight: 400;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-normal);
   color: ${props => props.$sorted ? 'var(--text-primary, #DEDEE5)' : 'var(--text-secondary, #8A8A95)'};
-  font-family: Helvetica, Arial, sans-serif;
-  line-height: 1.2;
+  font-family: var(--font-family-base);
+  line-height: var(--line-height-tight);
   cursor: ${props => props.$sortable ? 'pointer' : 'default'};
   user-select: none;
-  transition: all 0.2s;
+  transition: all var(--transition-fast);
 
   ${props => props.$alignLeft ? `
-    padding-right: ${props.$paddingRight || '10px'};
+    padding-right: ${props.$paddingRight || 'var(--spacing-px-10)'};
     padding-left: ${props.$paddingLeft || '0'};
   ` : props.$alignRight ? `
-    padding-left: ${props.$paddingLeft || '10px'};
+    padding-left: ${props.$paddingLeft || 'var(--spacing-px-10)'};
     padding-right: ${props.$paddingRight || '0'};
     width: ${props.$width || '1%'};
   ` : ''}
 
   @media (min-width: ${MOBILE_BREAKPOINT_PX}) {
-    padding-top: ${props => props.$padding ? props.$padding.split(' ')[0] : '0.3rem'};
-    padding-bottom: ${props => props.$padding ? props.$padding.split(' ')[0] : '0.3rem'};
+    padding-top: ${props => props.$padding ? props.$padding.split(' ')[0] : 'var(--spacing-3)'};
+    padding-bottom: ${props => props.$padding ? props.$padding.split(' ')[0] : 'var(--spacing-3)'};
     padding-left: ${props => props.$paddingLeft || (props.$alignLeft ? '0' : 'auto')};
     padding-right: ${props => props.$paddingRight || (props.$alignRight ? '0' : 'auto')};
-    font-size: 12px;
+    font-size: var(--font-size-md);
   }
 
   &:first-child {
     padding-left: 0;
-    padding-right: 20px;
-    width: 48px;
+    padding-right: var(--spacing-px-4);
+    width: var(--spacing-px-20);
+    box-sizing: border-box;
+    overflow: hidden;
   }
 
   &:last-child {
-    padding-right: 1rem;
-    padding-left: 20px;
-    min-width: calc(1% + 10px);
+    padding-right: var(--spacing-8);
+    padding-left: var(--spacing-px-20);
+    min-width: calc(1% + var(--spacing-px-10));
 
     @media (min-width: ${MOBILE_BREAKPOINT_PX}) {
-      padding-right: 1.25rem;
+      padding-right: var(--spacing-10);
     }
   }
 
@@ -1068,8 +1075,8 @@ const DatabaseHeaderCell = styled.th<DatabaseHeaderCellProps>`
     &:hover {
       color: var(--text-primary, #ffffff) !important;
       text-decoration: underline !important;
-      text-decoration-thickness: 0.5px !important;
-      text-underline-offset: 2px !important;
+      text-decoration-thickness: var(--underline-thickness) !important;
+      text-underline-offset: var(--underline-offset) !important;
     }
   ` : ''}
 `;
@@ -1079,7 +1086,7 @@ const TableBody = styled.tbody``;
 const DataRow = styled.tr<{ $isSelected?: boolean }>`
   cursor: pointer;
   background: ${props => props.$isSelected ? 'var(--bg-selected, rgba(255, 255, 255, 0.05))' : 'transparent'};
-  transition: all 0.2s;
+  transition: all var(--transition-fast);
   display: table-row;
 
   &:hover {
@@ -1105,50 +1112,52 @@ interface DataCellProps {
 }
 
 const DataCell = styled.td<DataCellProps>`
-  padding: ${props => props.$padding || '0.2rem 0'};
+  padding: ${props => props.$padding || 'var(--spacing-02) 0'};
   padding-left: ${props => props.$paddingLeft || (props.$alignLeft ? '0' : 'auto')};
   padding-right: ${props => props.$paddingRight || (props.$alignRight ? '0' : 'auto')};
   width: ${props => props.$width || 'auto'};
   min-width: ${props => props.$minWidth || 'auto'};
   white-space: ${props => props.$whiteSpace || 'nowrap'};
   cursor: ${props => props.$cursor || 'default'};
-  font-size: 11px;
+  font-size: var(--font-size-base);
   color: var(--text-primary, #DEDEE5);
-  font-family: Helvetica, Arial, sans-serif;
-  line-height: 1.2;
+  font-family: var(--font-family-base);
+  line-height: var(--line-height-tight);
   text-align: ${props => props.$centerText ? 'center' : props.$alignRight ? 'right' : props.$alignLeft ? 'left' : 'left'};
   vertical-align: top;
 
   ${props => props.$alignLeft ? `
-    padding-right: ${props.$paddingRight || '20px'};
+    padding-right: ${props.$paddingRight || 'var(--spacing-px-20)'};
     padding-left: ${props.$paddingLeft || '0'};
   ` : props.$alignRight ? `
-    padding-left: ${props.$paddingLeft || '10px'};
+    padding-left: ${props.$paddingLeft || 'var(--spacing-px-10)'};
     padding-right: ${props.$paddingRight || '0'};
     width: ${props.$width || '1%'};
   ` : ''}
 
   @media (min-width: ${MOBILE_BREAKPOINT_PX}) {
-    padding-top: ${props => props.$padding ? props.$padding.split(' ')[0] : '0.3rem'};
-    padding-bottom: ${props => props.$padding ? props.$padding.split(' ')[0] : '0.3rem'};
+    padding-top: ${props => props.$padding ? props.$padding.split(' ')[0] : 'var(--spacing-3)'};
+    padding-bottom: ${props => props.$padding ? props.$padding.split(' ')[0] : 'var(--spacing-3)'};
     padding-left: ${props => props.$paddingLeft || (props.$alignLeft ? '0' : 'auto')};
     padding-right: ${props => props.$paddingRight || (props.$alignRight ? '0' : 'auto')};
-    font-size: 12px;
+    font-size: var(--font-size-md);
   }
 
   &:first-child {
     padding-left: 0;
-    padding-right: 4px;
-    width: 15px;
+    padding-right: var(--spacing-px-4);
+    width: var(--spacing-px-20);
+    box-sizing: border-box;
+    overflow: hidden;
   }
 
   &:last-child {
-    padding-right: 1rem;
-    padding-left: 20px;
-    min-width: calc(1% + 10px);
+    padding-right: var(--spacing-8);
+    padding-left: var(--spacing-px-20);
+    min-width: calc(1% + var(--spacing-px-10));
 
     @media (min-width: ${MOBILE_BREAKPOINT_PX}) {
-      padding-right: 1.25rem;
+      padding-right: var(--spacing-10);
     }
   }
 `;
@@ -1173,10 +1182,10 @@ const EditInput = styled.input`
   background: var(--bg-tertiary, #1a1a1a);
   border: none;
   color: var(--text-primary, #ffffff);
-  font-size: 12px;
-  font-family: Helvetica, Arial, sans-serif;
+  font-size: var(--font-size-md);
+  font-family: var(--font-family-base);
   outline: none;
-  line-height: 1.2;
+  line-height: var(--line-height-tight);
   box-sizing: border-box;
   transition: none;
   cursor: text;
@@ -1192,42 +1201,42 @@ const EmptyRow = styled.tr`
 `;
 
 const EmptyCell = styled.td`
-  padding: 1rem;
+  padding: var(--spacing-8);
   text-align: center;
-  font-size: 12px;
+  font-size: var(--font-size-md);
   color: var(--text-secondary, #8A8A95);
-  font-family: Helvetica, Arial, sans-serif;
-  line-height: 1.2;
+  font-family: var(--font-family-base);
+  line-height: var(--line-height-tight);
   pointer-events: none;
 `;
 
 const EmptyText = styled.span`
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--transition-fast);
   display: inline-block;
   pointer-events: auto;
 
   &:hover {
     color: var(--text-primary, #ffffff);
     text-decoration: underline;
-    text-decoration-thickness: 0.5px;
-    text-underline-offset: 2px;
+    text-decoration-thickness: var(--underline-thickness);
+    text-underline-offset: var(--underline-offset);
   }
 `;
 
 const RowCheckbox = styled.div<{ $checked: boolean; $indeterminate?: boolean }>`
-  width: 14px;
-  height: 14px;
-  border: 1px solid ${props => (props.$checked || props.$indeterminate) ? '#8A8A95' : '#5a5a5d'};
-  background: ${props => (props.$checked || props.$indeterminate) ? '#8A8A95' : 'transparent'};
-  color: #161619;
+  width: var(--spacing-px-14);
+  height: var(--spacing-px-14);
+  border: var(--border-width) solid ${props => (props.$checked || props.$indeterminate) ? 'var(--checkbox-border-checked)' : 'var(--checkbox-border-unchecked)'};
+  background: ${props => (props.$checked || props.$indeterminate) ? 'var(--checkbox-bg-checked)' : 'var(--checkbox-bg-unchecked)'};
+  color: var(--checkbox-text);
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  font-size: 9px;
-  font-weight: bold;
-  transition: all 0.2s;
-  line-height: 1;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  transition: all var(--transition-fast);
+  line-height: var(--line-height-none);
   margin: 0 auto;
   cursor: pointer;
 `;
@@ -1238,7 +1247,7 @@ const IndexCellContent = styled.div`
   justify-content: flex-end;
   gap: 0;
   width: 100%;
-  height: 15px;
+  height: var(--spacing-px-15);
 `;
 
 const ExpandSpacer = styled.div`
