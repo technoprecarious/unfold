@@ -22,8 +22,15 @@
   --font-size-xl: 16px;         /* Extra large text (e.g., item titles, add buttons) */
   --font-size-2xl: 28px;        /* 2XL text (e.g., close button icons) */
   
+  /* Font Weights
+     Typography weight values */
+  --font-weight-normal: 400;     /* Normal weight (default) */
+  --font-weight-bold: bold;      /* Bold weight */
+  --font-weight-light: 300;      /* Light weight */
+  
   /* Spacing Scale (rem-based)
      Consistent spacing values for padding, margin, and gaps */
+  --spacing-02: 0.2rem;        /* 3.2px - Very small spacing (table cells) */
   --spacing-1: 0.15rem;         /* 2.4px - Tiny spacing */
   --spacing-2: 0.25rem;         /* 4px - Small spacing */
   --spacing-3: 0.3rem;          /* 4.8px - Small-medium spacing */
@@ -32,6 +39,7 @@
   --spacing-6: 0.6rem;          /* 9.6px - Medium-large spacing */
   --spacing-7: 0.75rem;         /* 12px - Large spacing */
   --spacing-8: 1rem;            /* 16px - Extra large spacing */
+  --spacing-10: 1.25rem;        /* 20px - Extra extra large spacing */
   --spacing-12: 1.5rem;         /* 24px - 2XL spacing */
   --spacing-16: 2rem;           /* 32px - 3XL spacing */
   --spacing-20: 2.5rem;         /* 40px - 4XL spacing */
@@ -42,10 +50,18 @@
   --spacing-px-4: 4px;          /* 4px - Precise small spacing */
   --spacing-px-10: 10px;        /* 10px - Precise medium-small spacing */
   --spacing-px-12: 12px;        /* 12px - Precise medium spacing */
+  --spacing-px-14: 14px;        /* 14px - Checkbox size */
   --spacing-px-15: 15px;        /* 15px - Column widths */
   --spacing-px-20: 20px;        /* 20px - Precise large spacing */
+  --spacing-px-24: 24px;        /* 24px - Standard column widths */
+  --spacing-px-28: 28px;        /* 28px - Medium column widths */
   --spacing-px-32: 32px;        /* 32px - Button/icon sizes */
   --spacing-px-40: 40px;        /* 40px - Minimum button widths */
+  --spacing-px-80: 80px;        /* 80px - Priority column width */
+  --spacing-px-90: 90px;        /* 90px - Status/time column width */
+  --spacing-px-100: 100px;      /* 100px - Tag/recurrence column width */
+  --spacing-px-120: 120px;      /* 120px - Parent/time column width */
+  --spacing-px-200: 200px;      /* 200px - Title column width */
   
   /* Layout Dimensions
      Common layout widths and breakpoints */
@@ -57,12 +73,17 @@
   --width-timetable: 500px;     /* Timetable display width */
   --width-table-max: 600px;     /* Database table maximum width */
   --width-modal-default: 400px; /* Default modal width */
+  --width-panel-mobile: 516px;  /* Panel max-width on mobile */
   
   /* Border Radius
      Rounded corner values */
   --radius-none: 0;             /* No rounding */
   --radius-sm: 4px;             /* Small rounding (e.g., inputs) */
   --radius-md: 12px;            /* Medium rounding (e.g., drawer panels) */
+  
+  /* Border Width
+     Border thickness values */
+  --border-width: 1px;          /* Standard border width */
   
   /* Transitions
      Standard animation timing */
@@ -107,6 +128,7 @@
   
   /* Line Height
      Typography line height values */
+  --line-height-none: 1;          /* No line height (single line) */
   --line-height-tight: 1.2;       /* Tight line height */
   --line-height-normal: 1.4;      /* Normal line height */
   --line-height-relaxed: 1.6;     /* Relaxed line height */
@@ -137,6 +159,12 @@
   --border-primary: #0a0a0a;
   --border-secondary: #8a8a95;
   --border-tertiary: #5a5a5a;
+  /* Checkbox palette for dark theme */
+  --checkbox-border-checked: #8A8A95;
+  --checkbox-border-unchecked: #5a5a5d;
+  --checkbox-bg-checked: #8A8A95;
+  --checkbox-bg-unchecked: transparent;
+  --checkbox-text: #161619;
   /* Danger palette for dark theme */
   --danger-bg: #3a1f1f;
   --danger-bg-hover: #4a2f2f;
@@ -169,6 +197,12 @@
   --border-primary: #e0e0e0;
   --border-secondary: #5a5a5a;
   --border-tertiary: #8a8a95;
+  /* Checkbox palette for light theme */
+  --checkbox-border-checked: #5a5a5a;
+  --checkbox-border-unchecked: #8a8a95;
+  --checkbox-bg-checked: #5a5a5a;
+  --checkbox-bg-unchecked: transparent;
+  --checkbox-text: #ffffff;
   /* Danger palette for light theme */
   --danger-bg: #ffe5e5;
   --danger-bg-hover: #ffd6d6;
